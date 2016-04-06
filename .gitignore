@@ -1,0 +1,13 @@
+logs
+*.log
+.DS_Store
+pids
+*.pid
+*.seed
+.lock-wscript
+build
+node_modules
+.idea
+docs/build
+/lib
+.npmrc
