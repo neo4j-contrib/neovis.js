@@ -1,1 +1,57 @@
-TODO: super simple example
+<!doctype html>
+<html>
+<head>
+    <title>Neovis.js Simple Example</title>
+    <style type="text/css">
+        html, body {
+            font: 10pt arial;
+        }
+
+        #viz {
+            width: 600px;
+            height: 600px;
+            border: 1px solid lightgray;
+        }
+
+    </style>
+
+    <!-- FIXME: figure out dependency loading / build -->
+    <script type="text/javascript" src="../vendor/neo4j-web.min.js"></script>
+    <script type="text/javascript" src="../vendor/vis.min.js"></script>
+
+    <!-- FIXME: load from dist -->
+    <script type="text/javascript" src="../src/neovis.js"></script>
+
+    <link href="../dist/vis.min.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+        // define config car
+        // instantiate nodevis object
+        // draw
+
+        function draw() {
+            var config = {
+                container_id: "viz",
+                server_url: "localhost",
+                labels: {
+                    "Character": "name"
+                },
+                thick_edges: {
+                    "INTERACTED": "weight"
+                },
+                cluster_labels: {
+                    "Character": "community"
+                }
+
+            };
+
+            var viz = new NeoVis(config);
+            viz.render();
+
+        }
+    </script>
+</head>
+<body onload="draw()">
+<div id="viz"></div>
+</body>
+</html>
