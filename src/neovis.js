@@ -1,8 +1,8 @@
 'use strict';
 
 // FIXME: need to figure out dependency loading
-//var neo4j = require('../vendor/neo4j-javascript-driver/neo4j-web');
-//var neo4j = require('neo4j');
+//
+//var neo4j = require('neo4j-driver').v1;
 //var vis = require('../vendor/vis.min.js');
 
 var NeoVis = (function () {
@@ -38,6 +38,57 @@ var NeoVis = (function () {
 
     }
 
+    /**
+     * Checks if this node has been added to a node list
+     * FIXME: move to private api?
+     * @param node
+     * @param nodes
+     * @returns {boolean}
+     */
+    function nodeExists(node, nodes) {
+        var id = node['id'];
+        for (var i = 0; i<nodes.length; i++) {
+            if (id === nodes[i].id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Build node object for vis from a neo4j Node
+     * FIXME: use config
+     * FIXME: move to private api
+     * @param n
+     * @returns {{}}
+     */
+    function buildNodeVisObject(n) {
+        var node = {};
+        node['id'] = n.identity.toInt();
+        
+        
+        node['value'] = n.properties.betweenness.toInt();
+        node['label'] = n.properties.name;
+        node['group'] = n.properties.community.toInt();
+        node['title'] = n.properties.name;
+        return node;
+    }
+
+    /**
+     * Build edge object for vis from a neo4j Relationship
+     * @param r
+     * @returns {{}}
+     */
+    function buildEdgeVisObject(r) {
+        var edge = {};
+        edge['from'] = r.start.toInt();
+        edge['to'] = r.end.toInt();
+        edge['value'] = r.properties.weight;
+        edge['title'] = r.type;
+
+        return edge;
+    }
+
     // public API
 
     NeoVis.prototype.render = function() {
@@ -46,48 +97,44 @@ var NeoVis = (function () {
         // run query
 
         var self = this;
+        var nodes = []; // FIXME: move to instance var
+        var edges = []; // FIXME: move to instance var
 
         var session = this._driver.session();
         session
-            .run(this._query, {limit: 200})
+            .run(this._query, {limit: 20})
             .then(function(result){
                 result.records.forEach(function(record) {
                     // get node(s) and rel
                     // add to global nodes / rels
-                });
-                // add to the vis and render it
-                
-                // FIXME fake data
-                // create people.
-                // value corresponds with the age of the person
-                var nodes = [
-                    {id: 1,  value: 2,  label: 'Algie' },
-                    {id: 2,  value: 31, label: 'Alston'},
-                    {id: 3,  value: 12, label: 'Barney'},
-                    {id: 4,  value: 16, label: 'Coley' },
-                    {id: 5,  value: 17, label: 'Grant' },
-                    {id: 6,  value: 15, label: 'Langdon'},
-                    {id: 7,  value: 6,  label: 'Lee'},
-                    {id: 8,  value: 5,  label: 'Merlin'},
-                    {id: 9,  value: 30, label: 'Mick'},
-                    {id: 10, value: 18, label: 'Tod'},
-                ];
+                    var n = record.get("n");
+                    console.log(record.get("n"));
+                    var node = buildNodeVisObject(n);
 
-                // create connections between people
-                // value corresponds with the amount of contact between two people
-                var edges = [
-                    {from: 2, to: 8, value: 3, title: '3 emails per week'},
-                    {from: 2, to: 9, value: 5, title: '5 emails per week'},
-                    {from: 2, to: 10,value: 1, title: '1 emails per week'},
-                    {from: 4, to: 6, value: 8, title: '8 emails per week'},
-                    {from: 5, to: 7, value: 2, title: '2 emails per week'},
-                    {from: 4, to: 5, value: 1, title: '1 emails per week'},
-                    {from: 9, to: 10,value: 2, title: '2 emails per week'},
-                    {from: 2, to: 3, value: 6, title: '6 emails per week'},
-                    {from: 3, to: 9, value: 4, title: '4 emails per week'},
-                    {from: 5, to: 3, value: 1, title: '1 emails per week'},
-                    {from: 2, to: 7, value: 4, title: '4 emails per week'}
-                ];
+
+                    if (!nodeExists(node, nodes)) {
+                        nodes.push(node);
+                    }
+
+                    if (record.get("r")) {
+                        console.log("Has an edge");
+                        var r = record.get("r");
+                        var m = record.get("m");
+                        var mNode = buildNodeVisObject(m);
+                        if (!nodeExists(mNode, nodes)) {
+                            nodes.push(mNode);
+                        }
+                        var edge = buildEdgeVisObject(r);
+                        
+                        edges.push(edge);
+                    } else {
+                        console.log("No Edge");
+                    }
+
+                });
+
+
+
                 var data = {
                     nodes: nodes,
                     edges: edges
@@ -130,6 +177,13 @@ var NeoVis = (function () {
     NeoVis.prototype.renderWithCypher = function(query) {
 
     };
+
+    // configure exports based on environment (ie Node.js or browser)
+    //if (typeof exports === 'object') {
+    //    module.exports = NeoVis;
+    //} else {
+    //    define (function () {return NeoVis;})
+    //}
 
     return NeoVis;
 }());
