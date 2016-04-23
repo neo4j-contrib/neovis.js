@@ -20,21 +20,28 @@ Graph visualizations powered by vis.js with data from Neo4j.
 ## How to use
 
 ~~~ javascript
-var config = {
-    container_id: "viz",
-    server_url: "localhost",
-    labels: {
-        "Character": "name"
-    },
-    thick_edges: {
-        "INTERACTED": "weight"
-    },
-    cluster_labels: {
-        "Character": "community"
-    }
+function draw() {
+            var config = {
+                container_id: "viz",
+                server_url: "localhost",
+                labels: {
+                    "Character": "name"
+                },
+                label_size: {
+                    "Character": "betweenness"
+                },
+                relationships: {
+                    "INTERACTED": null
+                },
+                relationship_thickness: {
+                    "INTERACTED": "weight"
+                },
+                cluster_labels: {
+                    "Character": "community"
+                }
 
-};
+            };
 
-var viz = new NeoVis(config);
-viz.render();
+            var viz = new NeoVis(config);
+            viz.render();
 ~~~

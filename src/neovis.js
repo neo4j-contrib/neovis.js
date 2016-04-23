@@ -28,6 +28,7 @@ var NeoVis = (function () {
                         "WITH (n), RAND() AS random \n" +
                         "ORDER BY random LIMIT {limit} \n" +
                         "OPTIONAL MATCH (n)-[r]->(m) \n" +
+                        //"WITH n,r,m WHERE has(n.betweenness) AND has(m.betweenness) \n" +
                         "RETURN n, r, m;"; // FIXME get (optionally) from config
 
         this._nodes = null;
@@ -102,7 +103,7 @@ var NeoVis = (function () {
 
         var session = this._driver.session();
         session
-            .run(this._query, {limit: 20})
+            .run(this._query, {limit: 3000})
             .then(function(result){
                 result.records.forEach(function(record) {
                     // get node(s) and rel
@@ -142,6 +143,17 @@ var NeoVis = (function () {
                 var options = {
                     nodes: {
                         shape: 'dot'
+                    },
+                    edges: {
+                        arrows: {
+                            to: {enabled: true, scaleFactor: 0.5}
+                        }
+                    },
+                    layout: {
+                        improvedLayout: false
+                    },
+                    physics: {
+                        enabled: true
                     }
                 };
 
