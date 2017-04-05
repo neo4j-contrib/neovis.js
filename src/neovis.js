@@ -5,11 +5,20 @@
 //var neo4j = require('neo4j-driver').v1;
 //var vis = require('../vendor/vis.min.js');
 
-var NeoVis = (function () {
+
+var defaultQuery =  "MATCH (n) WHERE exists(n.betweenness)\n" +
+                    "WITH (n), RAND() AS random \n" +
+                    "ORDER BY random LIMIT 3000 \n" +
+                    "OPTIONAL MATCH (n)-[r]-(m)\n" +
+                    //"WITH n,r,m WHERE exists(n.pagerank) AND exists(m.pagerank) AND exists(m.community) \n" +
+                    "RETURN n, r, m;"; // FIXME get (optionally) from config
+
+export default class NeoVis {
 
     /**
      *
-     * @param config - configures the visualization and Neo4j server connection
+     * @constructor
+     * @param {object} config - configures the visualization and Neo4j server connection
      *  {
      *    container:
      *    server_url:
@@ -19,18 +28,12 @@ var NeoVis = (function () {
      *
      *  }
      *
-     * @constructor
      */
-    function NeoVis(config) {
-        this._config = config;
-        this._driver = neo4j.v1.driver("bolt://localhost", neo4j.v1.auth.basic("neo4j", "letmein")); // FIXME get params from config
-        this._query =   "MATCH (n) \n" +
-                        "WITH (n), RAND() AS random \n" +
-                        "ORDER BY random LIMIT {limit} \n" +
-                        "OPTIONAL MATCH (n)-[r]->(m) \n" +
-                        //"WITH n,r,m WHERE has(n.betweenness) AND has(m.betweenness) \n" +
-                        "RETURN n, r, m;"; // FIXME get (optionally) from config
 
+    constructor(config) {
+        this._config = config;
+        this._driver = neo4j.v1.driver(config.server_url, neo4j.v1.auth.basic(config.server_user, config.server_password)); // FIXME: handle unauthenticated / default
+        this._query =   config.initial_cypher || defaultQuery;
         this._nodes = null;
         this._edges = null;
         this._network = null;
@@ -46,7 +49,7 @@ var NeoVis = (function () {
      * @param nodes
      * @returns {boolean}
      */
-    function nodeExists(node, nodes) {
+    static nodeExists(node, nodes) {
         var id = node['id'];
         for (var i = 0; i<nodes.length; i++) {
             if (id === nodes[i].id) {
@@ -63,14 +66,14 @@ var NeoVis = (function () {
      * @param n
      * @returns {{}}
      */
-    function buildNodeVisObject(n) {
+    static buildNodeVisObject(n) {
         var node = {};
         node['id'] = n.identity.toInt();
         
         
-        node['value'] = n.properties.betweenness.toInt();
+        node['value'] = n.properties.betweenness;
         node['label'] = n.properties.name;
-        node['group'] = n.properties.community.toInt();
+        node['group'] = n.properties.community ? n.properties.community.toInt() : 0;
         node['title'] = n.properties.name;
         return node;
     }
@@ -80,11 +83,12 @@ var NeoVis = (function () {
      * @param r
      * @returns {{}}
      */
-    function buildEdgeVisObject(r) {
+    static buildEdgeVisObject(r) {
         var edge = {};
         edge['from'] = r.start.toInt();
         edge['to'] = r.end.toInt();
         edge['value'] = r.properties.weight;
+        //edge['value'] = 0.01;
         edge['title'] = r.type;
 
         return edge;
@@ -92,7 +96,7 @@ var NeoVis = (function () {
 
     // public API
 
-    NeoVis.prototype.render = function() {
+    render() {
 
         // connect to Neo4j instance
         // run query
@@ -103,17 +107,24 @@ var NeoVis = (function () {
 
         var session = this._driver.session();
         session
-            .run(this._query, {limit: 3000})
+            .run(this._query, {limit: 30})
             .then(function(result){
+                console.log("RESULT OBJECT:");
+                console.log(result);
                 result.records.forEach(function(record) {
                     // get node(s) and rel
                     // add to global nodes / rels
+
+                    console.log("RECORD OBJECT");
+                    console.log(record);
+                    // FIXME: get all nodes, relationships without specifying column (inspect result object to infer type of thing returned)
+
                     var n = record.get("n");
                     console.log(record.get("n"));
-                    var node = buildNodeVisObject(n);
+                    var node = NeoVis.buildNodeVisObject(n);
 
 
-                    if (!nodeExists(node, nodes)) {
+                    if (!NeoVis.nodeExists(node, nodes)) {
                         nodes.push(node);
                     }
 
@@ -121,11 +132,11 @@ var NeoVis = (function () {
                         console.log("Has an edge");
                         var r = record.get("r");
                         var m = record.get("m");
-                        var mNode = buildNodeVisObject(m);
-                        if (!nodeExists(mNode, nodes)) {
+                        var mNode = NeoVis.buildNodeVisObject(m);
+                        if (!NeoVis.nodeExists(mNode, nodes)) {
                             nodes.push(mNode);
                         }
-                        var edge = buildEdgeVisObject(r);
+                        var edge = NeoVis.buildEdgeVisObject(r);
                         
                         edges.push(edge);
                     } else {
@@ -142,25 +153,34 @@ var NeoVis = (function () {
                 };
                 var options = {
                     nodes: {
-                        shape: 'dot'
+                        shape: 'dot',
+                        font: {
+                            size: 26,
+                            strokeWidth: 7
+                        }
                     },
                     edges: {
                         arrows: {
-                            to: {enabled: true, scaleFactor: 0.5}
+                            to: {enabled: self._config.arrows } // FIXME: handle default value
                         }
                     },
                     layout: {
-                        improvedLayout: false
+                        improvedLayout: true
                     },
                     physics: {
                         enabled: true
                     }
                 };
 
+
+
                 var container = self._container;
 
                 self._network = new vis.Network(container, data, options);
             })
+            .catch(function(error) {
+                console.log(error);
+            });
 
 
 
@@ -171,14 +191,16 @@ var NeoVis = (function () {
      * Reset the config object and reload data
      * @param config
      */
-    NeoVis.prototype.reinit = function(config) {
+    reinit(config) {
 
     };
 
     /**
      * Fetch live data form the server and reload the visualization
      */
-    NeoVis.prototype.reload = function() {
+    reload() {
+
+        this.render();
 
     };
 
@@ -186,7 +208,12 @@ var NeoVis = (function () {
      * Execute an arbitrary Cypher query and re-render the visualization
      * @param query
      */
-    NeoVis.prototype.renderWithCypher = function(query) {
+    renderWithCypher(query) {
+
+        //self._config.initial_cypher = query;
+
+        this._query = query;
+        this.render();
 
     };
 
@@ -197,5 +224,5 @@ var NeoVis = (function () {
     //    define (function () {return NeoVis;})
     //}
 
-    return NeoVis;
-}());
+}
+
