@@ -33,8 +33,12 @@ export default class NeoVis {
         this._config = config;
         this._driver = neo4j.v1.driver(config.server_url, neo4j.v1.auth.basic(config.server_user, config.server_password)); // FIXME: handle unauthenticated / default
         this._query =   config.initial_cypher || defaultQuery;
-        this._nodes = null;
-        this._edges = null;
+        this._nodes = new vis.DataSet();
+        this._edges = new vis.DataSet();
+        this._data = {
+            "nodes": this._nodes,
+            "edges": this._edges
+        };
         this._network = null;
         this._container = document.getElementById(config.container_id);
 
@@ -84,6 +88,7 @@ export default class NeoVis {
      */
     static buildEdgeVisObject(r) {
         var edge = {};
+        edge['id'] = r.identity.toInt();
         edge['from'] = r.start.toInt();
         edge['to'] = r.end.toInt();
         edge['value'] = r.properties.weight;
@@ -100,11 +105,9 @@ export default class NeoVis {
         // connect to Neo4j instance
         // run query
 
-        var self = this;
-        var nodes = []; // FIXME: move to instance var
-        var edges = []; // FIXME: move to instance var
+        let self = this;
 
-        var session = this._driver.session();
+        let session = this._driver.session();
         session
             .run(this._query, {limit: 30})
             .then(function(result){
@@ -121,9 +124,14 @@ export default class NeoVis {
                         if (v.constructor.name === "Node") {
                             let node = NeoVis.buildNodeVisObject(v);
 
-                            if (!NeoVis.nodeExists(node, nodes)) {
-                                nodes.push(node);
+
+                            try {
+                                self._nodes.add(node);
+                            } catch(e) {
+                                console.log(e);
                             }
+
+
                         }
                         else if (v.constructor.name === "Relationship") {
                             //var mNode = NeoVis.buildNodeVisObject(m);
@@ -132,7 +140,12 @@ export default class NeoVis {
                             //}
                             let edge = NeoVis.buildEdgeVisObject(v);
 
-                            edges.push(edge);
+                            try {
+                                self._edges.add(edge);
+                            } catch(e) {
+                                console.log(e);
+                            }
+                            //edges.push(edge);
                         }
 
                     });
@@ -141,11 +154,12 @@ export default class NeoVis {
 
 
 
-                var data = {
-                    nodes: nodes,
-                    edges: edges
-                };
-                var options = {
+                // let data = {
+                //     nodes: self._nodes,
+                //     edges: self._edges
+                // };
+
+                let options = {
                     nodes: {
                         shape: 'dot',
                         font: {
@@ -169,7 +183,7 @@ export default class NeoVis {
 
                 var container = self._container;
 
-                self._network = new vis.Network(container, data, options);
+                self._network = new vis.Network(container, self._data, options);
             })
             .catch(function(error) {
                 console.log(error);
@@ -193,6 +207,9 @@ export default class NeoVis {
      */
     reload() {
 
+        this._nodes.clear();
+        this._edges.clear();
+        this._network.setData(this._data);
         this.render();
 
     };
@@ -206,6 +223,9 @@ export default class NeoVis {
         //self._config.initial_cypher = query;
 
         this._query = query;
+        this._nodes.clear();
+        this._edges.clear();
+        this._network.setData(this._data);
         this.render();
 
     };
