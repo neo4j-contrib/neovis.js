@@ -112,36 +112,31 @@ export default class NeoVis {
                 console.log("RESULT OBJECT:");
                 console.log(result);
                 result.records.forEach(function(record) {
-                    // get node(s) and rel
-                    // add to global nodes / rels
 
-                    console.log("RECORD OBJECT");
-                    console.log(record);
-                    // FIXME: get all nodes, relationships without specifying column (inspect result object to infer type of thing returned)
-
-                    var n = record.get("n");
-                    console.log(record.get("n"));
-                    var node = NeoVis.buildNodeVisObject(n);
+                    record.forEach(function(v,k,r) {
+                        console.log("CLASS NAME");
+                        console.log(v.constructor.name);
+                        console.log(v);
 
 
-                    if (!NeoVis.nodeExists(node, nodes)) {
-                        nodes.push(node);
-                    }
+                        if (v.constructor.name === "Node") {
+                            let node = NeoVis.buildNodeVisObject(v);
 
-                    if (record.get("r")) {
-                        console.log("Has an edge");
-                        var r = record.get("r");
-                        var m = record.get("m");
-                        var mNode = NeoVis.buildNodeVisObject(m);
-                        if (!NeoVis.nodeExists(mNode, nodes)) {
-                            nodes.push(mNode);
+                            if (!NeoVis.nodeExists(node, nodes)) {
+                                nodes.push(node);
+                            }
                         }
-                        var edge = NeoVis.buildEdgeVisObject(r);
-                        
-                        edges.push(edge);
-                    } else {
-                        console.log("No Edge");
-                    }
+                        else if (v.constructor.name === "Relationship") {
+                            //var mNode = NeoVis.buildNodeVisObject(m);
+                            //if (!NeoVis.nodeExists(mNode, nodes)) {
+                             //   nodes.push(mNode);
+                            //}
+                            let edge = NeoVis.buildEdgeVisObject(v);
+
+                            edges.push(edge);
+                        }
+
+                    });
 
                 });
 
@@ -171,7 +166,6 @@ export default class NeoVis {
                         enabled: true
                     }
                 };
-
 
 
                 var container = self._container;
