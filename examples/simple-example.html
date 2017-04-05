@@ -16,14 +16,9 @@
 
     </style>
 
-    <!-- FIXME: figure out dependency loading / build -->
-    <script type="text/javascript" src="../vendor/neo4j-web.min.js"></script>
-    <script type="text/javascript" src="../vendor/vis.min.js"></script>
-
-
     <!-- FIXME: load from dist -->
     <script type="text/javascript" src="../dist/bundle.js"></script>
-    <link href="../dist/vis.min.css" rel="stylesheet" type="text/css" />
+
 
     <script
             src="https://code.jquery.com/jquery-3.2.1.min.js"
@@ -45,6 +40,12 @@
                 server_password: "drunks-glue-detentions",
                 labels: {
                     "Character": "name"
+//                    "Character" :
+//                        {
+//                            "caption": "name",
+//                            "color": "blue",
+//                            "icon": "image.png"
+//                        }
                 },
                 label_size: {
                     "Character": "betweenness"

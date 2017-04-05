@@ -1,9 +1,8 @@
 'use strict';
 
-// FIXME: need to figure out dependency loading
-//
-//var neo4j = require('neo4j-driver').v1;
-//var vis = require('../vendor/vis.min.js');
+import * as neo4j from '../vendor/neo4j-web.js';
+import * as vis from '../vendor/vis.min.js';
+import '../vendor/vis/vis-network.min.css';
 
 
 var defaultQuery =  "MATCH (n) WHERE exists(n.betweenness)\n" +
