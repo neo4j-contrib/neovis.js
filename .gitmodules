@@ -1,0 +1,6 @@
+[submodule "vendor/neo4j-javascript-driver"]
+	path = vendor/neo4j-javascript-driver
+	url = git@github.com:neo4j/neo4j-javascript-driver.git
+[submodule "vendor/vis"]
+	path = vendor/vis
+	url = https://github.com/almende/vis.git
