@@ -35,21 +35,24 @@
         function draw() {
             var config = {
                 container_id: "viz",
-                server_url: "bolt://34.207.253.214:32857",
+                server_url: "bolt://54.209.44.254:33146",
                 server_user: "neo4j",
-                server_password: "drunks-glue-detentions",
+                server_password: "investigators-spill-future",
                 labels: {
                     //"Character": "name",
-                    "Character": {
+                    "Person": {
                         "caption": "name",
-                        "size": "betweenness"
+                        "size": 1.0,
+                        "sizeCypher": "MATCH (n) WHERE id(n) = {id} RETURN SIZE((n)--()) AS s;",
+                        "icon": "????"
+                    },
+                    "Organization": {
+                        "caption": "name",
+                        "size": 2.0,
+                        "sizeCypher": "MATCH (n) WHERE id(n) = {id} RETURN SIZE((n)--()) AS s",
+                        "icon": "???"
                     }
-//                    "Character" :
-//                        {
-//                            "caption": "name",
-//                            "color": "blue",
-//                            "icon": "image.png"
-//                        }
+
                 },
                 label_size: {
                     "Character": "betweenness"
@@ -63,8 +66,8 @@
                 cluster_labels: {
                     "Character": "community"
                 },
-                initial_cypher: "MATCH (n:Character) WHERE n.name = 'Daenerys' MATCH (n)-[r]-(m) RETURN n,r,m",
-               arrows: false
+                initial_cypher: "match (p:Person)-[r]-(o:Organization)-[r1]-(p2:Person) RETURN * LIMIT 10",
+                arrows: false
             };
 
             viz = new NeoVis.default(config);
@@ -79,7 +82,7 @@
 
 
 Cypher query: <textarea rows="4" cols=50 id="cypher"></textarea><br>
-    <input type="submit" value="Submit" id="reload">
+<input type="submit" value="Submit" id="reload">
 
 
 </body>

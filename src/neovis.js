@@ -69,15 +69,80 @@ export default class NeoVis {
      * @param n
      * @returns {{}}
      */
-    static buildNodeVisObject(n) {
-        var node = {};
+     buildNodeVisObject(n) {
+
+        var self = this;
+        let node = {};
+        let label = n.labels[0];
+
+        let captionKey   = this._config.labels[label]['caption'],
+            sizeKey      = this._config.labels[label]['size'],
+            sizeCypher   = this._config.labels[label]['sizeCypher'],
+            communityKey = this._config.labels[label]['community'];
+
+
         node['id'] = n.identity.toInt();
         
-        
-        node['value'] = n.properties.betweenness;
-        node['label'] = n.properties.name;
-        node['group'] = n.properties.community ? n.properties.community.toInt() : 0;
-        node['title'] = n.properties.name;
+        // node size
+
+        if (sizeCypher) {
+            // use a cypher statement to determine the size of the node
+            // the cypher statement will be passed a parameter {id} with the value
+            // of the internal node id
+
+            let session = this._driver.session();
+            session.run(sizeCypher, {id: neo4j.v1.int(node['id'])})
+                .then(function(result) {
+                    result.records.forEach(function(record) {
+                        record.forEach(function(v,k,r) {
+                            if (typeof v === "number") {
+                                self._nodes.update({id: node['id'], value: v});
+                            } else if (v.constructor.name === "Integer") {
+                                self._nodes.update({id: node['id'], value: v.toNumber()});
+                            }
+                        })
+                    })
+                })
+
+
+        } else if (typeof sizeKey === "number") {
+            node['value'] = sizeKey;
+        } else {
+
+            let sizeProp = n.properties[sizeKey];
+
+            if (sizeProp && typeof sizeProp === "number") {
+                // propety value is a number, OK to use
+                node['value'] = sizeProp;
+            } else if (sizeProp && typeof sizeProp === "object" && sizeProp.constructor.name === "Integer") {
+                // property value might be a Neo4j Integer, check if we can call toNumber on it:
+                if (sizeProp.inSafeRange()) {
+                    node['value'] = sizeProp.toNumber();
+                } else {
+                    // couldn't convert to Number, use default
+                    node['value'] = 1.0;
+                }
+            } else {
+                node['value'] = 1.0;
+            }
+        }
+
+        // node caption
+        node['label'] = n.properties[captionKey] || label || "";
+
+        // community
+        // behavior: color by value of community property (if set in config), then color by label
+        //node['group'] = n.properties.community ? n.properties.community.toInt() : 0;
+
+        if (!communityKey) {
+            node['group'] = label;
+        } else {
+            node['group'] = n.properties[communityKey] || label || 0;
+        }
+
+
+        //  FIXME: this is NOT the node caption. What is it?
+        //node['title'] = n.properties[captionKey] || "";
         return node;
     }
 
@@ -86,7 +151,7 @@ export default class NeoVis {
      * @param r
      * @returns {{}}
      */
-    static buildEdgeVisObject(r) {
+    buildEdgeVisObject(r) {
         var edge = {};
         edge['id'] = r.identity.toInt();
         edge['from'] = r.start.toInt();
@@ -94,6 +159,8 @@ export default class NeoVis {
         edge['value'] = r.properties.weight;
         //edge['value'] = 0.01;
         edge['title'] = r.type;
+
+        // TODO: styling from config
 
         return edge;
     }
@@ -122,7 +189,7 @@ export default class NeoVis {
 
 
                         if (v.constructor.name === "Node") {
-                            let node = NeoVis.buildNodeVisObject(v);
+                            let node = self.buildNodeVisObject(v);
 
 
                             try {
@@ -138,7 +205,7 @@ export default class NeoVis {
                             //if (!NeoVis.nodeExists(mNode, nodes)) {
                              //   nodes.push(mNode);
                             //}
-                            let edge = NeoVis.buildEdgeVisObject(v);
+                            let edge = self.buildEdgeVisObject(v);
 
                             try {
                                 self._edges.add(edge);
@@ -193,6 +260,15 @@ export default class NeoVis {
 
     };
 
+    /**
+     * Clear the data for the visualization
+     */
+    clearNetwork() {
+        this._nodes.clear();
+        this._edges.clear();
+        this._network.setData(this._data);
+    }
+
 
     /**
      * Reset the config object and reload data
@@ -207,9 +283,7 @@ export default class NeoVis {
      */
     reload() {
 
-        this._nodes.clear();
-        this._edges.clear();
-        this._network.setData(this._data);
+        this.clearNetwork();
         this.render();
 
     };
@@ -222,10 +296,8 @@ export default class NeoVis {
 
         //self._config.initial_cypher = query;
 
+        this.clearNetwork();
         this._query = query;
-        this._nodes.clear();
-        this._edges.clear();
-        this._network.setData(this._data);
         this.render();
 
     };
