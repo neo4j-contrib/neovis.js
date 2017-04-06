@@ -1,8 +1,8 @@
 'use strict';
 
-import * as neo4j from '../vendor/neo4j-web.js';
-import * as vis from '../vendor/vis.min.js';
-import '../vendor/vis/vis-network.min.css';
+import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
+import * as vis from '../vendor/vis/dist/vis.min.js';
+import '../vendor/vis/dist/vis-network.min.css';
 
 
 var defaultQuery =  "MATCH (n) WHERE exists(n.betweenness)\n" +
@@ -43,23 +43,6 @@ export default class NeoVis {
         this._container = document.getElementById(config.container_id);
 
 
-    }
-
-    /**
-     * Checks if this node has been added to a node list
-     * FIXME: move to private api?
-     * @param node
-     * @param nodes
-     * @returns {boolean}
-     */
-    static nodeExists(node, nodes) {
-        var id = node['id'];
-        for (var i = 0; i<nodes.length; i++) {
-            if (id === nodes[i].id) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -132,8 +115,6 @@ export default class NeoVis {
 
         // community
         // behavior: color by value of community property (if set in config), then color by label
-        //node['group'] = n.properties.community ? n.properties.community.toInt() : 0;
-
         if (!communityKey) {
             node['group'] = label;
         } else {
@@ -141,8 +122,11 @@ export default class NeoVis {
         }
 
 
-        //  FIXME: this is NOT the node caption. What is it?
-        //node['title'] = n.properties[captionKey] || "";
+        // set all properties as tooltip
+        node['title'] = "";
+        for (let key in n.properties) {
+            node['title'] += "<strong>" + key + ":</strong>" + " " + n.properties[key] + "<br>";
+        }
         return node;
     }
 
@@ -152,15 +136,44 @@ export default class NeoVis {
      * @returns {{}}
      */
     buildEdgeVisObject(r) {
-        var edge = {};
+
+        let weightKey = this._config && this._config.relationships && this._config.relationships[r.type] && this._config.relationships[r.type]['thickness'] || 1.0,
+            captionKey = this._config && this._config.relationships && this._config.relationships[r.type] && this._config.relationships[r.type]['caption'];
+
+        let edge = {};
         edge['id'] = r.identity.toInt();
         edge['from'] = r.start.toInt();
         edge['to'] = r.end.toInt();
-        edge['value'] = r.properties.weight;
-        //edge['value'] = 0.01;
-        edge['title'] = r.type;
 
-        // TODO: styling from config
+        // hover tooltip. show all properties in the format <strong>key:</strong> value
+        edge['title'] = "";
+        for (let key in r.properties) {
+            edge['title'] += "<strong>" + key + ":</strong>" + " " + r.properties[key] + "<br>";
+        }
+
+        // set relationship thickness
+        if (weightKey && typeof weightKey === "string") {
+            edge['value'] = r.properties[weightKey];
+        } else if (weightKey && typeof weightKey === "number") {
+            edge['value'] = weightKey;
+        } else {
+            edge['value'] = 1.0;
+        }
+
+        // set caption
+
+
+        if (typeof captionKey === "boolean") {
+            if (!captionKey) {
+                edge['label'] = "";
+            } else {
+                edge['label'] = r.type;
+            }
+        } else if (captionKey && typeof captionKey === "string") {
+            edge['label']  = captionKey;
+        } else {
+            edge['label'] = r.type;
+        }
 
         return edge;
     }
@@ -201,18 +214,16 @@ export default class NeoVis {
 
                         }
                         else if (v.constructor.name === "Relationship") {
-                            //var mNode = NeoVis.buildNodeVisObject(m);
-                            //if (!NeoVis.nodeExists(mNode, nodes)) {
-                             //   nodes.push(mNode);
-                            //}
+
                             let edge = self.buildEdgeVisObject(v);
 
+                            // FIXME: DataSet error thrown if edge object already exists
                             try {
                                 self._edges.add(edge);
                             } catch(e) {
                                 console.log(e);
                             }
-                            //edges.push(edge);
+
                         }
 
                     });
@@ -232,11 +243,16 @@ export default class NeoVis {
                         font: {
                             size: 26,
                             strokeWidth: 7
+                        },
+                        scaling: {
+                            label: {
+                                enabled: true
+                            }
                         }
                     },
                     edges: {
                         arrows: {
-                            to: {enabled: self._config.arrows } // FIXME: handle default value
+                            to: {enabled: self._config.arrows || false } // FIXME: handle default value
                         }
                     },
                     layout: {
