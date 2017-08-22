@@ -51,7 +51,7 @@ MATCH p=(:Character)-[:INTERACTS]->(:Character)
 RETURN p
 ```
 
-~[](/img/got-neo4j-browser.png)
+![](/img/got-neo4j-browser.png)
 
 We can see characters that are connected and with the help of the force directed layout we can begin to see clusters in the graph. However, we want to visualize the centralities (PageRank) and community detection results that we also imported.
 
@@ -151,31 +151,37 @@ This project uses webpack to build a bundle that includes all project dependenci
 `./node_modules/.bin/webpack` will build `dist/neovis.js` 
 
 
-## How to use
+## Documentation
 
-~~~ javascript
-function draw() {
-            var config = {
-                container_id: "viz",
-                server_url: "localhost",
-                labels: {
-                    "Character": "name"
-                },
-                label_size: {
-                    "Character": "betweenness"
-                },
-                relationships: {
-                    "INTERACTED": null
-                },
-                relationship_thickness: {
-                    "INTERACTED": "weight"
-                },
-                cluster_labels: {
-                    "Character": "community"
-                }
+###`Neovis`
 
-            };
+* `Neovis.default(config)`
+* `Neovis.clearNetwork()`
+* `Neovis.reinit(config)`
+* `Neovis.reload()`
+* `Neovis.stabilize()`
+* `Neovis.renderWithCypher(statement)`
 
-            var viz = new NeoVis(config);
-            viz.render();
-~~~
+### `Neovis.default(config)`
+
+Constructor for Neovis. Creates new Neovis object, given configuration. See [config]()
+
+### `Neovis.clearNetwork()`
+
+Clears network visualization
+
+### `Neovis.reinit(config)`
+
+Reinitializes the network visualization with a new `config` object. See [config]()
+
+### `Neovis.reload()`
+
+Reload the visualization. Will fetch data again from Neo4j per `initial_cypher` in the config object.
+
+### `Neovis.stabilize()`
+
+Stop the physics simulation.
+
+### `Neovis.renderWithCypher(statement)`
+
+Render a new visualization with results from a Cypher statement. Any `Node` and `Relationship` objects returned in the Cypher query will be rendered in the visualization. Paths are not currently supported. 
