@@ -17,7 +17,7 @@
     </style>
 
     <!-- FIXME: load from dist -->
-    <script type="text/javascript" src="../dist/bundle.js"></script>
+    <script type="text/javascript" src="../dist/neovis.js"></script>
 
 
     <script
@@ -35,36 +35,25 @@
         function draw() {
             var config = {
                 container_id: "viz",
-                server_url: "bolt://34.207.253.214:32857",
+                server_url: "bolt://localhost:7687",
                 server_user: "neo4j",
-                server_password: "drunks-glue-detentions",
+                server_password: "sorts-swims-burglaries",
                 labels: {
                     //"Character": "name",
                     "Character": {
                         "caption": "name",
-                        "size": "betweenness"
+                        "size": "pagerank",
+                        "community": "community"
+                        //"sizeCypher": "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
                     }
-//                    "Character" :
-//                        {
-//                            "caption": "name",
-//                            "color": "blue",
-//                            "icon": "image.png"
-//                        }
-                },
-                label_size: {
-                    "Character": "betweenness"
                 },
                 relationships: {
-                    "INTERACTS": null
+                    "INTERACTS": {
+                        "thickness": "weight",
+                        "caption": false
+                    }
                 },
-                relationship_thickness: {
-                    "INTERACTS": "weight"
-                },
-                cluster_labels: {
-                    "Character": "community"
-                },
-                initial_cypher: "MATCH (n:Character) WHERE n.name = 'Daenerys' MATCH (n)-[r]-(m) RETURN n,r,m",
-               arrows: false
+                initial_cypher: "MATCH (n)-[r:INTERACTS]->(m) RETURN n,r,m"
             };
 
             viz = new NeoVis.default(config);
@@ -80,6 +69,7 @@
 
 Cypher query: <textarea rows="4" cols=50 id="cypher"></textarea><br>
     <input type="submit" value="Submit" id="reload">
+    <input type="submit" value="Stabilize" id="stabilize">
 
 
 </body>
@@ -98,6 +88,10 @@ Cypher query: <textarea rows="4" cols=50 id="cypher"></textarea><br>
         }
 
     });
+
+    $("#stabilize").click(function() {
+        viz.stabilize();
+    })
 
 </script>
 </html>

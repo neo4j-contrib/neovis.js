@@ -17,7 +17,7 @@
     </style>
 
     <!-- FIXME: load from dist -->
-    <script type="text/javascript" src="../dist/bundle.js"></script>
+    <script type="text/javascript" src="../dist/neovis.js"></script>
 
 
     <script
@@ -54,17 +54,10 @@
                     }
 
                 },
-                label_size: {
-                    "Character": "betweenness"
-                },
                 relationships: {
-                    "INTERACTS": null
-                },
-                relationship_thickness: {
-                    "INTERACTS": "weight"
-                },
-                cluster_labels: {
-                    "Character": "community"
+                    "PRESIDENT": {
+                        "caption": "El Presidente"
+                    }
                 },
                 initial_cypher: "match (p:Person)-[r]-(o:Organization)-[r1]-(p2:Person) RETURN * LIMIT 10",
                 arrows: false

@@ -118,7 +118,7 @@ export default class NeoVis {
         if (!communityKey) {
             node['group'] = label;
         } else {
-            node['group'] = n.properties[communityKey] || label || 0;
+            node['group'] = n.properties[communityKey].toNumber() || label || 0;  // FIXME: cast to Integer
         }
 
 
@@ -137,7 +137,7 @@ export default class NeoVis {
      */
     buildEdgeVisObject(r) {
 
-        let weightKey = this._config && this._config.relationships && this._config.relationships[r.type] && this._config.relationships[r.type]['thickness'] || 1.0,
+        let weightKey = this._config && this._config.relationships && this._config.relationships[r.type] && this._config.relationships[r.type]['thickness'],
             captionKey = this._config && this._config.relationships && this._config.relationships[r.type] && this._config.relationships[r.type]['caption'];
 
         let edge = {};
@@ -157,7 +157,7 @@ export default class NeoVis {
         } else if (weightKey && typeof weightKey === "number") {
             edge['value'] = weightKey;
         } else {
-            edge['value'] = 1.0;
+            //edge['value'] = 1.0;
         }
 
         // set caption
@@ -256,10 +256,12 @@ export default class NeoVis {
                         }
                     },
                     layout: {
-                        improvedLayout: true
+                        improvedLayout: false
                     },
                     physics: {
-                        enabled: true
+                        enabled: true,
+                        timestep: 0.4,
+                        stabilization: true
                     }
                 };
 
@@ -303,6 +305,14 @@ export default class NeoVis {
         this.render();
 
     };
+
+    /**
+     * Stabilize the visuzliation
+     */
+    stabilize() {
+        this._network.stopSimulation();
+        console.log("Calling stopSimulation");
+    }
 
     /**
      * Execute an arbitrary Cypher query and re-render the visualization
