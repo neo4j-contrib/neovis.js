@@ -153,8 +153,6 @@ This project uses webpack to build a bundle that includes all project dependenci
 
 ## Documentation
 
-###`Neovis`
-
 * `Neovis.default(config)`
 * `Neovis.clearNetwork()`
 * `Neovis.reinit(config)`
