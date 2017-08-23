@@ -160,6 +160,8 @@ This project uses webpack to build a bundle that includes all project dependenci
 * `Neovis.stabilize()`
 * `Neovis.renderWithCypher(statement)`
 
+* `config`
+
 ### `Neovis.default(config)`
 
 Constructor for Neovis. Creates new Neovis object, given configuration. See [config]()
@@ -183,3 +185,76 @@ Stop the physics simulation.
 ### `Neovis.renderWithCypher(statement)`
 
 Render a new visualization with results from a Cypher statement. Any `Node` and `Relationship` objects returned in the Cypher query will be rendered in the visualization. Paths are not currently supported. 
+
+### `config`
+
+A configuration object that defines:
+
+* how to connect to Neo4j (required)
+* an initial Cypher query for loading data for the visualization (optional)
+* the DOM element in which the visualization should be rendered (required)
+* how to style elements of the visualization (`labels` and `relationships`) (required)
+
+Example:
+
+~~~ js
+var config = {
+                container_id: "viz",
+                server_url: "bolt://localhost:7687",
+                server_user: "neo4j",
+                server_password: "sorts-swims-burglaries",
+                labels: {
+                    //"Character": "name",
+                    "Character": {
+                        "caption": "name",
+                        "size": "pagerank",
+                        "community": "community"
+                        //"sizeCypher": "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
+                    }
+                },
+                relationships: {
+                    "INTERACTS": {
+                        "thickness": "weight",
+                        "caption": false
+                    }
+                },
+                initial_cypher: "MATCH (n)-[r:INTERACTS]->(m) RETURN n,r,m"
+            };
+
+            viz = new NeoVis.default(config);
+            viz.render();
+~~~
+
+#### `config.container_id`
+
+#### `config.server_url`
+
+#### `config.server_user`
+
+#### `config.server_password`
+
+#### `config.labels`
+
+```
+"Character": {
+    "caption": "name",
+    "size": "pagerank",
+    "community": "community",
+    sizeCypher: "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
+}
+```
+
+#### `config.relationships`
+
+```
+{
+    "INTERACTS": {
+        "thickness": "weight",
+        "caption": false
+    }
+}
+```
+
+#### `config.initial_cypher`
+
+
