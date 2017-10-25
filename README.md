@@ -7,12 +7,12 @@ Graph visualizations powered by vis.js with data from Neo4j.
 ## Features
 
 - [x] Connect to Neo4j instance to get live data
-- [ ] User specified labels and property to be displayed
-- [ ] User specified Cypher query to populate 
+- [x] User specified labels and property to be displayed
+- [x] User specified Cypher query to populate 
 - [ ] Specify node property for url of image for node
-- [ ] Specify edge property for edge thickness
-- [ ] Specify node property for community / clustering
-- [ ] Specify node property for node size
+- [x] Specify edge property for edge thickness
+- [x] Specify node property for community / clustering
+- [x] Specify node property for node size
 - [ ] Configure popover
 
 
