@@ -206,7 +206,8 @@ export default class NeoVis {
 
 
                             try {
-                                self._nodes.add(node);
+                                //self._nodes.add(node);
+                                self._nodes.update(node);
                             } catch(e) {
                                 console.log(e);
                             }
@@ -219,7 +220,8 @@ export default class NeoVis {
 
                             // FIXME: DataSet error thrown if edge object already exists
                             try {
-                                self._edges.add(edge);
+                                //self._edges.add(edge);
+                                self._edges.update(edge);
                             } catch(e) {
                                 console.log(e);
                             }
