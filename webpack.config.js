@@ -5,7 +5,7 @@ module.exports = {
   output: {
     filename: 'neovis.js',
     library: 'NeoVis',
-    libraryTarget: 'var',
+    libraryTarget: 'umd',
     path: path.resolve(__dirname, 'dist')
   },
   module: {
