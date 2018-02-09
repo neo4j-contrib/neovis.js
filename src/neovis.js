@@ -3,14 +3,8 @@
 import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
 import * as vis from '../vendor/vis/dist/vis.min.js';
 import '../vendor/vis/dist/vis-network.min.css';
+import defaults from './defaults';
 
-
-var defaultQuery =  "MATCH (n) WHERE exists(n.betweenness)\n" +
-                    "WITH (n), RAND() AS random \n" +
-                    "ORDER BY random LIMIT 3000 \n" +
-                    "OPTIONAL MATCH (n)-[r]-(m)\n" +
-                    //"WITH n,r,m WHERE exists(n.pagerank) AND exists(m.pagerank) AND exists(m.community) \n" +
-                    "RETURN n, r, m;"; // FIXME get (optionally) from config
 
 export default class NeoVis {
 
@@ -31,8 +25,8 @@ export default class NeoVis {
 
     constructor(config) {
         this._config = config;
-        this._driver = neo4j.v1.driver(config.server_url, neo4j.v1.auth.basic(config.server_user, config.server_password)); // FIXME: handle unauthenticated / default
-        this._query =   config.initial_cypher || defaultQuery;
+        this._driver = neo4j.v1.driver(config.server_url || defaults.neo4j.neo4jUri, neo4j.v1.auth.basic(config.server_user || defaults.neo4j.neo4jUser, config.server_password || defaults.neo4j.neo4jPassword));
+        this._query =   config.initial_cypher || defaults.neo4j.initialQuery;
         this._nodes = new vis.DataSet();
         this._edges = new vis.DataSet();
         this._data = {
@@ -157,7 +151,7 @@ export default class NeoVis {
         } else if (weightKey && typeof weightKey === "number") {
             edge['value'] = weightKey;
         } else {
-            //edge['value'] = 1.0;
+            edge['value'] = 1.0;
         }
 
         // set caption
@@ -190,56 +184,42 @@ export default class NeoVis {
         let session = this._driver.session();
         session
             .run(this._query, {limit: 30})
-            .then(function(result){
-                console.log("RESULT OBJECT:");
-                console.log(result);
-                result.records.forEach(function(record) {
+            .subscribe({
+                onNext: function (record) {
+                    //console.log("CLASS NAME");
+                    //console.log(record.constructor.name);
+                    //console.log(record);
 
-                    record.forEach(function(v,k,r) {
-                        console.log("CLASS NAME");
-                        console.log(v.constructor.name);
-                        console.log(v);
+                    record.forEach(function(v, k, r) {
+                    if (v.constructor.name === "Node") {
+                        let node = self.buildNodeVisObject(v);
+                        //console.log("adding node");
 
-
-                        if (v.constructor.name === "Node") {
-                            let node = self.buildNodeVisObject(v);
-
-
-                            try {
-                                //self._nodes.add(node);
-                                self._nodes.update(node);
-                            } catch(e) {
-                                console.log(e);
-                            }
-
-
-                        }
-                        else if (v.constructor.name === "Relationship") {
-
-                            let edge = self.buildEdgeVisObject(v);
-
-                            // FIXME: DataSet error thrown if edge object already exists
-                            try {
-                                //self._edges.add(edge);
-                                self._edges.update(edge);
-                            } catch(e) {
-                                console.log(e);
-                            }
-
+                        try {
+                            //self._nodes.add(node);
+                            self._nodes.update(node);
+                        } catch(e) {
+                            console.log(e);
                         }
 
-                    });
+                    }
+                    else if (v.constructor.name === "Relationship") {
 
-                });
+                        let edge = self.buildEdgeVisObject(v);
 
+                        try {
+                            self._edges.update(edge);
+                        } catch(e) {
+                            console.log(e);
+                        }
 
+                    }
 
-                // let data = {
-                //     nodes: self._nodes,
-                //     edges: self._edges
-                // };
-
-                let options = {
+                })
+                },
+                onCompleted: function () {
+                  session.close();
+                  let options = {
                     nodes: {
                         shape: 'dot',
                         font: {
@@ -267,18 +247,20 @@ export default class NeoVis {
                     }
                 };
 
-
                 var container = self._container;
 
                 self._network = new vis.Network(container, self._data, options);
+                
+                console.log("completed");
+
+                
+                },
+                onError: function (error) {
+                  console.log(error);
+                }
+
             })
-            .catch(function(error) {
-                console.log(error);
-            });
-
-
-
-    };
+        };
 
     /**
      * Clear the data for the visualization
