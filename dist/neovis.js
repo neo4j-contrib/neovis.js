@@ -134,10 +134,11 @@ if(false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony default export */ __webpack_exports__["a"] = (defaults = {
+/* unused harmony export defaults */
+var defaults = {
 
     neo4j: {
-        initialQuery:   `MATCH (n) WHERE exists(n.betweenness)
+        initialQuery:   `MATCH (n) WHERE exists(n.pagerank)
                         WITH (n), RAND() AS random
                         ORDER BY random LIMIT 3000
                         OPTIONAL MATCH (n)-[r]-(m)
@@ -199,7 +200,9 @@ if(false) {
         }
 
     }
-});
+}
+
+
 
 /***/ }),
 /* 3 */
@@ -36320,8 +36323,8 @@ class NeoVis {
 
     constructor(config) {
         this._config = config;
-        this._driver = __WEBPACK_IMPORTED_MODULE_0__vendor_neo4j_javascript_driver_lib_browser_neo4j_web_js__["v1"].driver(config.server_url || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* default */].neo4j.neo4jUri, __WEBPACK_IMPORTED_MODULE_0__vendor_neo4j_javascript_driver_lib_browser_neo4j_web_js__["v1"].auth.basic(config.server_user || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* default */].neo4j.neo4jUser, config.server_password || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* default */].neo4j.neo4jPassword));
-        this._query =   config.initial_cypher || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* default */].neo4j.initialQuery;
+        this._driver = __WEBPACK_IMPORTED_MODULE_0__vendor_neo4j_javascript_driver_lib_browser_neo4j_web_js__["v1"].driver(config.server_url || __WEBPACK_IMPORTED_MODULE_3__defaults__["default"].neo4j.neo4jUri, __WEBPACK_IMPORTED_MODULE_0__vendor_neo4j_javascript_driver_lib_browser_neo4j_web_js__["v1"].auth.basic(config.server_user || __WEBPACK_IMPORTED_MODULE_3__defaults__["default"].neo4j.neo4jUser, config.server_password || __WEBPACK_IMPORTED_MODULE_3__defaults__["default"].neo4j.neo4jPassword));
+        this._query =   config.initial_cypher || __WEBPACK_IMPORTED_MODULE_3__defaults__["default"].neo4j.initialQuery;
         this._nodes = new __WEBPACK_IMPORTED_MODULE_1__vendor_vis_dist_vis_min_js__["DataSet"]();
         this._edges = new __WEBPACK_IMPORTED_MODULE_1__vendor_vis_dist_vis_min_js__["DataSet"]();
         this._data = {
@@ -36446,7 +36449,7 @@ class NeoVis {
         } else if (weightKey && typeof weightKey === "number") {
             edge['value'] = weightKey;
         } else {
-            //edge['value'] = 1.0;
+            edge['value'] = 1.0;
         }
 
         // set caption
@@ -36479,56 +36482,42 @@ class NeoVis {
         let session = this._driver.session();
         session
             .run(this._query, {limit: 30})
-            .then(function(result){
-                console.log("RESULT OBJECT:");
-                console.log(result);
-                result.records.forEach(function(record) {
+            .subscribe({
+                onNext: function (record) {
+                    //console.log("CLASS NAME");
+                    //console.log(record.constructor.name);
+                    //console.log(record);
 
-                    record.forEach(function(v,k,r) {
-                        console.log("CLASS NAME");
-                        console.log(v.constructor.name);
-                        console.log(v);
+                    record.forEach(function(v, k, r) {
+                    if (v.constructor.name === "Node") {
+                        let node = self.buildNodeVisObject(v);
+                        //console.log("adding node");
 
-
-                        if (v.constructor.name === "Node") {
-                            let node = self.buildNodeVisObject(v);
-
-
-                            try {
-                                //self._nodes.add(node);
-                                self._nodes.update(node);
-                            } catch(e) {
-                                console.log(e);
-                            }
-
-
-                        }
-                        else if (v.constructor.name === "Relationship") {
-
-                            let edge = self.buildEdgeVisObject(v);
-
-                            // FIXME: DataSet error thrown if edge object already exists
-                            try {
-                                //self._edges.add(edge);
-                                self._edges.update(edge);
-                            } catch(e) {
-                                console.log(e);
-                            }
-
+                        try {
+                            //self._nodes.add(node);
+                            self._nodes.update(node);
+                        } catch(e) {
+                            console.log(e);
                         }
 
-                    });
+                    }
+                    else if (v.constructor.name === "Relationship") {
 
-                });
+                        let edge = self.buildEdgeVisObject(v);
 
+                        try {
+                            self._edges.update(edge);
+                        } catch(e) {
+                            console.log(e);
+                        }
 
+                    }
 
-                // let data = {
-                //     nodes: self._nodes,
-                //     edges: self._edges
-                // };
-
-                let options = {
+                })
+                },
+                onCompleted: function () {
+                  session.close();
+                  let options = {
                     nodes: {
                         shape: 'dot',
                         font: {
@@ -36556,18 +36545,20 @@ class NeoVis {
                     }
                 };
 
-
                 var container = self._container;
 
                 self._network = new __WEBPACK_IMPORTED_MODULE_1__vendor_vis_dist_vis_min_js__["Network"](container, self._data, options);
+                
+                console.log("completed");
+
+                
+                },
+                onError: function (error) {
+                  console.log(error);
+                }
+
             })
-            .catch(function(error) {
-                console.log(error);
-            });
-
-
-
-    };
+        };
 
     /**
      * Clear the data for the visualization
