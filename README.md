@@ -145,9 +145,12 @@ See [simple-example.html](/examples/simple-example.html) for the full code.
 
 This project uses webpack to build a bundle that includes all project dependencies. `webpack.config.js` contains the configuration for webpack.
 
-`npm install`
-`./node_modules/.bin/webpack` will build `dist/neovis.js` 
+```
+npm install
+./node_modules/.bin/webpack
+```
 
+will build `dist/neovis.js` 
 
 ## Documentation
 
