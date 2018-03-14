@@ -1,9 +1,9 @@
 'use strict';
 
 import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
-import * as vis from '../vendor/vis/dist/vis.min.js';
+import * as vis from '../vendor/vis/dist/vis-network.min.js';
 import '../vendor/vis/dist/vis-network.min.css';
-import defaults from './defaults';
+import * as defaults from './defaults.js';
 
 
 export default class NeoVis {
@@ -25,7 +25,9 @@ export default class NeoVis {
 
     constructor(config) {
         this._config = config;
-        this._driver = neo4j.v1.driver(config.server_url || defaults.neo4j.neo4jUri, neo4j.v1.auth.basic(config.server_user || defaults.neo4j.neo4jUser, config.server_password || defaults.neo4j.neo4jPassword));
+        this._encrypted = config.encrypted || defaults.neo4j.encrypted;
+        this._trust = config.trust || defaults.neo4j.trust;
+        this._driver = neo4j.v1.driver(config.server_url || defaults.neo4j.neo4jUri, neo4j.v1.auth.basic(config.server_user || defaults.neo4j.neo4jUser, config.server_password || defaults.neo4j.neo4jPassword), {encrypted: this._encrypted, trust: this._trust});
         this._query =   config.initial_cypher || defaults.neo4j.initialQuery;
         this._nodes = new vis.DataSet();
         this._edges = new vis.DataSet();
@@ -52,11 +54,10 @@ export default class NeoVis {
         let node = {};
         let label = n.labels[0];
 
-        let captionKey   = this._config.labels[label]['caption'],
-            sizeKey      = this._config.labels[label]['size'],
-            sizeCypher   = this._config.labels[label]['sizeCypher'],
-            communityKey = this._config.labels[label]['community'];
-
+        let captionKey   = this._config && this._config.labels && this._config.labels[label] && this._config.labels[label]['caption'],
+            sizeKey = this._config && this._config.labels && this._config.labels[label] && this._config.labels[label]['size'],
+            sizeCypher = this._config && this._config.labels && this._config.labels[label] && this._config.labels[label]['sizeCypher'],
+            communityKey = this._config && this._config.labels && this._config.labels[label] && this._config.labels[label]['communityKey'];
 
         node['id'] = n.identity.toInt();
         
@@ -186,11 +187,13 @@ export default class NeoVis {
             .run(this._query, {limit: 30})
             .subscribe({
                 onNext: function (record) {
-                    //console.log("CLASS NAME");
-                    //console.log(record.constructor.name);
-                    //console.log(record);
+                    console.log("CLASS NAME");
+                    console.log(record.constructor.name);
+                    console.log(record);
 
                     record.forEach(function(v, k, r) {
+                    console.log("Constructor:");
+                    console.log(v.constructor.name);
                     if (v.constructor.name === "Node") {
                         let node = self.buildNodeVisObject(v);
                         //console.log("adding node");
@@ -214,6 +217,35 @@ export default class NeoVis {
                         }
 
                     }
+                    else if (v.constructor.name === "Array") {
+                        v.forEach(function(obj) {
+                            console.log("Array element constructor:");
+                            console.log(obj.constructor.name);
+                            if (obj.constructor.name === "Node") {
+                                let node = self.buildNodeVisObject(obj);
+
+                                try {
+                                    //self._nodes.add(node);
+                                    console.log("Added node:");
+                                    console.log(node);
+                                    self._nodes.update(node);
+                                } catch(e) {
+                                    console.log(e);
+                                }
+                            }
+                            else if (obj.constructor.name === "Relationship") {
+                                let edge = self.buildEdgeVisObject(obj);
+
+                                try {
+                                    self._edges.update(edge);
+                                    console.log("Added rel:");
+                                    console.log(edge);
+                                } catch(e) {
+                                    console.log(e);
+                                }
+                            }
+                        });
+                    }
 
                 })
                 },
@@ -235,7 +267,8 @@ export default class NeoVis {
                     edges: {
                         arrows: {
                             to: {enabled: self._config.arrows || false } // FIXME: handle default value
-                        }
+                        },
+                        length: 200
                     },
                     layout: {
                         improvedLayout: false
@@ -245,15 +278,28 @@ export default class NeoVis {
                         timestep: 0.4,
                         stabilization: true
                     }
-                };
+                  };
 
                 var container = self._container;
+                console.log(self._data.nodes);
+                console.log(self._data.edges);
 
-                self._network = new vis.Network(container, self._data, options);
+                self._data.edges = self._data.edges.map( 
+                    function (item) {
+                         if (item.from == item.to) {
+                            var newNode = self._data.nodes.get(item.from)
+                            delete newNode.id;
+                            var newNodeIds = self._data.nodes.add(newNode);
+                            console.log("Adding new node and changing self-ref to node: " + item.to);
+                            item.to = newNodeIds[0];
+                         }
+                         return item;
+                    }
+                );
                 
+                self._network = new vis.Network(container, self._data, options);
                 console.log("completed");
 
-                
                 },
                 onError: function (error) {
                   console.log(error);

@@ -9,7 +9,8 @@ var defaults = {
                         RETURN n, r, m;`,
         neo4jUri: "bolt://localhost:7687",
         neo4jUser: "neo4j",
-        neo4jPassword: "neo4j"
+        neo4jPassword: "neo4j",
+        encrypted: false
     },
 
     visjs: {
