@@ -134,8 +134,9 @@ if(false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* unused harmony export defaults */
-var defaults = {
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return defaults; });
+
+ const defaults = {
 
     neo4j: {
         initialQuery:   `MATCH (n) WHERE exists(n.pagerank)
@@ -147,7 +148,8 @@ var defaults = {
         neo4jUri: "bolt://localhost:7687",
         neo4jUser: "neo4j",
         neo4jPassword: "neo4j",
-        encrypted: false
+        encrypted: "ENCRYPTION_OFF",
+        trust: "TRUST_ALL_CERTIFICATES"
     },
 
     visjs: {
@@ -201,7 +203,7 @@ var defaults = {
         }
 
     }
-}
+};
 
 
 
@@ -36291,7 +36293,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__vendor_vis_dist_vis_network_min_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__vendor_vis_dist_vis_network_min_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__vendor_vis_dist_vis_network_min_css__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__vendor_vis_dist_vis_network_min_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__vendor_vis_dist_vis_network_min_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__defaults_js__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__defaults__ = __webpack_require__(2);
 
 
 
@@ -36318,11 +36320,14 @@ class NeoVis {
      */
 
     constructor(config) {
+        console.log(config);
+        console.log(__WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* defaults */]);
+
         this._config = config;
-        this._encrypted = config.encrypted || __WEBPACK_IMPORTED_MODULE_3__defaults_js__["neo4j"].encrypted;
-        this._trust = config.trust || __WEBPACK_IMPORTED_MODULE_3__defaults_js__["neo4j"].trust;
-        this._driver = __WEBPACK_IMPORTED_MODULE_0__vendor_neo4j_javascript_driver_lib_browser_neo4j_web_js__["v1"].driver(config.server_url || __WEBPACK_IMPORTED_MODULE_3__defaults_js__["neo4j"].neo4jUri, __WEBPACK_IMPORTED_MODULE_0__vendor_neo4j_javascript_driver_lib_browser_neo4j_web_js__["v1"].auth.basic(config.server_user || __WEBPACK_IMPORTED_MODULE_3__defaults_js__["neo4j"].neo4jUser, config.server_password || __WEBPACK_IMPORTED_MODULE_3__defaults_js__["neo4j"].neo4jPassword), {encrypted: this._encrypted, trust: this._trust});
-        this._query =   config.initial_cypher || __WEBPACK_IMPORTED_MODULE_3__defaults_js__["neo4j"].initialQuery;
+        this._encrypted = config.encrypted || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* defaults */]['neo4j']['encrypted'];
+        this._trust = config.trust || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* defaults */].neo4j.trust;
+        this._driver = __WEBPACK_IMPORTED_MODULE_0__vendor_neo4j_javascript_driver_lib_browser_neo4j_web_js__["v1"].driver(config.server_url || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* defaults */].neo4j.neo4jUri, __WEBPACK_IMPORTED_MODULE_0__vendor_neo4j_javascript_driver_lib_browser_neo4j_web_js__["v1"].auth.basic(config.server_user || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* defaults */].neo4j.neo4jUser, config.server_password || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* defaults */].neo4j.neo4jPassword), {encrypted: this._encrypted, trust: this._trust});
+        this._query =   config.initial_cypher || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* defaults */].neo4j.initialQuery;
         this._nodes = new __WEBPACK_IMPORTED_MODULE_1__vendor_vis_dist_vis_network_min_js__["DataSet"]();
         this._edges = new __WEBPACK_IMPORTED_MODULE_1__vendor_vis_dist_vis_network_min_js__["DataSet"]();
         this._data = {
@@ -36511,6 +36516,23 @@ class NeoVis {
                         }
 
                     }
+                    else if (v.constructor.name === "Path") {
+                        console.log("PATH");
+                        console.log(v);
+                        let n1 = self.buildNodeVisObject(v.start);
+                        let n2 = self.buildNodeVisObject(v.end);
+                        
+                        self._nodes.update(n1);
+                        self._nodes.update(n2);
+
+                        v.segments.forEach((obj) => {
+                            
+                            self._nodes.update(self.buildNodeVisObject(obj.start));
+                            self._nodes.update(self.buildNodeVisObject(obj.end));
+                            self._edges.update(self.buildEdgeVisObject(obj.relationship));
+                        });
+
+                    }
                     else if (v.constructor.name === "Array") {
                         v.forEach(function(obj) {
                             console.log("Array element constructor:");
@@ -36578,18 +36600,18 @@ class NeoVis {
                 console.log(self._data.nodes);
                 console.log(self._data.edges);
 
-                self._data.edges = self._data.edges.map( 
-                    function (item) {
-                         if (item.from == item.to) {
-                            var newNode = self._data.nodes.get(item.from)
-                            delete newNode.id;
-                            var newNodeIds = self._data.nodes.add(newNode);
-                            console.log("Adding new node and changing self-ref to node: " + item.to);
-                            item.to = newNodeIds[0];
-                         }
-                         return item;
-                    }
-                );
+                // self._data.edges = self._data.edges.map( 
+                //     function (item) {
+                //          if (item.from == item.to) {
+                //             var newNode = self._data.nodes.get(item.from)
+                //             delete newNode.id;
+                //             var newNodeIds = self._data.nodes.add(newNode);
+                //             console.log("Adding new node and changing self-ref to node: " + item.to);
+                //             item.to = newNodeIds[0];
+                //          }
+                //          return item;
+                //     }
+                // );
                 
                 self._network = new __WEBPACK_IMPORTED_MODULE_1__vendor_vis_dist_vis_network_min_js__["Network"](container, self._data, options);
                 console.log("completed");

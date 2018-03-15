@@ -1,4 +1,5 @@
-var defaults = {
+
+ const defaults = {
 
     neo4j: {
         initialQuery:   `MATCH (n) WHERE exists(n.pagerank)
@@ -10,7 +11,8 @@ var defaults = {
         neo4jUri: "bolt://localhost:7687",
         neo4jUser: "neo4j",
         neo4jPassword: "neo4j",
-        encrypted: false
+        encrypted: "ENCRYPTION_OFF",
+        trust: "TRUST_ALL_CERTIFICATES"
     },
 
     visjs: {
@@ -64,6 +66,6 @@ var defaults = {
         }
 
     }
-}
+};
 
 export { defaults };
