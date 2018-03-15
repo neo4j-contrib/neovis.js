@@ -258,4 +258,12 @@ var config = {
 
 #### `config.initial_cypher`
 
+#### `config.encrypted`
+
+`ENCRYPTION_ON` (default) or `ENCRYPTION_ON`
+
+#### `config.trust`
+
+`TRUST_ALL_CERTIFICATES` (default) o  `TRUST_SYSTEM_CA_SIGNED_CERTIFICATES`
+
 
