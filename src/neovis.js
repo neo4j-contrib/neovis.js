@@ -168,7 +168,7 @@ export default class NeoVis {
                 edge['label'] = r.type;
             }
         } else if (captionKey && typeof captionKey === "string") {
-            edge['label']  = captionKey;
+            edge['label']  = r.properties[captionKey] || "";
         } else {
             edge['label'] = r.type;
         }

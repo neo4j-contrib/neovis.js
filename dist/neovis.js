@@ -36464,7 +36464,7 @@ class NeoVis {
                 edge['label'] = r.type;
             }
         } else if (captionKey && typeof captionKey === "string") {
-            edge['label']  = captionKey;
+            edge['label']  = r.properties[captionKey] || "";
         } else {
             edge['label'] = r.type;
         }
@@ -36599,7 +36599,9 @@ class NeoVis {
                 var container = self._container;
                 console.log(self._data.nodes);
                 console.log(self._data.edges);
-
+                
+                // Create duplicate node for any self reference relationships
+                // NOTE: Is this only useful for data model type data
                 // self._data.edges = self._data.edges.map( 
                 //     function (item) {
                 //          if (item.from == item.to) {
