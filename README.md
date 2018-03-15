@@ -260,10 +260,10 @@ var config = {
 
 #### `config.encrypted`
 
-`ENCRYPTION_ON` (default) or `ENCRYPTION_ON`
+`"ENCRYPTION_OFF"` (default) or `"ENCRYPTION_ON"`
 
 #### `config.trust`
 
-`TRUST_ALL_CERTIFICATES` (default) o  `TRUST_SYSTEM_CA_SIGNED_CERTIFICATES`
+`"TRUST_ALL_CERTIFICATES"` (default) o  `"TRUST_SYSTEM_CA_SIGNED_CERTIFICATES"`
 
 
