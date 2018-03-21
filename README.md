@@ -95,7 +95,7 @@ We define some basic CSS to specify the boundaries of a `div` and then create a 
 We need to pull in `neovis.js`:
 
 ``` html
-<script src="https://cdn.rawgit.com/johnymontana/neovis.js/master/dist/neovis.js"></script>
+<script src="https://cdn.rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
 ```
 
 And define our draw() function:
@@ -143,9 +143,11 @@ See [simple-example.html](/examples/simple-example.html) for the full code.
 
 ## Build
 
-This project uses webpack to build a bundle that includes all project dependencies. `webpack.config.js` contains the configuration for webpack.
+This project uses git submodules to include the dependencies for neo4j-driver and vis.js. This project uses webpack to build a bundle that includes all project dependencies. `webpack.config.js` contains the configuration for webpack. After cloning the repo:
 
 ```
+git submodule init
+git submodule update
 npm install
 ./node_modules/.bin/webpack
 ```
