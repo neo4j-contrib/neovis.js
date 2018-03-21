@@ -36587,7 +36587,10 @@ class NeoVis {
                         length: 200
                     },
                     layout: {
-                        improvedLayout: false
+                        improvedLayout: false,
+                        hierarchical: {
+                            enabled: self._config.hierarchical || false
+                        }
                     },
                     physics: {
                         enabled: true,

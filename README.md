@@ -258,6 +258,14 @@ var config = {
 }
 ```
 
+#### `config.arrows`
+
+Boolean. Defaults to false.
+
+#### `config.hierarchical_layout`
+
+Boolean. Default to false.
+
 #### `config.initial_cypher`
 
 #### `config.encrypted`
