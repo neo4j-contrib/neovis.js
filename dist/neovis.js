@@ -36356,7 +36356,7 @@ class NeoVis {
         let captionKey   = this._config && this._config.labels && this._config.labels[label] && this._config.labels[label]['caption'],
             sizeKey = this._config && this._config.labels && this._config.labels[label] && this._config.labels[label]['size'],
             sizeCypher = this._config && this._config.labels && this._config.labels[label] && this._config.labels[label]['sizeCypher'],
-            communityKey = this._config && this._config.labels && this._config.labels[label] && this._config.labels[label]['communityKey'];
+            communityKey = this._config && this._config.labels && this._config.labels[label] && this._config.labels[label]['community'];
 
         node['id'] = n.identity.toInt();
         
