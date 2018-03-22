@@ -306,7 +306,7 @@ export default class NeoVis {
                             enabled: self._config.hierarchical || false
                         }
                     },
-                    physics: {
+                    physics: { // TODO: adaptive physics settings based on size of graph rendered
                         // enabled: true,
                         // timestep: 0.5,
                         // stabilization: {
@@ -314,13 +314,14 @@ export default class NeoVis {
                         // }
                         
                             adaptiveTimestep: true,
-                            barnesHut: {
-                                gravitationalConstant: -8000,
-                                springConstant: 0.04,
-                                springLength: 95
-                            },
+                            // barnesHut: {
+                            //     gravitationalConstant: -8000,
+                            //     springConstant: 0.04,
+                            //     springLength: 95
+                            // },
                             stabilization: {
-                                iterations: 9
+                                iterations: 200,
+                                fit: true
                             }
                         
                     }
