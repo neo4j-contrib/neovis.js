@@ -32,16 +32,20 @@ export default class NeoVis {
         this._trust = config.trust || defaults.neo4j.trust;
         this._driver = neo4j.v1.driver(config.server_url || defaults.neo4j.neo4jUri, neo4j.v1.auth.basic(config.server_user || defaults.neo4j.neo4jUser, config.server_password || defaults.neo4j.neo4jPassword), {encrypted: this._encrypted, trust: this._trust});
         this._query =   config.initial_cypher || defaults.neo4j.initialQuery;
-        this._nodes = new vis.DataSet();
-        this._edges = new vis.DataSet();
-        this._data = {
-            "nodes": this._nodes,
-            "edges": this._edges
-        };
+        this._nodes = {};
+        this._edges = {};
+        this._data = {};
         this._network = null;
         this._container = document.getElementById(config.container_id);
 
+    }
 
+    _addNode(node) {
+        this._nodes[node.id] = node;
+    }
+
+    _addEdge(edge) {
+        this._edges[edge.id] = edge;
     }
 
     /**
@@ -77,9 +81,9 @@ export default class NeoVis {
                     result.records.forEach(function(record) {
                         record.forEach(function(v,k,r) {
                             if (typeof v === "number") {
-                                self._nodes.update({id: node['id'], value: v});
+                                self._addNode({id: node['id'], value: v});
                             } else if (v.constructor.name === "Integer") {
-                                self._nodes.update({id: node['id'], value: v.toNumber()});
+                                self._addNode({id: node['id'], value: v.toNumber()})
                             }
                         })
                     })
@@ -199,11 +203,9 @@ export default class NeoVis {
                     console.log(v.constructor.name);
                     if (v.constructor.name === "Node") {
                         let node = self.buildNodeVisObject(v);
-                        //console.log("adding node");
 
                         try {
-                            //self._nodes.add(node);
-                            self._nodes.update(node);
+                            self._addNode(node);
                         } catch(e) {
                             console.log(e);
                         }
@@ -214,7 +216,7 @@ export default class NeoVis {
                         let edge = self.buildEdgeVisObject(v);
 
                         try {
-                            self._edges.update(edge);
+                            self._addEdge(edge);
                         } catch(e) {
                             console.log(e);
                         }
@@ -226,14 +228,14 @@ export default class NeoVis {
                         let n1 = self.buildNodeVisObject(v.start);
                         let n2 = self.buildNodeVisObject(v.end);
                         
-                        self._nodes.update(n1);
-                        self._nodes.update(n2);
+                        self._addNode(n1);
+                        self._addNode(n2);
 
                         v.segments.forEach((obj) => {
                             
-                            self._nodes.update(self.buildNodeVisObject(obj.start));
-                            self._nodes.update(self.buildNodeVisObject(obj.end));
-                            self._edges.update(self.buildEdgeVisObject(obj.relationship));
+                            self._addNode(self.buildNodeVisObject(obj.start));
+                            self._addNode(self.buildNodeVisObject(obj.end))
+                            self._addEdge(self.buildEdgeVisObject(obj.relationship))
                         });
 
                     }
@@ -245,10 +247,7 @@ export default class NeoVis {
                                 let node = self.buildNodeVisObject(obj);
 
                                 try {
-                                    //self._nodes.add(node);
-                                    console.log("Added node:");
-                                    console.log(node);
-                                    self._nodes.update(node);
+                                    self._addNode(node);
                                 } catch(e) {
                                     console.log(e);
                                 }
@@ -257,9 +256,7 @@ export default class NeoVis {
                                 let edge = self.buildEdgeVisObject(obj);
 
                                 try {
-                                    self._edges.update(edge);
-                                    console.log("Added rel:");
-                                    console.log(edge);
+                                    self._addEdge(edge);
                                 } catch(e) {
                                     console.log(e);
                                 }
@@ -304,6 +301,12 @@ export default class NeoVis {
                   };
 
                 var container = self._container;
+                self._data = {
+                    "nodes": new vis.DataSet(Object.values(self._nodes)),
+                    "edges": new vis.DataSet(Object.values(self._edges))
+
+                }
+
                 console.log(self._data.nodes);
                 console.log(self._data.edges);
                 
