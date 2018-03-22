@@ -266,6 +266,10 @@ Boolean. Defaults to false.
 
 Boolean. Default to false.
 
+#### `config.hierarchical_sort_method`
+
+When hierarchical layout is enabled you may choose betweeen `"hubsize"` (default) and `"directed"`.
+
 #### `config.initial_cypher`
 
 #### `config.encrypted`

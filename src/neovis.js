@@ -303,7 +303,9 @@ export default class NeoVis {
                     layout: {
                         improvedLayout: false,
                         hierarchical: {
-                            enabled: self._config.hierarchical || false
+                            enabled: self._config.hierarchical || false,
+                            sortMethod: self._config.hierarchical_sort_method || "hubsize"
+
                         }
                     },
                     physics: { // TODO: adaptive physics settings based on size of graph rendered
