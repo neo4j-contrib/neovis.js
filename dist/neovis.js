@@ -36590,9 +36590,22 @@ class NeoVis {
                         }
                     },
                     physics: {
-                        enabled: true,
-                        timestep: 0.4,
-                        stabilization: true
+                        // enabled: true,
+                        // timestep: 0.5,
+                        // stabilization: {
+                        //     iterations: 10
+                        // }
+                        
+                            adaptiveTimestep: true,
+                            barnesHut: {
+                                gravitationalConstant: -8000,
+                                springConstant: 0.04,
+                                springLength: 95
+                            },
+                            stabilization: {
+                                iterations: 9
+                            }
+                        
                     }
                   };
 
@@ -36636,9 +36649,9 @@ class NeoVis {
      * Clear the data for the visualization
      */
     clearNetwork() {
-        this._nodes.clear();
-        this._edges.clear();
-        this._network.setData(this._data);
+        this._nodes = {}
+        this._edges = {};
+        this._network.setData([]);
     }
 
 
