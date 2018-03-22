@@ -120,7 +120,20 @@ export default class NeoVis {
         if (!communityKey) {
             node['group'] = label;
         } else {
-            node['group'] = n.properties[communityKey].toNumber() || label || 0;  // FIXME: cast to Integer
+            try {
+                if (n.properties[communityKey]) {
+                    node['group'] = n.properties[communityKey].toNumber() || label || 0;  // FIXME: cast to Integer
+
+                }
+                else {
+                    node['group'] = 0;
+                }
+
+            } catch(e) {
+                node['group'] = 0;
+            }
+
+            
         }
 
 
