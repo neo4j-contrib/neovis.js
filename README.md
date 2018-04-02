@@ -22,21 +22,29 @@ For ease of use Neovis.js can be obtained from the RawGit CDN:
 
 *For development (not cached) - Master*
 
-https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js
+```
+<script src="https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
+```
 
 *For production (cached) - Master*
 
-https://cdn.rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js
+```
+<script src="https://cdn.rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
+```
 
 or specify release tags:
 
 *For development (not cached) - v0.0.1*
 
-https://rawgit.com/neo4j-contrib/neovis.js/v0.0.1/dist/neovis.js
+```
+<script src="https://rawgit.com/neo4j-contrib/neovis.js/v0.0.1/dist/neovis.js"></script>
+```
 
 *For production (cached) - v0.0.1*
 
-https://cdn.rawgit.com/neo4j-contrib/neovis.js/v0.0.1/dist/neovis.js
+```
+<script src="https://cdn.rawgit.com/neo4j-contrib/neovis.js/v0.0.1/dist/neovis.js"></script>
+```
 
 ## Quickstart Example
 
