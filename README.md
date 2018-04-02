@@ -20,13 +20,23 @@ Graph visualizations powered by vis.js with data from Neo4j.
 
 For ease of use Neovis.js can be obtained from the RawGit CDN:
 
-*For development (not cached)*
+*For development (not cached) - Master*
 
 https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js
 
-*For production (cached)*
+*For production (cached) - Master*
 
 https://cdn.rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js
+
+or specify release tags:
+
+*For development (not cached) - v0.0.1*
+
+https://rawgit.com/neo4j-contrib/neovis.js/v0.0.1/dist/neovis.js
+
+*For production (cached) - v0.0.1*
+
+https://cdn.rawgit.com/neo4j-contrib/neovis.js/v0.0.1/dist/neovis.js
 
 ## Quickstart Example
 
