@@ -356,7 +356,7 @@ export default class NeoVis {
                 
                 self._network = new vis.Network(container, self._data, options);
                 console.log("completed");
-                setTimeout(self.stabilize, 5000);
+                setTimeout(() => { self._network.stopSimulation(); }, 10000);
 
                 },
                 onError: function (error) {

@@ -36652,7 +36652,7 @@ class NeoVis {
                 
                 self._network = new __WEBPACK_IMPORTED_MODULE_1__vendor_vis_dist_vis_network_min_js__["Network"](container, self._data, options);
                 console.log("completed");
-                setTimeout(self.stabilize, 5000);
+                setTimeout(() => { self._network.stopSimulation(); }, 10000);
 
                 },
                 onError: function (error) {
