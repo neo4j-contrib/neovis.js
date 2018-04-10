@@ -16,6 +16,36 @@ Graph visualizations powered by vis.js with data from Neo4j.
 - [ ] Configure popover
 
 
+## CDN
+
+For ease of use Neovis.js can be obtained from the RawGit CDN:
+
+*For development (not cached) - Master*
+
+```
+<script src="https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
+```
+
+*For production (cached) - Master*
+
+```
+<script src="https://cdn.rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
+```
+
+or specify release tags:
+
+*For development (not cached) - v0.0.1*
+
+```
+<script src="https://rawgit.com/neo4j-contrib/neovis.js/v0.0.1/dist/neovis.js"></script>
+```
+
+*For production (cached) - v0.0.1*
+
+```
+<script src="https://cdn.rawgit.com/neo4j-contrib/neovis.js/v0.0.1/dist/neovis.js"></script>
+```
+
 ## Quickstart Example
 
 Let's go through the steps to reproduce this visualization:
@@ -95,7 +125,7 @@ We define some basic CSS to specify the boundaries of a `div` and then create a 
 We need to pull in `neovis.js`:
 
 ``` html
-<script src="https://cdn.rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
+<script src="https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
 ```
 
 And define our draw() function:
