@@ -356,6 +356,7 @@ export default class NeoVis {
                 
                 self._network = new vis.Network(container, self._data, options);
                 console.log("completed");
+                self.stabilize();
 
                 },
                 onError: function (error) {
@@ -390,6 +391,7 @@ export default class NeoVis {
 
         this.clearNetwork();
         this.render();
+
 
     };
 

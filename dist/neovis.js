@@ -36652,6 +36652,7 @@ class NeoVis {
                 
                 self._network = new __WEBPACK_IMPORTED_MODULE_1__vendor_vis_dist_vis_network_min_js__["Network"](container, self._data, options);
                 console.log("completed");
+                self.stabilize();
 
                 },
                 onError: function (error) {
@@ -36686,6 +36687,7 @@ class NeoVis {
 
         this.clearNetwork();
         this.render();
+
 
     };
 
