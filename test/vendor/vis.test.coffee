@@ -1,18 +1,15 @@
-vis   = require '../../vendor/vis/dist/vis-network.min.js'
-vis   = require '../../vendor/vis/dist/vis.js'
-
-#{JSDOM} = require 'jsdom'
+require 'fluentnode'
+vis          = require '../../vendor/vis/dist/vis-network.min.js'
+vis          = require '../../vendor/vis/dist/vis.js'
+jsdom_global = require('jsdom-global')
 
 describe 'visjs test', ->
+
   it 'should work',->
     edges = new vis.DataSet()
 
-    #    window =  new JSDOM('<div id="viz"/>').window
-    #    document = window.document
-    #    container =  window.document.getElementById('viz')
-
     nodes = new vis.DataSet([
-      {id: 1, label: 'Node 1'},
+      {id: 1, label: 'Node 1 ABC'},
       {id: 2, label: 'Node 2'},
       {id: 3, label: 'Node 3'},
       {id: 4, label: 'Node 4'},
@@ -33,31 +30,21 @@ describe 'visjs test', ->
 
     options = {};
 
-    #console.log document.getElementById('vi= windowz')
-    #    global.window    = window
-    #    global.document  = document
-    #    global.navigator = window.navigator
-    #    global.Element   = window.Element
-    jsdom_global = require('jsdom-global')
     jsdom_global =  jsdom_global(
       "<div id='mygraph'></div>",
       { skipWindowCheck: true}
     );
-
     container = document.getElementById('mygraph');
 
-    Canvas = require('canvas-prebuilt');
-    console.log new Canvas().getContext()
-
-#    console.log container
-#    console.log data
-#    console.log options
     network = new vis.Network(container, data, options);
+    network.body.nodes['1'].options.label.toString().assert_Is 'Node 1 ABC'
+    network.body.nodes['2'].options.label.toString().assert_Is 'Node 2'
 
-    #canvas =  document.getElementsByTagName("canvas")[0]
+    canvas =  document.getElementsByTagName("canvas")[0]
 
-    #context = canvas.getContext('2d')
+    canvas                 .toString().assert_Is '[object HTMLCanvasElement]'
+    canvas.getContext('2d').toString().assert_Is '[object CanvasRenderingContext2D]'
 
-    #console.log canvas.pngStream
+
 
 

@@ -61,7 +61,7 @@
                     "HOLDS": { thickness: 0.1, "caption" : "id" },
 
                 },
-                initial_cypher: 'MATCH (dc:DataCenter {name:"DC1"})-[r1:CONTAINS]->(rack:Rack)-[r2:HOLDS]->(s:Switch)-[r3:ROUTES]->(si:Interface)<-[r4:ROUTES]-(nr:Network:Zone) RETURN * limit 3',
+                initial_cypher: 'MATCH (dc:DataCenter {name:"DC1"})-[r1:CONTAINS]->(rack:Rack)-[r2:HOLDS]->(s:Switch)-[r3:ROUTES]->(si:Interface)<-[r4:ROUTES]-(nr:Network:Zone) RETURN * limit 30',
                 //initial_cypher: "match (n)-[r]-(p) return n,r,p limit 2",
                 arrows: false
             };

@@ -23,8 +23,15 @@ describe 'NeoVis | render', ->
         @._driver._url         .assert_Is '54.197.82.102:34060'
         @._container.toString().assert_Is '[object HTMLDivElement]'
 
-  xit 'render', (done)->
-    neoVis.render ->
+  it.only 'render', (done)->
+    session = neoVis.render (options)->
       console.log neoVis._nodes._keys()
       console.log neoVis._edges._keys()
+
+      console.log options
+      console.log neoVis.getOptions()
+      options.assert_Is neoVis.getOptions()
       done()
+
+  it 'getOptions', ()->
+    console.log neoVis.getOptions()
