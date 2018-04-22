@@ -52,6 +52,3 @@ describe 'NeoVis', ->
 
     neoVis.buildEdgeVisObject(visObject)
       .assert_Is { id: undefined, from: undefined, to: undefined, title: '', value: 1, label: undefined }
-
-  it 'render', ->
-    neoVis.render()

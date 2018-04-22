@@ -1,11 +1,11 @@
 'use strict';
 
 //uncomment for wallabyjs
-//import * as  neo4j from  '../vendor/neo4j-javascript-driver/lib/index.js'
+import * as  neo4j from  '../vendor/neo4j-javascript-driver/lib/index.js'
 
 //uncomment for webpack
-import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
-import '../vendor/vis/dist/vis-network.min.css';
+//import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
+//import '../vendor/vis/dist/vis-network.min.css';
 
 //ok on both
 import * as vis from '../vendor/vis/dist/vis-network.min.js';
@@ -30,8 +30,6 @@ export default class NeoVis {
      */
 
     constructor(config = {}) {
-        //console.log(config);
-        //console.log(defaults);
         this._config    = config;
         this._encrypted = config.encrypted      || defaults.neo4j.encrypted
         this._trust     = config.trust          || defaults.neo4j.trust;
@@ -201,7 +199,8 @@ export default class NeoVis {
 
     // public API
 
-    render() {
+
+    render(callback) {
         console.log('In Build')
         // connect to Neo4j instance
         // run query
@@ -360,14 +359,16 @@ export default class NeoVis {
                 //          return item;
                 //     }
                 // );
-                
+
+
                 self._network = new vis.Network(container, self._data, options);
                 console.log("completed");
                 setTimeout(() => { self._network.stopSimulation(); }, 10000);
-
+                callback()
                 },
                 onError: function (error) {
                   console.log(error);
+                  callback()
                 }
 
             })
