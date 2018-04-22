@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "babel-runtime": "^6.26.0",
+    "canvas-prebuilt": "^1.6.5-prerelease.1",
     "coffeescript": "^2.2.4",
     "esm": "^3.0.22",
     "fluentnode": "^0.7.1",

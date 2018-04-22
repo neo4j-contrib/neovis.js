@@ -46,15 +46,18 @@ describe 'visjs test', ->
 
     container = document.getElementById('mygraph');
 
-    #canvas = require('canvas-prebuilt');
-    #console.log new canvas().getContext()
+    Canvas = require('canvas-prebuilt');
+    console.log new Canvas().getContext()
 
+#    console.log container
+#    console.log data
+#    console.log options
     network = new vis.Network(container, data, options);
 
-    canvas =  document.getElementsByTagName("canvas")[0]
+    #canvas =  document.getElementsByTagName("canvas")[0]
 
-    context = canvas.getContext('2d')
+    #context = canvas.getContext('2d')
 
-    console.log canvas.pngStream
+    #console.log canvas.pngStream
 
 

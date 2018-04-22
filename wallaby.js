@@ -14,6 +14,7 @@ module.exports = function () {
         env: {
 
             type: 'node',
+            runner: 'node',
             params: {
                 runner: `-r ${require.resolve('esm')}`
             }
