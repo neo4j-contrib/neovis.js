@@ -213,13 +213,13 @@ export default class NeoVis {
             .run(this._query, {limit: 30})
             .subscribe({
                 onNext: function (record) {
-                    console.log("CLASS NAME");
-                    console.log(record.constructor.name);
-                    console.log(record);
+                    //console.log("CLASS NAME");
+                    //console.log(record.constructor.name);
+                    //console.log(record);
 
                     record.forEach(function(v, k, r) {
-                    console.log("Constructor:");
-                    console.log(v.constructor.name);
+                    //console.log("Constructor:");
+                    //console.log(v.constructor.name);
                     if (v.constructor.name === "Node") {
                         let node = self.buildNodeVisObject(v);
 
@@ -242,8 +242,8 @@ export default class NeoVis {
 
                     }
                     else if (v.constructor.name === "Path") {
-                        console.log("PATH");
-                        console.log(v);
+                        //console.log("PATH");
+                        //console.log(v);
                         let n1 = self.buildNodeVisObject(v.start);
                         let n2 = self.buildNodeVisObject(v.end);
                         
@@ -260,8 +260,8 @@ export default class NeoVis {
                     }
                     else if (v.constructor.name === "Array") {
                         v.forEach(function(obj) {
-                            console.log("Array element constructor:");
-                            console.log(obj.constructor.name);
+                            //console.log("Array element constructor:");
+                            //console.log(obj.constructor.name);
                             if (obj.constructor.name === "Node") {
                                 let node = self.buildNodeVisObject(obj);
 
@@ -286,6 +286,7 @@ export default class NeoVis {
                 })
                 },
                 onCompleted: function () {
+                  console.log("on Completed")
                   session.close();
                   let options = {
                     nodes: {
@@ -342,8 +343,8 @@ export default class NeoVis {
 
                 }
 
-                console.log(self._data.nodes);
-                console.log(self._data.edges);
+                //console.log(self._data.nodes);
+                //console.log(self._data.edges);
                 
                 // Create duplicate node for any self reference relationships
                 // NOTE: Is this only useful for data model type data

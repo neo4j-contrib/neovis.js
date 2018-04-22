@@ -35,44 +35,45 @@
         function draw() {
             var config = {
                 container_id: "viz",
-                server_url: "bolt://34.224.3.24:35274",
+                server_url: "bolt://54.197.82.102:34060",
                 server_user: "neo4j",
-                server_password: "cylinders-tapes-rights",
+                server_password: "servant-jackets-fives",
                 labels: {
-                    //"Character": "name",
-                    "Person": {
+                    "Network": {
                         "caption": "name",
                         "size": 1.0,
                         "sizeCypher": "MATCH (n) WHERE id(n) = {id} RETURN SIZE((n)--()) AS s;",
                         "icon": "????"
                     },
-                    "Organization": {
+                    "Rack": {
                         "caption": "name",
                         "size": 2.0,
                         "sizeCypher": "MATCH (n) WHERE id(n) = {id} RETURN SIZE((n)--()) AS s",
                         "icon": "???"
+                    },
+                    "Machine": {
+                        "caption": "name",
+                        size: 0.5
                     }
 
                 },
                 relationships: {
-                    "PRESIDENT": {
-                        "caption": "El Presidente"
-                    }
+                    "HOLDS": { thickness: 0.1, "caption" : "id" },
+
                 },
-                initial_cypher: "match (p:Person)-[r]-(o:Organization)-[r1]-(p2:Person) RETURN * LIMIT 10",
+                initial_cypher: 'MATCH (dc:DataCenter {name:"DC1"})-[r1:CONTAINS]->(rack:Rack)-[r2:HOLDS]->(s:Switch)-[r3:ROUTES]->(si:Interface)<-[r4:ROUTES]-(nr:Network:Zone) RETURN * limit 3',
+                //initial_cypher: "match (n)-[r]-(p) return n,r,p limit 2",
                 arrows: false
             };
 
             viz = new NeoVis.default(config);
             viz.render();
-            console.log(viz);
-
         }
     </script>
 </head>
 <body onload="draw()">
 
-<h1> Trumpworld view</h1>
+<h2>From 'Network and IT Management' Neo4j sandbox</h2>
 
 <div id="viz"></div>
 
