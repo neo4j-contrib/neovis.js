@@ -1,8 +1,10 @@
 'use strict';
 
-import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
+import * as  neo4j from  '../vendor/neo4j-javascript-driver/lib/index.js'
+
+//import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
 import * as vis from '../vendor/vis/dist/vis-network.min.js';
-import '../vendor/vis/dist/vis-network.min.css';
+//import '../vendor/vis/dist/vis-network.min.css';
 import { defaults } from './defaults';
 
 
@@ -23,19 +25,18 @@ export default class NeoVis {
      *
      */
 
-    constructor(config) {
-        console.log(config);
-        console.log(defaults);
-
-        this._config = config;
-        this._encrypted = config.encrypted || defaults['neo4j']['encrypted'];
-        this._trust = config.trust || defaults.neo4j.trust;
-        this._driver = neo4j.v1.driver(config.server_url || defaults.neo4j.neo4jUri, neo4j.v1.auth.basic(config.server_user || defaults.neo4j.neo4jUser, config.server_password || defaults.neo4j.neo4jPassword), {encrypted: this._encrypted, trust: this._trust});
-        this._query =   config.initial_cypher || defaults.neo4j.initialQuery;
-        this._nodes = {};
-        this._edges = {};
-        this._data = {};
-        this._network = null;
+    constructor(config = {}) {
+        //console.log(config);
+        //console.log(defaults);
+        this._config    = config;
+        this._encrypted = config.encrypted      || defaults.neo4j.encrypted
+        this._trust     = config.trust          || defaults.neo4j.trust;
+        this._query     = config.initial_cypher || defaults.neo4j.initialQuery;
+        this._driver    = neo4j.v1.driver(config.server_url || defaults.neo4j.neo4jUri, neo4j.v1.auth.basic(config.server_user || defaults.neo4j.neo4jUser, config.server_password || defaults.neo4j.neo4jPassword), {encrypted: this._encrypted, trust: this._trust});
+        this._nodes     = {};
+        this._edges     = {};
+        this._data      = {};
+        this._network   = null;
         this._container = document.getElementById(config.container_id);
 
     }
@@ -140,7 +141,8 @@ export default class NeoVis {
         // set all properties as tooltip
         node['title'] = "";
         for (let key in n.properties) {
-            node['title'] += "<strong>" + key + ":</strong>" + " " + n.properties[key] + "<br>";
+            if (n.hasOwnProperty(key))                                                                  // DC Change (check if it has side effects)
+                node['title'] += "<strong>" + key + ":</strong>" + " " + n.properties[key] + "<br>";
         }
         return node;
     }
