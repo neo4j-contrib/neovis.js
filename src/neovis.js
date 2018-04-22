@@ -1,10 +1,14 @@
 'use strict';
 
-import * as  neo4j from  '../vendor/neo4j-javascript-driver/lib/index.js'
+//uncomment for wallabyjs
+//import * as  neo4j from  '../vendor/neo4j-javascript-driver/lib/index.js'
 
-//import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
+//uncomment for webpack
+import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
+import '../vendor/vis/dist/vis-network.min.css';
+
+//ok on both
 import * as vis from '../vendor/vis/dist/vis-network.min.js';
-//import '../vendor/vis/dist/vis-network.min.css';
 import { defaults } from './defaults';
 
 
@@ -198,7 +202,7 @@ export default class NeoVis {
     // public API
 
     render() {
-
+        console.log('In Build')
         // connect to Neo4j instance
         // run query
 
