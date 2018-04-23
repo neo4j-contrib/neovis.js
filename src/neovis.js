@@ -4,8 +4,8 @@
 import * as  neo4j from  '../vendor/neo4j-javascript-driver/lib/index.js'
 
 //uncomment for webpack
-//import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
-//import '../vendor/vis/dist/vis-network.min.css';
+// import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
+// import '../vendor/vis/dist/vis-network.min.css';
 
 //ok on both
 import * as vis from '../vendor/vis/dist/vis-network.min.js';
@@ -234,6 +234,56 @@ export default class NeoVis {
         }
     }
 
+    handle_Array(value) {
+        let self = this;
+        value.forEach(function(obj) {
+            if (obj.constructor.name === "Node") {
+                let node = self.buildNodeVisObject(obj);
+
+                try {
+                    self._addNode(node);
+                } catch(e) {
+                    console.log(e);
+                }
+            }
+            else if (obj.constructor.name === "Relationship") {
+                let edge = self.buildEdgeVisObject(obj);
+
+                try {
+                    self._addEdge(edge);
+                } catch(e) {
+                    console.log(e);
+                }
+            }
+        });
+    }
+
+    handle_onNext (record) {
+        let self = this;
+        record.forEach(function(v, k, r) {
+            if      (v.constructor.name === "Node"          ) { self.handle_Node(v)         }
+            else if (v.constructor.name === "Relationship"  ) { self.handle_Relationship(v) }
+            else if (v.constructor.name === "Path"          ) { self.handle_Path(v)         }
+            else if (v.constructor.name === "Array"         ) { self.handle_Array(v)        }
+        })
+    }
+
+    handle_onCompleted(callback) {
+        console.log("on Completed")
+        let self    = this;
+        let session = this._driver.session();
+
+        session.close();
+        self.createVisGraph(self._nodes, self._edges)
+        setTimeout(() => { self._network.stopSimulation(); }, 10000);
+
+        callback()
+    }
+
+    handle_onError (error) {
+        console.log(error);
+    }
+
     render(callback) {
         console.log('In Build')
         // connect to Neo4j instance
@@ -245,53 +295,9 @@ export default class NeoVis {
         session
             .run(this._query, {limit: 30})
             .subscribe({
-                onNext: function (record) {
-
-                  record.forEach(function(v, k, r) {
-
-                    if      (v.constructor.name === "Node"          ) { self.handle_Node(v)         }
-                    else if (v.constructor.name === "Relationship"  ) { self.handle_Relationship(v) }
-                    else if (v.constructor.name === "Path"          ) { self.handle_Path(v)         }
-                    else if (v.constructor.name === "Array"         ) {
-                        v.forEach(function(obj) {
-                            //console.log("Array element constructor:");
-                            //console.log(obj.constructor.name);
-                            if (obj.constructor.name === "Node") {
-                                let node = self.buildNodeVisObject(obj);
-
-                                try {
-                                    self._addNode(node);
-                                } catch(e) {
-                                    console.log(e);
-                                }
-                            }
-                            else if (obj.constructor.name === "Relationship") {
-                                let edge = self.buildEdgeVisObject(obj);
-
-                                try {
-                                    self._addEdge(edge);
-                                } catch(e) {
-                                    console.log(e);
-                                }
-                            }
-                        });
-                    }
-
-                })
-                },
-                onCompleted: function () {
-                    console.log("on Completed")
-                    session.close();
-                    self.createVisGraph(self._nodes, self._edges)
-
-                    setTimeout(() => { self._network.stopSimulation(); }, 10000);
-
-                    if(callback)
-                        callback()
-                },
-                onError: function (error) {
-                  console.log(error);
-                }
+                onNext     : function(record) { self.handle_onNext(record)        },
+                onCompleted: function ()      { self.handle_onCompleted(callback) },
+                onError    : function (error) { self.handle_onError(record)       },
 
             })
         return session

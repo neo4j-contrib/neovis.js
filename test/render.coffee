@@ -3,7 +3,6 @@ NeoVis       = (require '../src/neovis.js').default
 jsdom_global = require('jsdom-global')
 
 
-
 describe 'NeoVis | render', ->
   neoVis = null
   config =
@@ -22,24 +21,8 @@ describe 'NeoVis | render', ->
 
   it 'check constructor options', ->
       using neoVis, ->
-        @._driver._url         .assert_Is '54.197.82.102:34060'
+        @._driver._url         .assert_Is 'localhost:7687'
         @._container.toString().assert_Is '[object HTMLDivElement]'
-
-  it 'render', (done)->
-    neoVis.render ()->
-      labels = []
-      colors = []
-      for key,value of neoVis._network.body.nodes
-        colors.push value.options.color.background
-        labels.push value.options.label
-
-      labels.assert_Is [ 'DataCenter', 'Rack', ''        ]
-      colors.assert_Is [ '#97C2FC', '#FFFF00', '#97C2FC' ]
-
-      neoVis._network.body.edges['178'].options.from.assert_Is 0
-      neoVis._network.body.edges['178'].options.to  .assert_Is 140
-
-      done()
 
   it 'createVisGraph', (done)->
     options = {}
@@ -63,21 +46,29 @@ describe 'NeoVis | render', ->
     done()
 
 
-  it.only 'render (test path)', (done)->
+  it 'render (schema)', (done)->
+    neoVis._query = 'CALL db.schema()'
+    neoVis.render ()->
+      neoVis._nodes._keys().assert_Size_Is  2
+      neoVis._edges._keys().assert_Size_Is 6
+      done()
+
+
+  it 'render (test path)', (done)->
     neoVis._query = 'MATCH p=()-[r:DIRECTED]->() RETURN p LIMIT 4'
     neoVis.render ()->
       # test the data fetched from Neo4j
-      neoVis._nodes._keys().assert_Is  [ '5', '9', '10', '105', '121' ]
-      neoVis._edges._keys().assert_Is  [ '12', '19', '142', '169' ]
-      neoVis._nodes['5'].assert_Is   { id: 5, value: 1, label: 'Person', group: 'Person', title: '' }
-      neoVis._edges['12'].assert_Is  { id: 12, from: 5, to: 9, title: '', value: 1, label: 'DIRECTED' }
+      neoVis._nodes._keys().assert_Contains  [ '5' , '9' , '10' , '105', '121']
+      neoVis._edges._keys().assert_Contains  [ '12', '19', '142', '169'       ]
+      neoVis._nodes['5' ]  .assert_Is        { id: 5 , value: 1, label: 'Person', group: 'Person', title: ''                   }
+      neoVis._edges['12']  .assert_Is        { id: 12, from : 5, to   : 9       , title: ''      , value: 1, label: 'DIRECTED' }
 
       # test the data mapped by vis.js
-      neoVis._network.body.nodes._keys().assert_Is [ '5', '9', '10', '105', '121', 'edgeId:12', 'edgeId:19', 'edgeId:142', 'edgeId:169' ]
-      neoVis._network.body.edges._keys().assert_Is [ '12', '19', '142', '169' ]
+      neoVis._network.body.nodes._keys().assert_Contains [ '5' , '9' , '10' , '105', '121', 'edgeId:12', 'edgeId:19', 'edgeId:142', 'edgeId:169' ]
+      neoVis._network.body.edges._keys().assert_Contains [ '12', '19', '142', '169'                                                              ]
 
       neoVis._network.body.nodes['5' ].options.color.background.assert_Is '#97C2FC'
-      neoVis._network.body.edges['12'].options.label.assert_Is 'DIRECTED'
+      neoVis._network.body.edges['12'].options.label           .assert_Is 'DIRECTED'
       done()
 
   it 'render (test query)', (done)->
@@ -85,18 +76,17 @@ describe 'NeoVis | render', ->
 
     neoVis.render ()->
       # test the data fetched from Neo4j
-      neoVis._nodes._keys().assert_Is [ '0', '5', '6', '7','8' ]
-      neoVis._edges._keys().assert_Is [ '4', '5', '6', '7' ]
-      neoVis._edges['4'].assert_Is { id: 4, from: 5, to: 0, title: '', value: 1, label: 'DIRECTED' }
-      neoVis._edges['5'].assert_Is { id: 5, from: 6, to: 0, title: '', value: 1, label: 'DIRECTED' }
+      neoVis._nodes._keys().assert_Contains [ '0', '5', '6', '7','8' ]
+      neoVis._edges._keys().assert_Contains [ '4', '5', '6', '7'     ]
+      neoVis._edges['4']   .assert_Is       { id: 4, from: 5, to: 0, title: '', value: 1, label: 'DIRECTED' }
+      neoVis._edges['5']   .assert_Is       { id: 5, from: 6, to: 0, title: '', value: 1, label: 'DIRECTED' }
 
       # test the data mapped by vis.js
-      neoVis._network.body.nodes._keys().assert_Is [ '0', '5', '6', '7', '8', 'edgeId:4', 'edgeId:5', 'edgeId:6', 'edgeId:7' ]
-      neoVis._network.body.edges._keys().assert_Is [ '4', '5', '6', '7' ]
+      neoVis._network.body.nodes._keys().assert_Contains [ '0', '5', '6', '7', '8', 'edgeId:4', 'edgeId:5', 'edgeId:6', 'edgeId:7' ]
+      neoVis._network.body.edges._keys().assert_Contains [ '4', '5', '6', '7'                                                      ]
 
       neoVis._network.body.nodes['0'].options.color.background.assert_Is '#97C2FC'
-      neoVis._network.body.edges['4'].options.label.assert_Is 'DIRECTED'
-
+      neoVis._network.body.edges['4'].options.label           .assert_Is 'DIRECTED'
       done()
 
 
