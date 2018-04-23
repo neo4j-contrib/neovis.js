@@ -36,10 +36,12 @@
                 server_user: "neo4j",
                 server_password: "test",
                 labels: {
+                    Person: { caption : "name"},
+                    Movie: { caption : "title"}
                 },
                 relationships: {
                 },
-                initial_cypher: "match (n)-[r]-(p) return n,r,p limit 2",
+                initial_cypher: "match (n)-[r]-(p) return n,r,p limit 20",
                 arrows: false
             };
 

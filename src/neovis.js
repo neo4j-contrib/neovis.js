@@ -1,11 +1,11 @@
 'use strict';
 
 //uncomment for wallabyjs
-import * as  neo4j from  '../vendor/neo4j-javascript-driver/lib/index.js'
+//import * as  neo4j from  '../vendor/neo4j-javascript-driver/lib/index.js'
 
 //uncomment for webpack
-//import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
-//import '../vendor/vis/dist/vis-network.min.css';
+import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
+import '../vendor/vis/dist/vis-network.min.css';
 
 //ok on both
 import * as vis from '../vendor/vis/dist/vis-network.min.js';
@@ -287,16 +287,12 @@ export default class NeoVis {
                   session.close();
                   let options = self.getOptions();
 
-                var container = self._container;
-                self._data = {
-                    "nodes": new vis.DataSet(Object.values(self._nodes)),
-                    "edges": new vis.DataSet(Object.values(self._edges))
 
-                }
-                //console.log(self._data.nodes._data['0']  ) // is  {id: 0, value: 1,label: 'DataCenter',group: 'DataCenter',title: '' }
-                self._network = new vis.Network(container, self._data, options);
-                console.log("completed");
+                self.createVisGraph(self._nodes, self._edges, options)
+
+                    
                 setTimeout(() => { self._network.stopSimulation(); }, 10000);
+
                 if(callback)
                     callback()
                 },
