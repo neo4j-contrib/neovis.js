@@ -197,8 +197,41 @@ export default class NeoVis {
 
     // public API
 
-    handle_Record_Node(value) {
+    handle_Node(value) {
+        let self = this;
+        let node = self.buildNodeVisObject(value);
 
+        try {
+            self._addNode(node);
+        } catch(e) {
+            console.log(e);
+        }
+    }
+    handle_Path(value) {
+        let self = this;
+        let n1 = self.buildNodeVisObject(value.start);
+        let n2 = self.buildNodeVisObject(value.end);
+
+        self._addNode(n1);
+        self._addNode(n2);
+
+        value.segments.forEach((obj) => {
+
+            self._addNode(self.buildNodeVisObject(obj.start));
+            self._addNode(self.buildNodeVisObject(obj.end))
+            self._addEdge(self.buildEdgeVisObject(obj.relationship))
+        });
+    }
+
+    handle_Relationship(value) {
+        let self = this;
+        let edge = self.buildEdgeVisObject(value);
+
+        try {
+            self._addEdge(edge);
+        } catch(e) {
+            console.log(e);
+        }
     }
 
     render(callback) {
@@ -216,45 +249,10 @@ export default class NeoVis {
 
                   record.forEach(function(v, k, r) {
 
-                    if (v.constructor.name === "Node") {
-                        let node = self.buildNodeVisObject(v);
-
-                        try {
-                            self._addNode(node);
-                        } catch(e) {
-                            console.log(e);
-                        }
-
-                    }
-                    else if (v.constructor.name === "Relationship") {
-
-                        let edge = self.buildEdgeVisObject(v);
-
-                        try {
-                            self._addEdge(edge);
-                        } catch(e) {
-                            console.log(e);
-                        }
-
-                    }
-                    else if (v.constructor.name === "Path") {
-                        //console.log("PATH");
-                        //console.log(v);
-                        let n1 = self.buildNodeVisObject(v.start);
-                        let n2 = self.buildNodeVisObject(v.end);
-                        
-                        self._addNode(n1);
-                        self._addNode(n2);
-
-                        v.segments.forEach((obj) => {
-                            
-                            self._addNode(self.buildNodeVisObject(obj.start));
-                            self._addNode(self.buildNodeVisObject(obj.end))
-                            self._addEdge(self.buildEdgeVisObject(obj.relationship))
-                        });
-
-                    }
-                    else if (v.constructor.name === "Array") {
+                    if      (v.constructor.name === "Node"          ) { self.handle_Node(v)         }
+                    else if (v.constructor.name === "Relationship"  ) { self.handle_Relationship(v) }
+                    else if (v.constructor.name === "Path"          ) { self.handle_Path(v)         }
+                    else if (v.constructor.name === "Array"         ) {
                         v.forEach(function(obj) {
                             //console.log("Array element constructor:");
                             //console.log(obj.constructor.name);

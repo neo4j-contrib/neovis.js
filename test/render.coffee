@@ -62,7 +62,25 @@ describe 'NeoVis | render', ->
     colors.assert_Is [ '#97C2FC', '#FFFF00', '#FFFF00' , '#FB7E81' , '#97C2FC' ]
     done()
 
-  it.only 'render (refactor)', (done)->
+
+  it.only 'render (test path)', (done)->
+    neoVis._query = 'MATCH p=()-[r:DIRECTED]->() RETURN p LIMIT 4'
+    neoVis.render ()->
+      # test the data fetched from Neo4j
+      neoVis._nodes._keys().assert_Is  [ '5', '9', '10', '105', '121' ]
+      neoVis._edges._keys().assert_Is  [ '12', '19', '142', '169' ]
+      neoVis._nodes['5'].assert_Is   { id: 5, value: 1, label: 'Person', group: 'Person', title: '' }
+      neoVis._edges['12'].assert_Is  { id: 12, from: 5, to: 9, title: '', value: 1, label: 'DIRECTED' }
+
+      # test the data mapped by vis.js
+      neoVis._network.body.nodes._keys().assert_Is [ '5', '9', '10', '105', '121', 'edgeId:12', 'edgeId:19', 'edgeId:142', 'edgeId:169' ]
+      neoVis._network.body.edges._keys().assert_Is [ '12', '19', '142', '169' ]
+
+      neoVis._network.body.nodes['5' ].options.color.background.assert_Is '#97C2FC'
+      neoVis._network.body.edges['12'].options.label.assert_Is 'DIRECTED'
+      done()
+
+  it 'render (test query)', (done)->
     neoVis._query = 'match (n)-[r]-(p) return n,r,p limit 4'
 
     neoVis.render ()->

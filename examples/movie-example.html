@@ -41,7 +41,8 @@
                 },
                 relationships: {
                 },
-                initial_cypher: "match (n)-[r]-(p) return n,r,p limit 20",
+                //initial_cypher: "match (n)-[r]-(p) return n,r,p limit 20",
+                initial_cypher: "MATCH p=()-[r:DIRECTED]->() RETURN p LIMIT 4",
                 arrows: false
             };
 
