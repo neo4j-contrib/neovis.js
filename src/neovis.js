@@ -308,6 +308,17 @@ export default class NeoVis {
         return session
         };
 
+    createVisGraph(nodes, edges, options) {
+        let self = this;
+        self._data = {
+            "nodes": new vis.DataSet(Object.values(nodes)),
+            "edges": new vis.DataSet(Object.values(edges))
+
+        }
+        var container = self._container;
+        self._network = new vis.Network(container, self._data, options);
+    }
+
     getOptions() {
         let self = this;
         let options = {
