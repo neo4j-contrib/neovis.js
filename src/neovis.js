@@ -1,11 +1,11 @@
 'use strict';
 
 //uncomment for wallabyjs
-//import * as  neo4j from  '../vendor/neo4j-javascript-driver/lib/index.js'
+import * as  neo4j from  '../vendor/neo4j-javascript-driver/lib/index.js'
 
 //uncomment for webpack
-import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
-import '../vendor/vis/dist/vis-network.min.css';
+//import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
+//import '../vendor/vis/dist/vis-network.min.css';
 
 //ok on both
 import * as vis from '../vendor/vis/dist/vis-network.min.js';
@@ -197,6 +197,9 @@ export default class NeoVis {
 
     // public API
 
+    handle_Record_Node(value) {
+
+    }
 
     render(callback) {
         console.log('In Build')
@@ -210,13 +213,9 @@ export default class NeoVis {
             .run(this._query, {limit: 30})
             .subscribe({
                 onNext: function (record) {
-                    //console.log("CLASS NAME");
-                    //console.log(record.constructor.name);
-                    //console.log(record);
 
-                    record.forEach(function(v, k, r) {
-                    //console.log("Constructor:");
-                    //console.log(v.constructor.name);
+                  record.forEach(function(v, k, r) {
+
                     if (v.constructor.name === "Node") {
                         let node = self.buildNodeVisObject(v);
 
@@ -283,18 +282,14 @@ export default class NeoVis {
                 })
                 },
                 onCompleted: function () {
-                  console.log("on Completed")
-                  session.close();
-                  let options = self.getOptions();
+                    console.log("on Completed")
+                    session.close();
+                    self.createVisGraph(self._nodes, self._edges)
 
+                    setTimeout(() => { self._network.stopSimulation(); }, 10000);
 
-                self.createVisGraph(self._nodes, self._edges, options)
-
-                    
-                setTimeout(() => { self._network.stopSimulation(); }, 10000);
-
-                if(callback)
-                    callback()
+                    if(callback)
+                        callback()
                 },
                 onError: function (error) {
                   console.log(error);
@@ -304,14 +299,14 @@ export default class NeoVis {
         return session
         };
 
-    createVisGraph(nodes, edges, options) {
+    createVisGraph(nodes, edges) {
         let self = this;
         self._data = {
             "nodes": new vis.DataSet(Object.values(nodes)),
             "edges": new vis.DataSet(Object.values(edges))
-
         }
         var container = self._container;
+        let options   = self.getOptions();
         self._network = new vis.Network(container, self._data, options);
     }
 

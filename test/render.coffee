@@ -41,9 +41,7 @@ describe 'NeoVis | render', ->
 
       done()
 
-
-
-  it.only 'createVisGraph', (done)->
+  it 'createVisGraph', (done)->
     options = {}
     nodes =
       '0' : { id:  0, value: 1, label: 'Movie'   , group: 'Movie',  title: '' }
@@ -53,7 +51,7 @@ describe 'NeoVis | render', ->
     edges =
       '7': { id: 7, from: 8, to: 0, title: '<strong>roles:</strong> Emil<br>', value: 1, label: 'ACTED_IN' }
 
-    neoVis.createVisGraph nodes, edges, options
+    neoVis.createVisGraph nodes, edges
 
     labels = []
     colors = []
@@ -64,14 +62,23 @@ describe 'NeoVis | render', ->
     colors.assert_Is [ '#97C2FC', '#FFFF00', '#FFFF00' , '#FB7E81' , '#97C2FC' ]
     done()
 
-  xit 'render (refactor)', (done)->
-    neoVis.render ()->
-      console.log neoVis._edges
-      console.log  neoVis            ._nodes
-      console.log neoVis._network.body.nodes
-      console.log  neoVis._edges
+  it.only 'render (refactor)', (done)->
+    neoVis._query = 'match (n)-[r]-(p) return n,r,p limit 4'
 
-      console.log 'here'
+    neoVis.render ()->
+      # test the data fetched from Neo4j
+      neoVis._nodes._keys().assert_Is [ '0', '5', '6', '7','8' ]
+      neoVis._edges._keys().assert_Is [ '4', '5', '6', '7' ]
+      neoVis._edges['4'].assert_Is { id: 4, from: 5, to: 0, title: '', value: 1, label: 'DIRECTED' }
+      neoVis._edges['5'].assert_Is { id: 5, from: 6, to: 0, title: '', value: 1, label: 'DIRECTED' }
+
+      # test the data mapped by vis.js
+      neoVis._network.body.nodes._keys().assert_Is [ '0', '5', '6', '7', '8', 'edgeId:4', 'edgeId:5', 'edgeId:6', 'edgeId:7' ]
+      neoVis._network.body.edges._keys().assert_Is [ '4', '5', '6', '7' ]
+
+      neoVis._network.body.nodes['0'].options.color.background.assert_Is '#97C2FC'
+      neoVis._network.body.edges['4'].options.label.assert_Is 'DIRECTED'
+
       done()
 
 
