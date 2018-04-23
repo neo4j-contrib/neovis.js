@@ -1,11 +1,11 @@
 'use strict';
 
 //uncomment for wallabyjs
-//import * as  neo4j from  '../vendor/neo4j-javascript-driver/lib/index.js'
+import * as  neo4j from  '../vendor/neo4j-javascript-driver/lib/index.js'
 
 //uncomment for webpack
-import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
-import '../vendor/vis/dist/vis-network.min.css';
+//import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
+//import '../vendor/vis/dist/vis-network.min.css';
 
 //ok on both
 import * as vis from '../vendor/vis/dist/vis-network.min.js';
@@ -135,8 +135,6 @@ export default class NeoVis {
             } catch(e) {
                 node['group'] = 0;
             }
-
-            
         }
 
 
@@ -295,31 +293,12 @@ export default class NeoVis {
                     "edges": new vis.DataSet(Object.values(self._edges))
 
                 }
-
-                //console.log(self._data.nodes);
-                //console.log(self._data.edges);
-                
-                // Create duplicate node for any self reference relationships
-                // NOTE: Is this only useful for data model type data
-                // self._data.edges = self._data.edges.map( 
-                //     function (item) {
-                //          if (item.from == item.to) {
-                //             var newNode = self._data.nodes.get(item.from)
-                //             delete newNode.id;
-                //             var newNodeIds = self._data.nodes.add(newNode);
-                //             console.log("Adding new node and changing self-ref to node: " + item.to);
-                //             item.to = newNodeIds[0];
-                //          }
-                //          return item;
-                //     }
-                // );
-
-
+                //console.log(self._data.nodes._data['0']  ) // is  {id: 0, value: 1,label: 'DataCenter',group: 'DataCenter',title: '' }
                 self._network = new vis.Network(container, self._data, options);
                 console.log("completed");
                 setTimeout(() => { self._network.stopSimulation(); }, 10000);
                 if(callback)
-                    callback(options)
+                    callback()
                 },
                 onError: function (error) {
                   console.log(error);
@@ -330,7 +309,6 @@ export default class NeoVis {
         };
 
     getOptions() {
-        console.log(' in getOptions')
         let self = this;
         let options = {
             nodes: {
@@ -367,11 +345,11 @@ export default class NeoVis {
                 // }
 
                 adaptiveTimestep: true,
-                barnesHut: {
-                    gravitationalConstant: -8000,
-                    springConstant: 0.04,
-                    springLength: 95
-                },
+                // barnesHut: {
+                //     gravitationalConstant: -8000,
+                //     springConstant: 0.04,
+                //     springLength: 95
+                // },
                 stabilization: {
                     iterations: 200,
                     fit: true
