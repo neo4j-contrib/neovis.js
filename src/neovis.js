@@ -1,11 +1,11 @@
 'use strict';
 
 //uncomment for wallabyjs
-import * as  neo4j from  '../vendor/neo4j-javascript-driver/lib/index.js'
+//import * as  neo4j from  '../vendor/neo4j-javascript-driver/lib/index.js'
 
 //uncomment for webpack
-// import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
-// import '../vendor/vis/dist/vis-network.min.css';
+import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
+import '../vendor/vis/dist/vis-network.min.css';
 
 //ok on both
 import * as vis from '../vendor/vis/dist/vis-network.min.js';
@@ -259,8 +259,11 @@ export default class NeoVis {
     }
 
     handle_onNext (record) {
+        //console.log(record.json_Pretty())
+        //console.log(record.constructor.name)
         let self = this;
         record.forEach(function(v, k, r) {
+            //console.log (v)
             if      (v.constructor.name === "Node"          ) { self.handle_Node(v)         }
             else if (v.constructor.name === "Relationship"  ) { self.handle_Relationship(v) }
             else if (v.constructor.name === "Path"          ) { self.handle_Path(v)         }
@@ -277,29 +280,25 @@ export default class NeoVis {
         self.createVisGraph(self._nodes, self._edges)
         setTimeout(() => { self._network.stopSimulation(); }, 10000);
 
-        callback()
+        if(callback)
+            callback()
     }
 
     handle_onError (error) {
         console.log(error);
     }
 
+
     render(callback) {
-        console.log('In Build')
-        // connect to Neo4j instance
-        // run query
 
-        let self = this;
-
+        let self    = this;
         let session = this._driver.session();
-        session
-            .run(this._query, {limit: 30})
-            .subscribe({
-                onNext     : function(record) { self.handle_onNext(record)        },
-                onCompleted: function ()      { self.handle_onCompleted(callback) },
-                onError    : function (error) { self.handle_onError(record)       },
-
-            })
+        session.run(this._query, {limit: 30})
+               .subscribe({
+                    onNext     : function (record) { self.handle_onNext     ( record   ) },
+                    onCompleted: function ()       { self.handle_onCompleted( callback ) },
+                    onError    : function (error)  { self.handle_onError    ( record   ) },
+                })
         return session
         };
 

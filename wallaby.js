@@ -3,7 +3,8 @@ module.exports = function () {
         files: [
             { pattern: 'vendor/neo4j-javascript-driver/**/*.js', instrument: false, load: true , ignore: false },
             { pattern: 'vendor/vis/dist/*.js'                  , instrument: false, load: true , ignore: false },
-            'src/**/*.js'
+            'src/**/*.js',
+            'src/**/*.coffee'
         ],
 
         tests: [

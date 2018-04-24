@@ -45,6 +45,9 @@ describe 'NeoVis | render', ->
     colors.assert_Is [ '#97C2FC', '#FFFF00', '#FFFF00' , '#FB7E81' , '#97C2FC' ]
     done()
 
+  it 'buildNodeVisObject', ->
+    console.log 'to do'
+
 
   it 'render (schema)', (done)->
     neoVis._query = 'CALL db.schema()'
@@ -72,7 +75,7 @@ describe 'NeoVis | render', ->
       done()
 
   it 'render (test query)', (done)->
-    neoVis._query = 'match (n)-[r]-(p) return n,r,p limit 4'
+    neoVis._query = 'match (n)-[r]-(p) return n,r,p limit 1'
 
     neoVis.render ()->
       # test the data fetched from Neo4j
@@ -105,3 +108,5 @@ describe 'NeoVis | render', ->
       @.physics.assert_Is
           adaptiveTimestep: true
           stabilization: { iterations: 200, fit: true }
+
+
