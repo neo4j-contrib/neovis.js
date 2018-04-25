@@ -1,4 +1,4 @@
 
 describe 'examples', ->
     it 'render',->
-      console.log 'test'
+      console.log 'to do'

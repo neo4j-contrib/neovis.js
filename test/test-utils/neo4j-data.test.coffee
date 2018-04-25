@@ -1,7 +1,7 @@
 require 'fluentnode'
 Neo4j_Data = require '../../src/test-utils/neo4j-data'
 
-describe.only 'test-utils | Neo4j_Data', ->
+describe 'test-utils | Neo4j_Data', ->
   neo4j_Data = null
 
   before ()->
@@ -17,8 +17,6 @@ describe.only 'test-utils | Neo4j_Data', ->
       @._fields[1].type  .assert_Is ['ACTED_IN']
       @._fields[2].labels.assert_Is ['Movie']
       @._keys()          .assert_Is [ 'keys', 'length', '_fields', '_fieldLookup' ]
-
-
 
   it 'rawData_on_Next_Record_Using_Types', ->
     rawData             = neo4j_Data.rawData_on_Next_Record()

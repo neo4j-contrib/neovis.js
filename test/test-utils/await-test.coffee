@@ -1,9 +1,21 @@
-describe 'await-test', ->
-  sleep =  (ms) ->
-    new Promise (resolve) ->
-      setTimeout resolve, ms
+NeoVis  = (require '../../src/neovis.js').default
+jsdom_global = require('jsdom-global')
+require "fluentnode"
 
-  it.only 'should work', ()->
-    #console.log  'before await.'
-    await sleep 50
-    #console.log 'after await'
+xdescribe 'await-test', ->
+  neoVis = null
+
+  before ->
+    jsdom_global =  jsdom_global("<div id='viz'></div>", { });
+    neoVis       = new NeoVis({})
+
+  it 'test NeoVis asyncTest', ->
+    neoVis = new NeoVis({})
+    promise = neoVis.asyncTest()
+    promise.then ->
+      console.log 'after async test'
+
+  it 'test NeoVis asyncCall', ->
+    console.log 'before the call'
+    console.log await neoVis.asyncCall()
+    console.log 'after the call'

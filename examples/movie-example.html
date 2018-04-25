@@ -23,9 +23,21 @@
 
 
     <script type="text/javascript">
-        // define config car
-        // instantiate nodevis object
-        // draw
+
+//         function sleep(ms) {
+//             return new Promise( (resolve) => {
+//                 console.log("... setting sleep to " + ms)
+//                 setTimeout(() => { resolve('ok')}, ms)
+//             })
+//         }
+//
+//         async function asyncCall() {
+//             console.log ('[before sleep]')
+//             result = await sleep(1050);
+//             console.log ('[after sleep]')
+//             console.log (' ... the result was: '+ result)
+//         }
+//         asyncCall()
 
         var viz;
 
@@ -34,7 +46,7 @@
                 container_id: "viz",
                 server_url: "bolt://localhost:7687",
                 server_user: "neo4j",
-                server_password: "test",
+                server_password: "servant-jackets-fives",
                 labels: {
                     Person: { caption : "name"},
                     Movie: { caption : "title"}

@@ -270,9 +270,9 @@ export default class NeoVis {
     }
 
     handle_onCompleted(callback) {
-        console.log("on Completed")
+        //console.log("on Completed")
         let self    = this;
-        let session = this._driver.session//();
+        let session = this._driver.session();
 
         session.close();
         self.createVisGraph(self._nodes, self._edges)
@@ -291,7 +291,7 @@ export default class NeoVis {
 
 
     render(callback) {
-
+        //console.log("on render")
         let self    = this;
         let session = this._driver.session();
         session.run(this._query, {limit: 30})
@@ -423,5 +423,24 @@ export default class NeoVis {
     //    define (function () {return NeoVis;})
     //}
 
+    sleep(ms) {
+        return new Promise( (resolve) => {
+            console.log("... setting sleep to " + ms)
+            setTimeout(() => { resolve('42')}, ms)
+        })
+    }
+
+    async asyncCall() {
+        console.log ('[before sleep]')
+        let result = await this.sleep(170);
+        console.log ('[after sleep]')
+        console.log (' ... the result was: '+ result)
+        return "it's " + result
+    }
+
+
+    asyncTest () {
+        return this.asyncCall()
+    }
 }
 

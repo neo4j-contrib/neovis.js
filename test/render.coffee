@@ -3,7 +3,7 @@ NeoVis       = (require '../src/neovis.js').default
 jsdom_global = require('jsdom-global')
 
 
-describe 'NeoVis | render', ->
+xdescribe 'NeoVis | render', ->
   neoVis = null
   config =
     #server_url     : 'bolt://54.197.82.102:34060',
