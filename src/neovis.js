@@ -1,11 +1,11 @@
 'use strict';
 
 //uncomment for wallabyjs
-import * as  neo4j from  '../vendor/neo4j-javascript-driver/lib/index.js'
+//import * as  neo4j from  '../vendor/neo4j-javascript-driver/lib/index.js'
 
 //uncomment for webpack
-// import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
-// import '../vendor/vis/dist/vis-network.min.css';
+import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
+import '../vendor/vis/dist/vis-network.min.css';
 
 //ok on both
 import * as vis from '../vendor/vis/dist/vis-network.min.js';
@@ -261,7 +261,6 @@ export default class NeoVis {
     handle_onNext (record) {
         let self = this;
         record.forEach(function(v, k, r) {
-            //console.log (v)
             if      (v.constructor.name === "Node"          ) { self.handle_Node(v)         }
             else if (v.constructor.name === "Relationship"  ) { self.handle_Relationship(v) }
             else if (v.constructor.name === "Path"          ) { self.handle_Path(v)         }
@@ -270,7 +269,6 @@ export default class NeoVis {
     }
 
     handle_onCompleted(callback) {
-        //console.log("on Completed")
         let self    = this;
         let session = this._driver.session();
 
@@ -291,7 +289,6 @@ export default class NeoVis {
 
 
     render(callback) {
-        //console.log("on render")
         let self    = this;
         let session = this._driver.session();
         session.run(this._query, {limit: 30})
@@ -422,25 +419,5 @@ export default class NeoVis {
     //} else {
     //    define (function () {return NeoVis;})
     //}
-
-    sleep(ms) {
-        return new Promise( (resolve) => {
-            console.log("... setting sleep to " + ms)
-            setTimeout(() => { resolve('42')}, ms)
-        })
-    }
-
-    async asyncCall() {
-        console.log ('[before sleep]')
-        let result = await this.sleep(170);
-        console.log ('[after sleep]')
-        console.log (' ... the result was: '+ result)
-        return "it's " + result
-    }
-
-
-    asyncTest () {
-        return this.asyncCall()
-    }
 }
 

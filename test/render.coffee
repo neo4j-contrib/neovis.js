@@ -3,7 +3,7 @@ NeoVis       = (require '../src/neovis.js').default
 jsdom_global = require('jsdom-global')
 
 
-xdescribe 'NeoVis | render', ->
+describe 'NeoVis | render', ->
   neoVis = null
   config =
     #server_url     : 'bolt://54.197.82.102:34060',
@@ -17,7 +17,6 @@ xdescribe 'NeoVis | render', ->
   before ->
     jsdom_global =  jsdom_global("<div id='viz'></div>", { });
     neoVis       = new NeoVis(config)
-
 
   it 'check constructor options', ->
       using neoVis, ->
@@ -112,5 +111,3 @@ xdescribe 'NeoVis | render', ->
       @.physics.assert_Is
           adaptiveTimestep: true
           stabilization: { iterations: 200, fit: true }
-
-
