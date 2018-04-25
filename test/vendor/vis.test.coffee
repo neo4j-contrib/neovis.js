@@ -48,3 +48,8 @@ describe 'visjs test', ->
 
 
 
+
+
+# note making this vis work was not easy since the canvas support on node seems to be quite flaky
+#  the error "Cannot read webkitBackingStorePixelRatio of null" was show (caused by canvas context to be null)
+

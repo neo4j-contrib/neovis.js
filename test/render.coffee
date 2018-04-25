@@ -9,8 +9,8 @@ describe 'NeoVis | render', ->
     #server_url     : 'bolt://54.197.82.102:34060',
     server_url     : 'bolt://localhost:7687',
     server_user    : 'neo4j',
-    #server_password: 'servant-jackets-fives',
-    server_password: 'test'
+    server_password: 'servant-jackets-fives',
+    #server_password: 'test'
     initial_cypher : 'match (n)-[r]-(p) return n,r,p limit 3',
     container_id   : 'viz'
 
@@ -23,6 +23,7 @@ describe 'NeoVis | render', ->
       using neoVis, ->
         @._driver._url         .assert_Is 'localhost:7687'
         @._container.toString().assert_Is '[object HTMLDivElement]'
+
 
   it 'createVisGraph', (done)->
     options = {}
@@ -44,6 +45,8 @@ describe 'NeoVis | render', ->
     labels.assert_Is [ 'Movie'  , 'Person' , 'Test_ABC', 'Test_XYZ', ''        ]
     colors.assert_Is [ '#97C2FC', '#FFFF00', '#FFFF00' , '#FB7E81' , '#97C2FC' ]
     done()
+
+
 
   it 'buildNodeVisObject', ->
     console.log 'to do'
@@ -74,10 +77,11 @@ describe 'NeoVis | render', ->
       neoVis._network.body.edges['12'].options.label           .assert_Is 'DIRECTED'
       done()
 
-  it 'render (test query)', (done)->
-    neoVis._query = 'match (n)-[r]-(p) return n,r,p limit 1'
+  it  'render (test query)', (done)->
+    neoVis._query = 'match (n)-[r]-(p) return n,r,p limit 4'
 
-    neoVis.render ()->
+    neoVis.render (error)->
+      assert_Is_Undefined error
       # test the data fetched from Neo4j
       neoVis._nodes._keys().assert_Contains [ '0', '5', '6', '7','8' ]
       neoVis._edges._keys().assert_Contains [ '4', '5', '6', '7'     ]
