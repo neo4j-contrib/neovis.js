@@ -1,4 +1,6 @@
 # neovis.js
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fneo4j-contrib%2Fneovis.js.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fneo4j-contrib%2Fneovis.js?ref=badge_shield)
+
 
 Graph visualizations powered by vis.js with data from Neo4j.
 
@@ -311,3 +313,7 @@ When hierarchical layout is enabled you may choose betweeen `"hubsize"` (default
 `"TRUST_ALL_CERTIFICATES"` (default) o  `"TRUST_SYSTEM_CA_SIGNED_CERTIFICATES"`
 
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fneo4j-contrib%2Fneovis.js.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fneo4j-contrib%2Fneovis.js?ref=badge_large)
