@@ -2,14 +2,15 @@
   "name": "neovis.js",
   "version": "1.0.0",
   "description": "Graph visualizations powered by vis.js with data from Neo4j.",
-  "main": "index.js",
+  "main": "./dist/neovis.js",
   "directories": {
     "doc": "doc",
     "example": "examples",
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -17,7 +18,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/johnymontana/neovis.js/issues"
   },
