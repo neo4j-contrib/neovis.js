@@ -16,6 +16,36 @@ Graph visualizations powered by vis.js with data from Neo4j.
 - [ ] Configure popover
 
 
+## CDN
+
+For ease of use Neovis.js can be obtained from the RawGit CDN:
+
+*For development (not cached) - Master*
+
+```
+<script src="https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
+```
+
+*For production (cached) - Master*
+
+```
+<script src="https://cdn.rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
+```
+
+or specify release tags:
+
+*For development (not cached) - v0.0.1*
+
+```
+<script src="https://rawgit.com/neo4j-contrib/neovis.js/v0.0.1/dist/neovis.js"></script>
+```
+
+*For production (cached) - v0.0.1*
+
+```
+<script src="https://cdn.rawgit.com/neo4j-contrib/neovis.js/v0.0.1/dist/neovis.js"></script>
+```
+
 ## Quickstart Example
 
 Let's go through the steps to reproduce this visualization:
@@ -95,7 +125,7 @@ We define some basic CSS to specify the boundaries of a `div` and then create a 
 We need to pull in `neovis.js`:
 
 ``` html
-<script src="https://cdn.rawgit.com/johnymontana/neovis.js/master/dist/neovis.js"></script>
+<script src="https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
 ```
 
 And define our draw() function:
@@ -143,9 +173,11 @@ See [simple-example.html](/examples/simple-example.html) for the full code.
 
 ## Build
 
-This project uses webpack to build a bundle that includes all project dependencies. `webpack.config.js` contains the configuration for webpack.
+This project uses git submodules to include the dependencies for neo4j-driver and vis.js. This project uses webpack to build a bundle that includes all project dependencies. `webpack.config.js` contains the configuration for webpack. After cloning the repo:
 
 ```
+git submodule init
+git submodule update
 npm install
 ./node_modules/.bin/webpack
 ```
@@ -255,6 +287,18 @@ var config = {
     }
 }
 ```
+
+#### `config.arrows`
+
+Boolean. Defaults to false.
+
+#### `config.hierarchical_layout`
+
+Boolean. Default to false.
+
+#### `config.hierarchical_sort_method`
+
+When hierarchical layout is enabled you may choose betweeen `"hubsize"` (default) and `"directed"`.
 
 #### `config.initial_cypher`
 
