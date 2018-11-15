@@ -24,14 +24,15 @@ export class EventController {
     /**
      * 
      * @param {string} eventType Type of the event generated
+     * @param {dictionary} value Values associated to the event
      */
-    generateEvent(eventType) {
+    generateEvent(eventType, values) {
         if (this._handlers[eventType] === undefined) {
             throw new Error('Unknown event: ' + eventType);
         }
 
         for (const handler of this._handlers[eventType]) {
-            handler();
+            handler(values);
         }
     }
 }

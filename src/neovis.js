@@ -201,12 +201,15 @@ export default class NeoVis {
         // run query
 
         let self = this;
+        let recordCount = 0;
 
         let session = this._driver.session();
         session
             .run(this._query, {limit: 30})
             .subscribe({
                 onNext: function (record) {
+                    recordCount++;
+
                     console.log("CLASS NAME");
                     console.log(record.constructor.name);
                     console.log(record);
@@ -358,7 +361,7 @@ export default class NeoVis {
                 console.log("completed");
                 setTimeout(() => { self._network.stopSimulation(); }, 10000);
 
-                self._events.generateEvent(CompletionEvent);
+                self._events.generateEvent(CompletionEvent, {record_count: recordCount});
 
                 },
                 onError: function (error) {

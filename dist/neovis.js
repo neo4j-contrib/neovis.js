@@ -240,15 +240,15 @@ class EventController {
     /**
      * 
      * @param {string} eventType Type of the event generated
+     * @param {dictionary} value Values associated to the event
      */
-    generateEvent(eventType) {
+    generateEvent(eventType, values) {
         if (this._handlers[eventType] === undefined) {
             throw new Error('Unknown event: ' + eventType);
         }
 
-        console.log(this);
         for (const handler of this._handlers[eventType]) {
-            handler();
+            handler(values);
         }
     }
 }
@@ -36549,12 +36549,15 @@ class NeoVis {
         // run query
 
         let self = this;
+        let recordCount = 0;
 
         let session = this._driver.session();
         session
             .run(this._query, {limit: 30})
             .subscribe({
                 onNext: function (record) {
+                    recordCount++;
+
                     console.log("CLASS NAME");
                     console.log(record.constructor.name);
                     console.log(record);
@@ -36706,7 +36709,7 @@ class NeoVis {
                 console.log("completed");
                 setTimeout(() => { self._network.stopSimulation(); }, 10000);
 
-                self._events.generateEvent(__WEBPACK_IMPORTED_MODULE_4__events__["b" /* CompletionEvent */]);
+                self._events.generateEvent(__WEBPACK_IMPORTED_MODULE_4__events__["b" /* CompletionEvent */], {record_count: recordCount});
 
                 },
                 onError: function (error) {
