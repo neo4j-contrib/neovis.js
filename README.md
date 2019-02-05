@@ -308,6 +308,6 @@ When hierarchical layout is enabled you may choose betweeen `"hubsize"` (default
 
 #### `config.trust`
 
-`"TRUST_ALL_CERTIFICATES"` (default) o  `"TRUST_SYSTEM_CA_SIGNED_CERTIFICATES"`
+`"TRUST_ALL_CERTIFICATES"` (default) or `"TRUST_SYSTEM_CA_SIGNED_CERTIFICATES"`
 
 
