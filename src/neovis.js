@@ -113,7 +113,12 @@ export default class NeoVis {
         }
 
         // node caption
-        node['label'] = n.properties[captionKey] || label || "";
+        if (typeof captionKey === "function") {
+            node['label'] = captionKey(n);
+        }
+        else {
+            node['label'] = n.properties[captionKey] || label || "";
+        }
 
         // community
         // behavior: color by value of community property (if set in config), then color by label
