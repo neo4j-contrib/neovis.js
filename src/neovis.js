@@ -4,7 +4,7 @@ import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.
 import * as vis from '../vendor/vis/dist/vis-network.min.js';
 import '../vendor/vis/dist/vis-network.min.css';
 import { defaults } from './defaults';
-
+import { EventController, CompletionEvent } from './events';
 
 export default class NeoVis {
 
@@ -37,7 +37,7 @@ export default class NeoVis {
         this._data = {};
         this._network = null;
         this._container = document.getElementById(config.container_id);
-
+        this._events = new EventController();
     }
 
     _addNode(node) {
@@ -206,12 +206,15 @@ export default class NeoVis {
         // run query
 
         let self = this;
+        let recordCount = 0;
 
         let session = this._driver.session();
         session
             .run(this._query, {limit: 30})
             .subscribe({
                 onNext: function (record) {
+                    recordCount++;
+
                     console.log("CLASS NAME");
                     console.log(record.constructor.name);
                     console.log(record);
@@ -363,6 +366,8 @@ export default class NeoVis {
                 console.log("completed");
                 setTimeout(() => { self._network.stopSimulation(); }, 10000);
 
+                self._events.generateEvent(CompletionEvent, {record_count: recordCount});
+
                 },
                 onError: function (error) {
                   console.log(error);
@@ -378,6 +383,16 @@ export default class NeoVis {
         this._nodes = {}
         this._edges = {};
         this._network.setData([]);
+    }
+
+
+    /**
+     *
+     * @param {string} eventType Event type to be handled
+     * @param {callback} handler Handler to manage the event
+     */
+    registerOnEvent(eventType, handler) {
+        this._events.register(eventType, handler);
     }
 
 
