@@ -16,35 +16,32 @@ Graph visualizations powered by vis.js with data from Neo4j.
 - [ ] Configure popover
 
 
+## Install
+
+Neovis.js can be installed via npm:
+
+```
+npm install --save neovis.js
+```
+
+you can also obtain neovis.js via CDN:
+
 ## CDN
 
-For ease of use Neovis.js can be obtained from the RawGit CDN:
+For ease of use Neovis.js can be obtained from Neo4jLabs CDN:
 
-*For development (not cached) - Master*
-
-```
-<script src="https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
-```
-
-*For production (cached) - Master*
+*Most recent release*
 
 ```
-<script src="https://cdn.rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
+<script src="https://cdn.neo4jlabs.com/neovis.js/v1.0.0/neovis.js"></script>
 ```
 
-or specify release tags:
-
-*For development (not cached) - v0.0.1*
+*Master - warning, not stable*
 
 ```
-<script src="https://rawgit.com/neo4j-contrib/neovis.js/v0.0.1/dist/neovis.js"></script>
+<script src="https://cdn.neo4jlabs.com/neovis.js/master/neovis.js"></script>
 ```
 
-*For production (cached) - v0.0.1*
-
-```
-<script src="https://cdn.rawgit.com/neo4j-contrib/neovis.js/v0.0.1/dist/neovis.js"></script>
-```
 
 ## Quickstart Example
 
