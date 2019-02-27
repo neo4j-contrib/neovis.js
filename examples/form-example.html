@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+<head>
+    <title>Neovis.js Simple Example</title>
+    <style type="text/css">
+        html, body, input, textarea {
+            font: 10pt arial;
+        }
+
+        #viz {
+            width: 75%;
+            height:700px;
+            border: 1px solid lightgray;
+            font: 22pt arial;
+			margin: 10px;
+        }
+        label { 
+	        display: inline-block;
+	        width: 10em;
+	    }
+
+    </style>
+
+    <script src="https://cdn.neo4jlabs.com/neovis.js/master/neovis.js"></script>
+
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        var viz;
+
+        function draw() {
+            var config = {
+                container_id: "viz",
+                server_url: $("#url").val(),
+                server_user: $("#user").val(),
+                server_password: $("#pass").val(),
+                labels: {},
+                relationships: {},
+                initial_cypher: $("#cypher").val()
+            };
+            config.labels[$("#label").val()] = {
+                "caption": $("#caption").val(),
+                "size": $("#size").val(),
+                "community": $("#community").val(),
+                //"sizeCypher": "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
+            };
+            config.relationships[$("#rel_type").val()] = {
+                "thickness": $("#thickness").val(),
+                "caption": $("#rel_caption").val(),
+            }
+            viz = new NeoVis.default(config);
+            viz.render();
+            console.log(viz);
+
+        }
+    </script>
+</head>
+<body>
+<div id="viz" style="float:left"></div>
+
+<div>
+<div><h3>Connection Details:</h3>
+
+<label for="url">URL</label><input id="url" name="url" type="text" value="bolt://localhost:7687"/><br/>
+<label for="user">Username</label><input id="user" name="user" type="text" value="neo4j"/><br/>
+<label for="pass">Password</label><input id="pass" name="pass" type="password" value="test"/>
+</div>
+
+<div><h3>Styling Nodes:</h3>
+
+<label for="label">Node-Label</label><input id="label" name="label" type="text" value="Character"/><br/>
+<label for="caption">Label</label><input id="caption" name="caption" type="text" value="name"/><br/>
+<label for="size">Size</label><input id="size" name="size" type="text" value="pagerank"/><br/>
+<label for="color">Color</label><input id="community" name="community" type="text" value="community"/>
+</div>
+
+
+<div><h3>Styling Relationship:</h3>
+
+<label for="type">Relationship-Type</label><input id="type" name="type" type="text" value="INTERACTS"/><br/>
+<label for="thickness">Thickness</label><input id="thickness" name="thickness" type="text" value="weight"/><br/>
+<label for="rel_caption">Caption</label><input id="rel_caption" name="rel_caption" type="text" value=""/>
+</div>
+
+
+<div><h3>Cypher query: </h3>
+
+<textarea rows="4" cols=50 id="cypher">MATCH (n)-[r:INTERACTS]->(m) RETURN n,r,m</textarea><br>
+
+<input type="submit" value="Submit" id="reload">
+<input type="submit" value="Stabilize" id="stabilize">
+</div>
+</div>
+</body>
+
+<script>
+    $(document).ready(function() { 
+	   draw();
+	})
+    $("#reload").click(function() {
+       draw();
+/*
+        var cypher = $("#cypher").val();
+
+        if (cypher.length > 3) {
+            viz.renderWithCypher(cypher);
+        } else {
+            console.log("reload");
+            viz.reload();
+        }
+*/
+    });
+
+    $("#stabilize").click(function() {
+        viz.stabilize();
+    })
+
+</script>
+</html>
