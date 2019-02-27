@@ -14,6 +14,8 @@ Graph visualizations powered by vis.js with data from Neo4j.
 - [x] Specify node property for community / clustering
 - [x] Specify node property for node size
 - [ ] Configure popover
+- [x] Pass in driver from the outside
+- [x] Pass in graph data from the outside
 
 
 ## Install
@@ -187,8 +189,11 @@ will build `dist/neovis.js`
 * `Neovis.clearNetwork()`
 * `Neovis.reinit(config)`
 * `Neovis.reload()`
+* `Neovis.render()`
 * `Neovis.stabilize()`
 * `Neovis.renderWithCypher(statement)`
+* `Neovis.renderWithData(data)`
+* `Neovis.renderWithResults(results)`
 
 * `config`
 
@@ -208,22 +213,37 @@ Reinitializes the network visualization with a new `config` object. See [config]
 
 Reload the visualization. Will fetch data again from Neo4j per `initial_cypher` in the config object.
 
+### `Neovis.render()`
+
+Renders either the provided data, or if a query is given execute the query and render the results.
+
 ### `Neovis.stabilize()`
 
 Stop the physics simulation.
 
 ### `Neovis.renderWithCypher(statement)`
 
-Render a new visualization with results from a Cypher statement. Any `Node` and `Relationship` objects returned in the Cypher query will be rendered in the visualization. Paths are not currently supported. 
+Render a new visualization with results from a Cypher statement. Any `Node`, `Relationship`, or `Path` objects returned in the Cypher query will be rendered in the visualization. Virtual entities work as well.
+
+### `Neovis.renderWithData(data)`
+
+Re-renders a new visualization with the given data, which is an object with: `{nodes: {id1:{node1}}, relationships:{id2:rel2}}` detailed below.
+
+
+### `Neovis.renderWithResults(results)`
+
+Re-renders a new visualization with the given results-array from a `StatementResult.records`.
 
 ### `config`
 
 A configuration object that defines:
 
-* how to connect to Neo4j (required)
+* how to connect to Neo4j (required when no driver is passed in)
+* an initalized bolt driver (optional)
 * an initial Cypher query for loading data for the visualization (optional)
 * the DOM element in which the visualization should be rendered (required)
-* how to style elements of the visualization (`labels` and `relationships`) (required)
+* how to style elements of the visualization (`labels` and `relationships`) (required when using Cypher, optional when passing graph data directly)
+* graph data instead of a cypher statement, which then has to be set to an "-" string (optional)
 
 Example:
 
@@ -263,6 +283,10 @@ var config = {
 
 #### `config.server_password`
 
+#### `config.driver`
+
+an initialized bolt driver.
+
 #### `config.labels`
 
 ```
@@ -298,6 +322,26 @@ Boolean. Default to false.
 When hierarchical layout is enabled you may choose betweeen `"hubsize"` (default) and `"directed"`.
 
 #### `config.initial_cypher`
+
+Cypher statement to be run initially, if graph data is given instead, pass `"-"`.
+
+#### `config.data`
+
+Optional graph data of this shape:
+
+```
+data:{ nodes: {42:{id:42,label:"Person", value:0.5, group:13, title:"detailed information"}}, 
+              relationships: {11:{id:11, from:42, to: 43, label:"KNOWS", value:0.3, title:"detailed information"}}}
+```
+
+If you pass it, please set `initial_cypher` to `"-"` also in that case the styling configuration is not used as you provide the values directly.
+
+* id: numeric id
+* from, to: node-ids of start-end node
+* label: the configured node-label or relationship-type, used for styling
+* value: numeric double value for sizing, if possible (0.0 to 1.0) (optional)
+* group: cluster or community for coloring (optional)
+* title: detailed text, for title-tip on hover (optional)
 
 #### `config.encrypted`
 

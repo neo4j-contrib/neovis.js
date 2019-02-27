@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+    <title>Neovis.js Simple Example</title>
+    <style type="text/css">
+        html, body {
+            font: 16pt arial;
+        }
+
+        #viz {
+            width: 900px;
+            height: 700px;
+            border: 1px solid lightgray;
+            font: 22pt arial;
+        }
+
+    </style>
+
+    <script src="https://unpkg.com/neo4j-driver"></script>
+    <script type="text/javascript" src="../dist/neovis.js"></script>
+
+
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+
+
+    <script type="text/javascript">
+        // define config car
+        // instantiate nodevis object
+        // draw
+
+        var viz;
+        var driver = neo4j.v1.driver("bolt://localhost", neo4j.v1.auth.basic("neo4j", "test"));
+        function draw() {
+            var config = {
+                container_id: "viz",
+                driver: driver,
+                labels: {
+                    //"Character": "name",
+                    "Character": {
+                        "caption": "name",
+                        "size": "pagerank",
+                        "community": "community"
+                        //"sizeCypher": "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
+                    }
+                },
+                relationships: {
+                    "INTERACTS": {
+                        "thickness": "weight",
+                        "caption": false
+                    }
+                },
+                initial_cypher: "MATCH (n)-[r:INTERACTS]->(m) RETURN n,r,m"
+            };
+
+            viz = new NeoVis.default(config);
+            viz.render();
+            console.log(viz);
+
+        }
+    </script>
+</head>
+<body onload="draw()">
+<div id="viz"></div>
+
+
+Cypher query: <textarea rows="4" cols=50 id="cypher">
+MATCH (n)-[r:INTERACTS]->(m) RETURN n,r,m
+</textarea><br>
+    <input type="submit" value="Submit" id="reload">
+    <input type="submit" value="Stabilize" id="stabilize">
+
+
+</body>
+
+<script>
+    $("#reload").click(function() {
+
+        var cypher = $("#cypher").val();
+
+        if (cypher.length > 3) {
+            viz.renderWithCypher(cypher);
+        } else {
+            console.log("reload");
+            viz.reload();
+
+        }
+
+    });
+
+    $("#stabilize").click(function() {
+        viz.stabilize();
+    })
+
+</script>
+</html>

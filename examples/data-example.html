@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+    <title>Neovis.js Simple Example</title>
+    <style type="text/css">
+        html, body {
+            font: 16pt arial;
+        }
+
+        #viz {
+            width: 900px;
+            height: 700px;
+            border: 1px solid lightgray;
+            font: 22pt arial;
+        }
+
+    </style>
+
+    <!-- FIXME: load from dist -->
+    <script type="text/javascript" src="../dist/neovis.js"></script>
+
+
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        // define config car
+        // instantiate nodevis object
+        // draw
+
+        var viz;
+
+        function draw() {
+            var config = {
+                container_id: "viz",
+                initial_cypher: "-",
+                data: {nodes: {1:{id:1, label:"John Snow", value:0.5, group: 1, title:"King of the North"},
+				         2:{id:2, label:"Cersei Lannister", value:0.3, group: 2, title:"Ruthless Queen"}}, 
+				relationships:{1:{id:1, from:1, to:2, label:"INTERACTS", value:0.2, title:"They hate each other"}}}
+            };
+
+            viz = new NeoVis.default(config);
+            viz.render();
+            console.log(viz);
+
+        }
+    </script>
+</head>
+<body onload="draw()">
+<div id="viz"></div>
+
+
+Data query: <textarea rows="4" cols=50 id="data">
+{nodes: {1:{id:1, label:"John Snow", value:0.5, group: 1, title:"King of the North"},
+         2:{id:2, label:"Cersei Lannister", value:0.3, group: 2, title:"Ruthless Queen"}}, 
+relationships:{1:{id:1, from:1, to:2, label:"INTERACTS", value:0.2, title:"They hate each other"}}}
+</textarea><br>
+    <input type="submit" value="Submit" id="reload">
+    <input type="submit" value="Stabilize" id="stabilize">
+
+
+</body>
+
+<script>
+    $("#reload").click(function() {
+
+        var data = $("#data").val();
+
+        if (data.length > 3) {
+            viz.renderWithData(eval("("+data+")"));
+        } else {
+            viz.render();
+
+        }
+
+    });
+
+    $("#stabilize").click(function() {
+        viz.stabilize();
+    })
+
+</script>
+</html>
