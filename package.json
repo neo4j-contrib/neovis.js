@@ -29,5 +29,9 @@
     "style-loader": "^0.16.1",
     "url-loader": "^0.5.8",
     "webpack": "^2.3.3"
+  },
+  "dependencies": {
+    "neo4j-driver": "^1.7.4",
+    "vis": "^4.21.0"
   }
 }

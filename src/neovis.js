@@ -1,8 +1,8 @@
 'use strict';
 
-import * as neo4j from '../vendor/neo4j-javascript-driver/lib/browser/neo4j-web.js';
-import * as vis from '../vendor/vis/dist/vis-network.min.js';
-import '../vendor/vis/dist/vis-network.min.css';
+import * as neo4j from "neo4j-driver";
+import * as vis from '../node_modules/vis/dist/vis-network.min.js';
+import '../node_modules/vis/dist/vis-network.min.css';
 import { defaults } from './defaults';
 import { EventController, CompletionEvent } from './events';
 
