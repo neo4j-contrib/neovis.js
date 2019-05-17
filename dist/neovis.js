@@ -11076,7 +11076,13 @@ if(false) {
 
 "use strict";
 const CompletionEvent = 'completed';
-/* harmony export (immutable) */ __webpack_exports__["b"] = CompletionEvent;
+/* harmony export (immutable) */ __webpack_exports__["c"] = CompletionEvent;
+
+const SelectionEvent = 'selectNode';
+/* harmony export (immutable) */ __webpack_exports__["b"] = SelectionEvent;
+
+const ClickEvent = 'click';
+/* unused harmony export ClickEvent */
 
 
 class EventController {
@@ -11084,6 +11090,8 @@ class EventController {
     constructor() {
         this._handlers = {
             [CompletionEvent]: [],
+            [SelectionEvent]: [],
+            [ClickEvent]: []
         };
     }
 
@@ -24253,8 +24261,8 @@ class NeoVis {
         this._config = config;
         this._encrypted = config.encrypted || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* defaults */]['neo4j']['encrypted'];
         this._trust = config.trust || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* defaults */].neo4j.trust;
-        this._driver = __WEBPACK_IMPORTED_MODULE_0_neo4j_driver__["v1"].driver(config.server_url || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* defaults */].neo4j.neo4jUri, __WEBPACK_IMPORTED_MODULE_0_neo4j_driver__["v1"].auth.basic(config.server_user || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* defaults */].neo4j.neo4jUser, config.server_password || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* defaults */].neo4j.neo4jPassword), {encrypted: this._encrypted, trust: this._trust});
-        this._query =   config.initial_cypher || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* defaults */].neo4j.initialQuery;
+        this._driver = __WEBPACK_IMPORTED_MODULE_0_neo4j_driver__["v1"].driver(config.server_url || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* defaults */].neo4j.neo4jUri, __WEBPACK_IMPORTED_MODULE_0_neo4j_driver__["v1"].auth.basic(config.server_user || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* defaults */].neo4j.neo4jUser, config.server_password || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* defaults */].neo4j.neo4jPassword), { encrypted: this._encrypted, trust: this._trust });
+        this._query = config.initial_cypher || __WEBPACK_IMPORTED_MODULE_3__defaults__["a" /* defaults */].neo4j.initialQuery;
         this._nodes = {};
         this._edges = {};
         this._data = {};
@@ -24278,19 +24286,19 @@ class NeoVis {
      * @param n
      * @returns {{}}
      */
-     buildNodeVisObject(n) {
+    buildNodeVisObject(n) {
 
         var self = this;
         let node = {};
         let label = n.labels[0];
 
-        let captionKey   = this._config && this._config.labels && this._config.labels[label] && this._config.labels[label]['caption'],
+        let captionKey = this._config && this._config.labels && this._config.labels[label] && this._config.labels[label]['caption'],
             sizeKey = this._config && this._config.labels && this._config.labels[label] && this._config.labels[label]['size'],
             sizeCypher = this._config && this._config.labels && this._config.labels[label] && this._config.labels[label]['sizeCypher'],
             communityKey = this._config && this._config.labels && this._config.labels[label] && this._config.labels[label]['community'];
 
         node['id'] = n.identity.toInt();
-        
+
         // node size
 
         if (sizeCypher) {
@@ -24299,14 +24307,14 @@ class NeoVis {
             // of the internal node id
 
             let session = this._driver.session();
-            session.run(sizeCypher, {id: __WEBPACK_IMPORTED_MODULE_0_neo4j_driver__["v1"].int(node['id'])})
-                .then(function(result) {
-                    result.records.forEach(function(record) {
-                        record.forEach(function(v,k,r) {
+            session.run(sizeCypher, { id: __WEBPACK_IMPORTED_MODULE_0_neo4j_driver__["v1"].int(node['id']) })
+                .then(function (result) {
+                    result.records.forEach(function (record) {
+                        record.forEach(function (v, k, r) {
                             if (typeof v === "number") {
-                                self._addNode({id: node['id'], value: v});
+                                self._addNode({ id: node['id'], value: v });
                             } else if (v.constructor.name === "Integer") {
-                                self._addNode({id: node['id'], value: v.toNumber()})
+                                self._addNode({ id: node['id'], value: v.toNumber() })
                             }
                         })
                     })
@@ -24357,11 +24365,11 @@ class NeoVis {
                     node['group'] = 0;
                 }
 
-            } catch(e) {
+            } catch (e) {
                 node['group'] = 0;
             }
 
-            
+
         }
 
 
@@ -24413,7 +24421,7 @@ class NeoVis {
                 edge['label'] = r.type;
             }
         } else if (captionKey && typeof captionKey === "string") {
-            edge['label']  = r.properties[captionKey] || "";
+            edge['label'] = r.properties[captionKey] || "";
         } else {
             edge['label'] = r.type;
         }
@@ -24433,119 +24441,119 @@ class NeoVis {
 
         let session = this._driver.session();
         session
-            .run(this._query, {limit: 30})
+            .run(this._query, { limit: 30 })
             .subscribe({
                 onNext: function (record) {
                     recordCount++;
 
-                    console.log("CLASS NAME");
-                    console.log(record.constructor.name);
-                    console.log(record);
+                    //console.log("CLASS NAME");
+                    //console.log(record.constructor.name);
+                    //console.log(record);
 
-                    record.forEach(function(v, k, r) {
-                    console.log("Constructor:");
-                    console.log(v.constructor.name);
-                    if (v.constructor.name === "Node") {
-                        let node = self.buildNodeVisObject(v);
+                    record.forEach(function (v, k, r) {
+                        //console.log("Constructor:");
+                        //console.log(v.constructor.name);
+                        if (v.constructor.name === "Node") {
+                            let node = self.buildNodeVisObject(v);
 
-                        try {
-                            self._addNode(node);
-                        } catch(e) {
-                            console.log(e);
+                            try {
+                                self._addNode(node);
+                            } catch (e) {
+                                console.error(e);
+                            }
+
+                        }
+                        else if (v.constructor.name === "Relationship") {
+
+                            let edge = self.buildEdgeVisObject(v);
+
+                            try {
+                                self._addEdge(edge);
+                            } catch (e) {
+                                console.error(e);
+                            }
+
+                        }
+                        else if (v.constructor.name === "Path") {
+                            //console.log("PATH");
+                            //console.log(v);
+                            let n1 = self.buildNodeVisObject(v.start);
+                            let n2 = self.buildNodeVisObject(v.end);
+
+                            self._addNode(n1);
+                            self._addNode(n2);
+
+                            v.segments.forEach((obj) => {
+
+                                self._addNode(self.buildNodeVisObject(obj.start));
+                                self._addNode(self.buildNodeVisObject(obj.end))
+                                self._addEdge(self.buildEdgeVisObject(obj.relationship))
+                            });
+
+                        }
+                        else if (v.constructor.name === "Array") {
+                            v.forEach(function (obj) {
+                                //console.log("Array element constructor:");
+                                //console.log(obj.constructor.name);
+                                if (obj.constructor.name === "Node") {
+                                    let node = self.buildNodeVisObject(obj);
+
+                                    try {
+                                        self._addNode(node);
+                                    } catch (e) {
+                                        console.error(e);
+                                    }
+                                }
+                                else if (obj.constructor.name === "Relationship") {
+                                    let edge = self.buildEdgeVisObject(obj);
+
+                                    try {
+                                        self._addEdge(edge);
+                                    } catch (e) {
+                                        console.error(e);
+                                    }
+                                }
+                            });
                         }
 
-                    }
-                    else if (v.constructor.name === "Relationship") {
-
-                        let edge = self.buildEdgeVisObject(v);
-
-                        try {
-                            self._addEdge(edge);
-                        } catch(e) {
-                            console.log(e);
-                        }
-
-                    }
-                    else if (v.constructor.name === "Path") {
-                        console.log("PATH");
-                        console.log(v);
-                        let n1 = self.buildNodeVisObject(v.start);
-                        let n2 = self.buildNodeVisObject(v.end);
-                        
-                        self._addNode(n1);
-                        self._addNode(n2);
-
-                        v.segments.forEach((obj) => {
-                            
-                            self._addNode(self.buildNodeVisObject(obj.start));
-                            self._addNode(self.buildNodeVisObject(obj.end))
-                            self._addEdge(self.buildEdgeVisObject(obj.relationship))
-                        });
-
-                    }
-                    else if (v.constructor.name === "Array") {
-                        v.forEach(function(obj) {
-                            console.log("Array element constructor:");
-                            console.log(obj.constructor.name);
-                            if (obj.constructor.name === "Node") {
-                                let node = self.buildNodeVisObject(obj);
-
-                                try {
-                                    self._addNode(node);
-                                } catch(e) {
-                                    console.log(e);
-                                }
-                            }
-                            else if (obj.constructor.name === "Relationship") {
-                                let edge = self.buildEdgeVisObject(obj);
-
-                                try {
-                                    self._addEdge(edge);
-                                } catch(e) {
-                                    console.log(e);
-                                }
-                            }
-                        });
-                    }
-
-                })
+                    })
                 },
                 onCompleted: function () {
-                  session.close();
-                  let options = {
-                    nodes: {
-                        shape: 'dot',
-                        font: {
-                            size: 26,
-                            strokeWidth: 7
-                        },
-                        scaling: {
-                            label: {
-                                enabled: true
+                    session.close();
+                    let options = {
+                        nodes: {
+                            shape: 'dot',
+                            font: {
+                                size: 26,
+                                strokeWidth: 7
+                            },
+                            scaling: {
+                                label: {
+                                    enabled: true
+                                }
                             }
-                        }
-                    },
-                    edges: {
-                        arrows: {
-                            to: {enabled: self._config.arrows || false } // FIXME: handle default value
                         },
-                        length: 200
-                    },
-                    layout: {
-                        improvedLayout: false,
-                        hierarchical: {
-                            enabled: self._config.hierarchical || false,
-                            sortMethod: self._config.hierarchical_sort_method || "hubsize"
+                        edges: {
+                            arrows: {
+                                to: { enabled: self._config.arrows || false } // FIXME: handle default value
+                            },
+                            length: 200
+                        },
+                        layout: {
+                            improvedLayout: false,
+                            hierarchical: {
+                                enabled: self._config.hierarchical || false,
+                                sortMethod: self._config.hierarchical_sort_method || "hubsize"
 
-                        }
-                    },
-                    physics: { // TODO: adaptive physics settings based on size of graph rendered
-                        // enabled: true,
-                        // timestep: 0.5,
-                        // stabilization: {
-                        //     iterations: 10
-                        // }
-                        
+                            }
+                        },
+                        physics: { // TODO: adaptive physics settings based on size of graph rendered
+                            // enabled: true,
+                            // timestep: 0.5,
+                            // stabilization: {
+                            //     iterations: 10
+                            // }
+
                             adaptiveTimestep: true,
                             // barnesHut: {
                             //     gravitationalConstant: -8000,
@@ -24556,48 +24564,55 @@ class NeoVis {
                                 iterations: 200,
                                 fit: true
                             }
-                        
+
+                        }
+                    };
+
+                    var container = self._container;
+                    self._data = {
+                        "nodes": new __WEBPACK_IMPORTED_MODULE_1__node_modules_vis_dist_vis_network_min_js__["DataSet"](Object.values(self._nodes)),
+                        "edges": new __WEBPACK_IMPORTED_MODULE_1__node_modules_vis_dist_vis_network_min_js__["DataSet"](Object.values(self._edges))
+
                     }
-                  };
 
-                var container = self._container;
-                self._data = {
-                    "nodes": new __WEBPACK_IMPORTED_MODULE_1__node_modules_vis_dist_vis_network_min_js__["DataSet"](Object.values(self._nodes)),
-                    "edges": new __WEBPACK_IMPORTED_MODULE_1__node_modules_vis_dist_vis_network_min_js__["DataSet"](Object.values(self._edges))
+                    //console.log(self._data.nodes);
+                    //console.log(self._data.edges);
 
-                }
+                    // Create duplicate node for any self reference relationships
+                    // NOTE: Is this only useful for data model type data
+                    // self._data.edges = self._data.edges.map( 
+                    //     function (item) {
+                    //          if (item.from == item.to) {
+                    //             var newNode = self._data.nodes.get(item.from)
+                    //             delete newNode.id;
+                    //             var newNodeIds = self._data.nodes.add(newNode);
+                    //             //console.log("Adding new node and changing self-ref to node: " + item.to);
+                    //             item.to = newNodeIds[0];
+                    //          }
+                    //          return item;
+                    //     }
+                    // );
 
-                console.log(self._data.nodes);
-                console.log(self._data.edges);
-                
-                // Create duplicate node for any self reference relationships
-                // NOTE: Is this only useful for data model type data
-                // self._data.edges = self._data.edges.map( 
-                //     function (item) {
-                //          if (item.from == item.to) {
-                //             var newNode = self._data.nodes.get(item.from)
-                //             delete newNode.id;
-                //             var newNodeIds = self._data.nodes.add(newNode);
-                //             console.log("Adding new node and changing self-ref to node: " + item.to);
-                //             item.to = newNodeIds[0];
-                //          }
-                //          return item;
-                //     }
-                // );
-                
-                self._network = new __WEBPACK_IMPORTED_MODULE_1__node_modules_vis_dist_vis_network_min_js__["Network"](container, self._data, options);
-                console.log("completed");
-                setTimeout(() => { self._network.stopSimulation(); }, 10000);
+                    self._network = new __WEBPACK_IMPORTED_MODULE_1__node_modules_vis_dist_vis_network_min_js__["Network"](container, self._data, options);
+                    self._network.on("selectNode", (properties) => {
+                        const session = self._driver.session();
+                        session.run("MATCH (n) WHERE ID(n) IN [" + properties.nodes.join(", ") + "] RETURN n")
+                            .then((results) => {
+                                self._events.generateEvent(__WEBPACK_IMPORTED_MODULE_4__events__["b" /* SelectionEvent */], results);
+                            });
+                    })
+                    //console.log("completed");
+                    setTimeout(() => { self._network.stopSimulation(); }, 10000);
 
-                self._events.generateEvent(__WEBPACK_IMPORTED_MODULE_4__events__["b" /* CompletionEvent */], {record_count: recordCount});
+                    self._events.generateEvent(__WEBPACK_IMPORTED_MODULE_4__events__["c" /* CompletionEvent */], { record_count: recordCount });
 
                 },
                 onError: function (error) {
-                  console.log(error);
+                    console.error(error);
                 }
 
             })
-        };
+    };
 
     /**
      * Clear the data for the visualization

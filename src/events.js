@@ -1,10 +1,14 @@
 export const CompletionEvent = 'completed';
+export const SelectionEvent = 'selectNode';
+export const ClickEvent = 'click';
 
 export class EventController {
 
     constructor() {
         this._handlers = {
             [CompletionEvent]: [],
+            [SelectionEvent]: [],
+            [ClickEvent]: []
         };
     }
 
