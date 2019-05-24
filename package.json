@@ -40,6 +40,7 @@
     "@babel/core": "^7.4.5",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/preset-env": "^7.4.5",
+    "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.6",
     "cross-env": "^5.2.0",
     "css-loader": "^2.1.1",
@@ -53,7 +54,6 @@
     "webpack-cli": "^3.3.2"
   },
   "dependencies": {
-    "babel-eslint": "^10.0.1",
     "core-js": "3",
     "neo4j-driver": "^1.7.5",
     "regenerator-runtime": "^0.13.2",
