@@ -392,6 +392,7 @@ export default class NeoVis {
 	 */
 	reinit(config) {
 		this._init(config);
+		this.render();
 	}
 
 	/**
