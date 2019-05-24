@@ -3,8 +3,8 @@
 import * as neo4j from 'neo4j-driver';
 import * as vis from 'vis/dist/vis-network.min';
 import 'vis/dist/vis-network.min.css';
-import {defaults} from './defaults';
-import {EventController, CompletionEvent} from './events';
+import { defaults } from './defaults';
+import { EventController, CompletionEvent } from './events';
 
 export default class NeoVis {
 	_nodes = {};
@@ -274,7 +274,7 @@ export default class NeoVis {
 					});
 					dataBuildPromises.push(Promise.all(dataPromises));
 				},
-				onCompleted: async() => {
+				onCompleted: async () => {
 					await Promise.all(dataBuildPromises);
 					session.close();
 					let options = {

@@ -1,8 +1,7 @@
-
 const defaults = {
 
 	neo4j: {
-		initialQuery:   `MATCH (n) WHERE exists(n.pagerank)
+		initialQuery: `MATCH (n) WHERE exists(n.pagerank)
                         WITH (n), RAND() AS random
                         ORDER BY random LIMIT 3000
                         OPTIONAL MATCH (n)-[r]-(m)
@@ -23,7 +22,7 @@ const defaults = {
 			//        multiselect: true,
 			multiselect: 'alwaysOn',
 			zoomView: false,
-			experimental: { }
+			experimental: {}
 		},
 		physics: {
 			barnesHut: {
