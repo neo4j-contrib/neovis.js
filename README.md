@@ -289,7 +289,7 @@ var config = {
 
 Boolean. Defaults to false.
 
-#### `config.hierarchical_layout`
+#### `config.hierarchical`
 
 Boolean. Default to false.
 
