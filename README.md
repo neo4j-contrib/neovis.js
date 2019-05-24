@@ -173,13 +173,11 @@ See [simple-example.html](/examples/simple-example.html) for the full code.
 This project uses git submodules to include the dependencies for neo4j-driver and vis.js. This project uses webpack to build a bundle that includes all project dependencies. `webpack.config.js` contains the configuration for webpack. After cloning the repo:
 
 ```
-git submodule init
-git submodule update
 npm install
-./node_modules/.bin/webpack
+npm run build
 ```
 
-will build `dist/neovis.js` 
+will build `dist/neovis.js` and `dist/neovis-without-dependencies.js` 
 
 ## Documentation
 
