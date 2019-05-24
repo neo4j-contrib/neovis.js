@@ -44,13 +44,13 @@
                         "size": "retweets",
                         "community": "community"
                     },
-                      "Troll": {
+                    "Troll": {
                         "caption": "screen_name",
                         "size": "pagerank",
                         "community": "community"
-                      }
+                    }
 
-                        //"sizeCypher": "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
+                    //"sizeCypher": "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
 
                 },
                 relationships: {
@@ -74,14 +74,14 @@
 
 
 Cypher query: <textarea rows="4" cols=50 id="cypher"></textarea><br>
-    <input type="submit" value="Submit" id="reload">
-    <input type="submit" value="Stabilize" id="stabilize">
+<input type="submit" value="Submit" id="reload">
+<input type="submit" value="Stabilize" id="stabilize">
 
 
 </body>
 
 <script>
-    $("#reload").click(function() {
+    $("#reload").click(function () {
 
         var cypher = $("#cypher").val();
 
@@ -95,7 +95,7 @@ Cypher query: <textarea rows="4" cols=50 id="cypher"></textarea><br>
 
     });
 
-    $("#stabilize").click(function() {
+    $("#stabilize").click(function () {
         viz.stabilize();
     })
 

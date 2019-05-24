@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Graph visualizations powered by vis.js with data from Neo4j.",
   "main": "./dist/neovis.js",
+  "module": "./dist/neovis-without-dependencies.js",
   "directories": {
     "doc": "doc",
     "example": "examples",
@@ -10,7 +11,18 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "eslint": "eslint .",
+    "prepublishOnly": "npm run build",
+    "prepublish": "npm run build",
+    "clean": "rimraf ./dist",
+    "build": "run-s clean build:prod",
+    "build-dev": "run-s clean build:dev",
+    "build:prod": "run-p build:prod:*",
+    "build:prod:with-dependencies": "cross-env BUILD_WITH_DEPENDENCIES=true webpack --mode=production",
+    "build:prod:without-dependencies": "webpack --mode=production",
+    "build:dev": "run-p build:dev:*",
+    "build:dev:with-dependencies": "cross-env BUILD_WITH_DEPENDENCIES=true webpack --mode=development",
+    "build:dev:without-dependencies": "webpack --mode=development"
   },
   "repository": {
     "type": "git",
@@ -24,10 +36,27 @@
   },
   "homepage": "https://github.com/neo4j-contrib/neovis.js#readme",
   "devDependencies": {
-    "css-loader": "^0.28.0",
-    "file-loader": "^0.11.1",
-    "style-loader": "^0.16.1",
-    "url-loader": "^0.5.8",
-    "webpack": "^2.3.3"
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "babel-loader": "^8.0.6",
+    "cross-env": "^5.2.0",
+    "css-loader": "^2.1.1",
+    "eslint": "^5.16.0",
+    "file-loader": "^3.0.1",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^2.6.3",
+    "style-loader": "^0.23.1",
+    "url-loader": "^1.1.2",
+    "webpack": "^4.32.2",
+    "webpack-cli": "^3.3.2"
+  },
+  "dependencies": {
+    "babel-eslint": "^10.0.1",
+    "core-js": "3",
+    "neo4j-driver": "^1.7.5",
+    "regenerator-runtime": "^0.13.2",
+    "vis": "^4.21.0"
   }
 }
