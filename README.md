@@ -167,6 +167,18 @@ This function creates a `config` object that specifies how to connect to Neo4j, 
 
 See [simple-example.html](/examples/simple-example.html) for the full code.
 
+### module usage
+you can also use it as module, but it would require you have a way to import css files
+
+```javascript
+import NeoVis from 'neovis.js';
+```
+
+or you can import the version with bundled dependency
+
+```javascript
+import NeoVis from 'neovis.js/dist/neovis.js';
+```
 
 ## Build
 
