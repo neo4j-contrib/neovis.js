@@ -299,6 +299,10 @@ When hierarchical layout is enabled you may choose betweeen `"hubsize"` (default
 
 #### `config.initial_cypher`
 
+#### `config.console_debug`
+
+Defaults to not showing console messages
+
 #### `config.encrypted`
 
 `"ENCRYPTION_OFF"` (default) or `"ENCRYPTION_ON"`

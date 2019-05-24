@@ -30,13 +30,13 @@ export default class NeoVis {
 	constructor(config) {
 		this._init(config);
 
-		this._debug(config);
-		this._debug(defaults);
+		this._consoleLog(config);
+		this._consoleLog(defaults);
 	}
 
-	_debug(message, level = 'log') {
+	_consoleLog(message, level = 'log') {
 		// eslint-disable-next-line no-console
-		this._config.debug_mode && console[level](message);
+		this._config.console_debug && console[level](message);
 	}
 
 	_init(config) {
@@ -221,19 +221,19 @@ export default class NeoVis {
 				onNext: async (record) => {
 					recordCount++;
 
-					this._debug('CLASS NAME');
-					this._debug(record.constructor.name);
-					this._debug(record);
+					this._consoleLog('CLASS NAME');
+					this._consoleLog(record.constructor.name);
+					this._consoleLog(record);
 
 					for (let v of record) {
-						this._debug('Constructor:');
-						this._debug(v.constructor.name);
+						this._consoleLog('Constructor:');
+						this._consoleLog(v.constructor.name);
 						if (v.constructor.name === 'Node') {
 							let node = await this.buildNodeVisObject(v);
 							try {
 								this._addNode(node);
 							} catch (e) {
-								this._debug(e, 'error');
+								this._consoleLog(e, 'error');
 							}
 
 						} else if (v.constructor.name === 'Relationship') {
@@ -241,8 +241,8 @@ export default class NeoVis {
 							this._addEdge(edge);
 
 						} else if (v.constructor.name === 'Path') {
-							this._debug('PATH');
-							this._debug(v);
+							this._consoleLog('PATH');
+							this._consoleLog(v);
 							let startNode = await this.buildNodeVisObject(v.start);
 							let endNode = await this.buildNodeVisObject(v.end);
 
@@ -257,8 +257,8 @@ export default class NeoVis {
 
 						} else if (v.constructor.name === 'Array') {
 							for (let obj of v) {
-								this._debug('Array element constructor:');
-								this._debug(obj.constructor.name);
+								this._consoleLog('Array element constructor:');
+								this._consoleLog(obj.constructor.name);
 								if (obj.constructor.name === 'Node') {
 									let node = await this.buildNodeVisObject(obj);
 									this._addNode(node);
@@ -299,7 +299,6 @@ export default class NeoVis {
 							hierarchical: {
 								enabled: this._config.hierarchical || false,
 								sortMethod: this._config.hierarchical_sort_method || 'hubsize'
-
 							}
 						},
 						physics: { // TODO: adaptive physics settings based on size of graph rendered
@@ -322,15 +321,14 @@ export default class NeoVis {
 						}
 					};
 
-					const
-						container = this._container;
+					const container = this._container;
 					this._data = {
 						'nodes': new vis.DataSet(Object.values(this._nodes)),
 						'edges': new vis.DataSet(Object.values(this._edges))
 					};
 
-					this._debug(this._data.nodes);
-					this._debug(this._data.edges);
+					this._consoleLog(this._data.nodes);
+					this._consoleLog(this._data.edges);
 
 					// Create duplicate node for any this reference relationships
 					// NOTE: Is this only useful for data model type data
@@ -340,7 +338,7 @@ export default class NeoVis {
 					//             const newNode = this._data.nodes.get(item.from)
 					//             delete newNode.id;
 					//             const newNodeIds = this._data.nodes.add(newNode);
-					//             this._debug("Adding new node and changing this-ref to node: " + item.to);
+					//             this._consoleLog("Adding new node and changing this-ref to node: " + item.to);
 					//             item.to = newNodeIds[0];
 					//          }
 					//          return item;
@@ -348,7 +346,7 @@ export default class NeoVis {
 					// );
 
 					this._network = new vis.Network(container, this._data, options);
-					this._debug('completed');
+					this._consoleLog('completed');
 
 					setTimeout(
 						() => {
@@ -361,7 +359,7 @@ export default class NeoVis {
 
 				},
 				onError: (error) => {
-					this._debug(error);
+					this._consoleLog(error);
 				}
 			});
 	}
@@ -408,7 +406,7 @@ export default class NeoVis {
 	 */
 	stabilize() {
 		this._network.stopSimulation();
-		this._debug('Calling stopSimulation');
+		this._consoleLog('Calling stopSimulation');
 	}
 
 	/**
