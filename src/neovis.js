@@ -95,9 +95,9 @@ export default class NeoVis {
 			for (let record of result.records) {
 				for (let v of record) {
 					if (typeof v === 'number') {
-						this._addNode({id: node.id, value: v});
+						node.value = v;
 					} else if (v.constructor.name === 'Integer') {
-						this._addNode({id: node.id, value: v.toNumber()});
+						node.value = v.toNumber();
 					}
 				}
 			}
@@ -215,17 +215,18 @@ export default class NeoVis {
 		let recordCount = 0;
 
 		let session = this._driver.session();
+		const dataBuildPromises = [];
 		session
 			.run(this._query, {limit: 30})
 			.subscribe({
-				onNext: async (record) => {
+				onNext: (record) => {
 					recordCount++;
 
 					this._consoleLog('CLASS NAME');
 					this._consoleLog(record.constructor.name);
 					this._consoleLog(record);
 
-					for (let v of record) {
+					const dataPromises = record.map(async (v) => {
 						this._consoleLog('Constructor:');
 						this._consoleLog(v.constructor.name);
 						if (v.constructor.name === 'Node') {
@@ -270,10 +271,11 @@ export default class NeoVis {
 								}
 							}
 						}
-
-					}
+					});
+					dataBuildPromises.push(Promise.all(dataPromises));
 				},
-				onCompleted: () => {
+				onCompleted: async() => {
+					await Promise.all(dataBuildPromises);
 					session.close();
 					let options = {
 						nodes: {
@@ -344,19 +346,15 @@ export default class NeoVis {
 					//          return item;
 					//     }
 					// );
-
 					this._network = new vis.Network(container, this._data, options);
 					this._consoleLog('completed');
-
 					setTimeout(
 						() => {
 							this._network.stopSimulation();
 						},
 						10000
 					);
-
 					this._events.generateEvent(CompletionEvent, {record_count: recordCount});
-
 				},
 				onError: (error) => {
 					this._consoleLog(error);
