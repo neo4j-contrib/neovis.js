@@ -226,7 +226,7 @@ export default class NeoVis {
 					this._consoleLog(record.constructor.name);
 					this._consoleLog(record);
 
-					const dataPromises = record.map(async (v) => {
+					const dataPromises = Object.values(record.toObject()).map(async (v) => {
 						this._consoleLog('Constructor:');
 						this._consoleLog(v.constructor.name);
 						if (v.constructor.name === 'Node') {
