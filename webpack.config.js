@@ -2,6 +2,7 @@ const path = require('path');
 
 module.exports = {
     entry: './src/neovis.js',
+    devtool: "source-map",
     output: {
         filename: process.env.BUILD_WITH_DEPENDENCIES ? 'neovis.js' : 'neovis-without-dependencies.js',
         library: 'NeoVis',
