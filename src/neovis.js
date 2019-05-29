@@ -1,6 +1,6 @@
 'use strict';
 
-import * as neo4j from 'neo4j-driver';
+import Neo4j from 'neo4j-driver';
 import * as vis from 'vis/dist/vis-network.min';
 import 'vis/dist/vis-network.min.css';
 import { defaults } from './defaults';
@@ -43,9 +43,9 @@ export default class NeoVis {
 		this._config = config;
 		this._encrypted = config.encrypted || defaults.neo4j.encrypted;
 		this._trust = config.trust || defaults.neo4j.trust;
-		this._driver = neo4j.v1.driver(
+		this._driver = Neo4j.driver(
 			config.server_url || defaults.neo4j.neo4jUri,
-			neo4j.v1.auth.basic(config.server_user || defaults.neo4j.neo4jUser, config.server_password || defaults.neo4j.neo4jPassword),
+			Neo4j.auth.basic(config.server_user || defaults.neo4j.neo4jUser, config.server_password || defaults.neo4j.neo4jPassword),
 			{
 				encrypted: this._encrypted,
 				trust: this._trust
@@ -91,12 +91,12 @@ export default class NeoVis {
 			// of the internal node id
 
 			let session = this._driver.session();
-			const result = await session.run(sizeCypher, {id: neo4j.v1.int(node.id)});
+			const result = await session.run(sizeCypher, {id: Neo4j.int(node.id)});
 			for (let record of result.records) {
 				for (let v of record) {
 					if (typeof v === 'number') {
 						node.value = v;
-					} else if (v.constructor.name === 'Integer') {
+					} else if (Neo4j.isInt(v)) {
 						node.value = v.toNumber();
 					}
 				}
@@ -109,7 +109,7 @@ export default class NeoVis {
 			if (sizeProp && typeof sizeProp === 'number') {
 				// property value is a number, OK to use
 				node.value = sizeProp;
-			} else if (sizeProp && typeof sizeProp === 'object' && sizeProp.constructor.name === 'Integer') {
+			} else if (sizeProp && typeof sizeProp === 'object' && Neo4j.isInt(sizeProp)) {
 				// property value might be a Neo4j Integer, check if we can call toNumber on it:
 				if (sizeProp.inSafeRange()) {
 					node.value = sizeProp.toNumber();
@@ -229,7 +229,7 @@ export default class NeoVis {
 					const dataPromises = Object.values(record.toObject()).map(async (v) => {
 						this._consoleLog('Constructor:');
 						this._consoleLog(v.constructor.name);
-						if (v.constructor.name === 'Node') {
+						if (v instanceof Neo4j.types.Node) {
 							let node = await this.buildNodeVisObject(v);
 							try {
 								this._addNode(node);
@@ -237,11 +237,11 @@ export default class NeoVis {
 								this._consoleLog(e, 'error');
 							}
 
-						} else if (v.constructor.name === 'Relationship') {
+						} else if (v instanceof Neo4j.types.Relationship) {
 							let edge = this.buildEdgeVisObject(v);
 							this._addEdge(edge);
 
-						} else if (v.constructor.name === 'Path') {
+						} else if (v instanceof Neo4j.types.Path) {
 							this._consoleLog('PATH');
 							this._consoleLog(v);
 							let startNode = await this.buildNodeVisObject(v.start);
@@ -256,15 +256,15 @@ export default class NeoVis {
 								this._addEdge(this.buildEdgeVisObject(obj.relationship));
 							}
 
-						} else if (v.constructor.name === 'Array') {
+						} else if (v instanceof Array) {
 							for (let obj of v) {
 								this._consoleLog('Array element constructor:');
 								this._consoleLog(obj.constructor.name);
-								if (obj.constructor.name === 'Node') {
+								if (obj instanceof Neo4j.types.Node) {
 									let node = await this.buildNodeVisObject(obj);
 									this._addNode(node);
 
-								} else if (obj.constructor.name === 'Relationship') {
+								} else if (obj instanceof Neo4j.types.Relationship) {
 									let edge = this.buildEdgeVisObject(obj);
 
 									this._addEdge(edge);
