@@ -167,19 +167,29 @@ This function creates a `config` object that specifies how to connect to Neo4j, 
 
 See [simple-example.html](/examples/simple-example.html) for the full code.
 
+### module usage
+you can also use it as module, but it would require you have a way to import css files
+
+```javascript
+import NeoVis from 'neovis.js';
+```
+
+or you can import the version with bundled dependency
+
+```javascript
+import NeoVis from 'neovis.js/dist/neovis.js';
+```
 
 ## Build
 
 This project uses git submodules to include the dependencies for neo4j-driver and vis.js. This project uses webpack to build a bundle that includes all project dependencies. `webpack.config.js` contains the configuration for webpack. After cloning the repo:
 
 ```
-git submodule init
-git submodule update
 npm install
-./node_modules/.bin/webpack
+npm run build
 ```
 
-will build `dist/neovis.js` 
+will build `dist/neovis.js` and `dist/neovis-without-dependencies.js` 
 
 ## Documentation
 
@@ -289,7 +299,7 @@ var config = {
 
 Boolean. Defaults to false.
 
-#### `config.hierarchical_layout`
+#### `config.hierarchical`
 
 Boolean. Default to false.
 
@@ -298,6 +308,10 @@ Boolean. Default to false.
 When hierarchical layout is enabled you may choose betweeen `"hubsize"` (default) and `"directed"`.
 
 #### `config.initial_cypher`
+
+#### `config.console_debug`
+
+Defaults to not showing console messages
 
 #### `config.encrypted`
 
