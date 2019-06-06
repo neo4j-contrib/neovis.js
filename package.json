@@ -13,7 +13,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "eslint": "eslint .",
     "prepublishOnly": "npm run build",
-    "prepublish": "npm run build",
     "clean": "rimraf ./dist",
     "build": "run-s clean build:prod",
     "build-dev": "run-s clean build:dev",
