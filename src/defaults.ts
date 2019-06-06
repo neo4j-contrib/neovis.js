@@ -1,8 +1,6 @@
-
- const defaults = {
-
+export const NeoVisDefault = {
     neo4j: {
-        initialQuery:   `MATCH (n) WHERE exists(n.pagerank)
+        initialQuery: `MATCH (n) WHERE exists(n.pagerank)
                         WITH (n), RAND() AS random
                         ORDER BY random LIMIT 3000
                         OPTIONAL MATCH (n)-[r]-(m)
@@ -16,14 +14,21 @@
     },
 
     visjs: {
+        layout: {
+            improvedLayout: false,
+            hierarchical: {
+                enabled: false,
+                sortMethod: "hubsize"
+            }
+        },
         interaction: {
             hover: true,
             hoverConnectedEdges: true,
             selectConnectedEdges: false,
-    //        multiselect: true,
-            multiselect: 'alwaysOn',
+            //        multiselect: true,
+            multiselect: "alwaysOn",
             zoomView: false,
-            experimental: { }
+            experimental: {}
         },
         physics: {
             barnesHut: {
@@ -32,7 +37,7 @@
         },
         nodes: {
             mass: 4,
-            shape: 'neo',
+            shape: "neo",
             labelHighlightBold: false,
             widthConstraint: {
                 maximum: 40
@@ -45,13 +50,13 @@
             hoverWidth: 0,
             selectionWidth: 0,
             smooth: {
-                type: 'continuous',
+                type: "continuous",
                 roundness: 0.15
             },
             font: {
                 size: 9,
                 strokeWidth: 0,
-                align: 'top'
+                align: "top"
             },
             color: {
                 inherit: false
@@ -59,7 +64,7 @@
             arrows: {
                 to: {
                     enabled: true,
-                    type: 'arrow',
+                    type: "arrow",
                     scaleFactor: 0.5
                 }
             }
@@ -67,5 +72,3 @@
 
     }
 };
-
-export { defaults };
