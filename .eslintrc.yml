@@ -28,5 +28,3 @@ rules:
     - error
   jest/no-mocks-import:
     - error
-  jest/lowercase-name:
-    - error

@@ -325,8 +325,8 @@ export default class NeoVis {
 
 					const container = this._container;
 					this._data = {
-						'nodes': new vis.DataSet(Object.values(this._nodes)),
-						'edges': new vis.DataSet(Object.values(this._edges))
+						nodes: new vis.DataSet(Object.values(this._nodes)),
+						edges: new vis.DataSet(Object.values(this._edges))
 					};
 
 					this._consoleLog(this._data.nodes);
