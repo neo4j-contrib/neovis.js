@@ -2,13 +2,18 @@ parser: babel-eslint
 env:
   browser: true
   es6: true
-extends: 'eslint:recommended'
+  "jest/globals": true
+extends:
+  - 'eslint:recommended'
+  - 'plugin:jest/recommended'
 globals:
   Atomics: readonly
   SharedArrayBuffer: readonly
 parserOptions:
   ecmaVersion: 2018
   sourceType: module
+plugins:
+  - jest
 rules:
   indent:
     - error
@@ -20,4 +25,8 @@ rules:
     - error
     - always
   no-console:
+    - error
+  jest/no-mocks-import:
+    - error
+  jest/lowercase-name:
     - error
