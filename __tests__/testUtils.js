@@ -1,5 +1,5 @@
 import Neo4j, * as Neo4jMock from 'neo4j-driver';
-import { CompletionEvent } from "../src/events";
+import { CompletionEvent } from '../src/events';
 
 jest.mock('neo4j-driver');
 

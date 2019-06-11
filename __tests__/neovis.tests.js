@@ -51,10 +51,39 @@ describe('Neovis', () => {
 			]);
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
-			expect(neovis._data.nodes.get(1)).toBeDefined();
-			expect(neovis._data.nodes.get(2)).toBeDefined();
-			expect(neovis._data.edges.get(3)).toBeDefined();
+			expect(neovis._data.nodes.length).toBe(2);
+			expect(neovis._data.edges.length).toBe(1);
 		});
 
+		it('should save record with multiple parameters', async () => {
+			const firstNode = testUtils.makeNode([label1]);
+			const secondNode = testUtils.makeNode([label1]);
+			const relationship = testUtils.makeRelationship(relationshipType, firstNode, secondNode);
+			testUtils.mockNormalRunSubscribe([
+				testUtils.makeRecord([firstNode, secondNode, relationship])
+			]);
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(neovis._data.nodes.length).toBe(2);
+			expect(neovis._data.edges.length).toBe(1);
+		});
+
+		it('should save multiple records from different types', async () => {
+			const firstNode = testUtils.makeNode([label1]);
+			const secondNode = testUtils.makeNode([label1]);
+			const relationship = testUtils.makeRelationship(relationshipType, firstNode, secondNode);
+			testUtils.mockNormalRunSubscribe([
+				testUtils.makeRecord([testUtils.makePathFromNodes([
+					testUtils.makeNode([label1]),
+					testUtils.makeNode([label1])
+				], relationshipType)]),
+				testUtils.makeRecord([testUtils.makeNode([label1])]),
+				testUtils.makeRecord([firstNode, secondNode, relationship])
+			]);
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(neovis._data.nodes.length).toBe(5);
+			expect(neovis._data.edges.length).toBe(2);
+		});
 	});
 });
