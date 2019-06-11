@@ -49,11 +49,34 @@ export function assertEdges(neovis, edges, assertFunction) {
 }
 
 export function mockNormalRunSubscribe(records = []) {
-	Neo4jMock.mockRunSubscribe.mockImplementationOnce(({onNext, onCompleted}) => {
-		records.forEach(onNext);
-		onCompleted();
+	Neo4jMock.mockSessionRun.mockImplementation(() => {
+		const observablePromise = Promise.resolve({records});
+		observablePromise.subscribe = ({onNext, onCompleted}) => {
+			records.forEach(onNext);
+			onCompleted();
+		};
+		return observablePromise;
 	});
 }
+
+export function mockFullRunSubscribe(cypherIdsAndAnswers) {
+	Neo4jMock.mockSessionRun.mockImplementation((cypher, parameters) => {
+		if (!cypherIdsAndAnswers[cypher]) {
+			throw new Error(`the cypher '${cypher}' was not expected`);
+		}
+		if (!cypherIdsAndAnswers[cypher].default && !cypherIdsAndAnswers[cypher][parameters.id.toInt()]) {
+			throw new Error(`the id '${parameters.id}' was not expected for cypher ${cypher}`);
+		}
+		const records = cypherIdsAndAnswers[cypher].default || cypherIdsAndAnswers[cypher][parameters.id.toInt()];
+		const observablePromise = Promise.resolve({records});
+		observablePromise.subscribe = ({onNext, onCompleted}) => {
+			records.forEach(onNext);
+			onCompleted();
+		};
+		return observablePromise;
+	});
+}
+
 
 export function neovisRenderDonePromise(neovis) {
 	return new Promise(res => neovis.registerOnEvent(CompletionEvent, res));

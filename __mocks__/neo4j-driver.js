@@ -1,10 +1,8 @@
 const Neo4j = jest.requireActual('neo4j-driver').v1;
 
-export const mockRunSubscribe = jest.fn(() => {});
-
 export const mockSessionRun = jest.fn(() => {
 	const observablePromise = Promise.resolve();
-	observablePromise.subscribe = mockRunSubscribe;
+	observablePromise.subscribe = jest.fn(() => {});
 	return observablePromise;
 });
 
@@ -20,7 +18,6 @@ export const mockDriver = jest.spyOn(Neo4j, 'driver').mockImplementation(() => (
 }));
 
 export function clearAllMocks() {
-	mockRunSubscribe.mockClear();
 	mockSessionClose.mockClear();
 	mockSessionRun.mockClear();
 	mockSession.mockClear();

@@ -93,13 +93,13 @@ export default class NeoVis {
 			let session = this._driver.session();
 			const result = await session.run(sizeCypher, {id: Neo4j.int(node.id)});
 			for (let record of result.records) {
-				for (let v of record) {
+				record.forEach((v) => {
 					if (typeof v === 'number') {
 						node.value = v;
 					} else if (Neo4j.isInt(v)) {
 						node.value = v.toNumber();
 					}
-				}
+				});
 			}
 		} else if (typeof sizeKey === 'number') {
 			node.value = sizeKey;
