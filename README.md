@@ -1,5 +1,7 @@
 # neovis.js
 
+[![CircleCI](https://circleci.com/gh/neo4j-contrib/neovis.js/tree/master.svg?style=svg)](https://circleci.com/gh/neo4j-contrib/neovis.js/tree/master)
+
 Graph visualizations powered by vis.js with data from Neo4j.
 
 ![](img/example-viz.png)
