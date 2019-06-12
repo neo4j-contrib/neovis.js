@@ -10,7 +10,7 @@
     "test": "`__tests__"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest __tests__/neovis.tests.js",
     "eslint": "eslint .",
     "prepublishOnly": "npm run build",
     "clean": "rimraf ./dist",
