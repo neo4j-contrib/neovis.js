@@ -1,7 +1,5 @@
-"use strict";
-
 import * as neo4j from "neo4j-driver";
-import { EncryptionLevel, Node, PathSegment, Relationship, TrustStrategy } from "neo4j-driver/types/v1";
+import { EncryptionLevel, Node, Path, Relationship, TrustStrategy } from "neo4j-driver/types/v1";
 import * as vis from "vis";
 import "../node_modules/vis/dist/vis-network.min.css";
 import { NeoVisDefault as defaults } from "./defaults";
@@ -20,8 +18,8 @@ export interface NeoVisConfig {
 
     initial_cypher: string;
 
-    nodes?: { [nodeLabel: string]: NodeProp };
-    relationships?: { [relationshipLabel: string]: RelationshipProp };
+    node?: NodeProp;
+    relationship?: RelationshipProp;
 
     visOptions?: vis.Options;
     encrypted?: boolean | EncryptionLevel;
@@ -83,6 +81,7 @@ export default class NeoVis {
         this._data = {};
         this._network = null;
         this._container = document.getElementById(config.container_id);
+
         this._events = new EventController();
     }
 
@@ -107,10 +106,10 @@ export default class NeoVis {
         const node: vis.Node = {};
         const label = n.labels[0];
 
-        const captionKey = this._config && this._config.nodes && this._config.nodes[label] && this._config.nodes[label].caption,
-            sizeKey = this._config && this._config.nodes && this._config.nodes[label] && this._config.nodes[label].size,
-            sizeCypher = this._config && this._config.nodes && this._config.nodes[label] && this._config.nodes[label].sizeCypher,
-            communityKey = this._config && this._config.nodes && this._config.nodes[label] && this._config.nodes[label].community;
+        const captionKey = this._config && this._config.node && this._config.node.caption,
+            sizeKey = this._config && this._config.node && this._config.node.size,
+            sizeCypher = this._config && this._config.node && this._config.node.sizeCypher,
+            communityKey = this._config && this._config.node && this._config.node.community;
 
         node.id = n.identity.toInt();
 
@@ -123,9 +122,9 @@ export default class NeoVis {
 
             const session = this._driver.session();
             session.run(sizeCypher, { id: neo4j.v1.int(node.id) })
-                .then(function (result) {
-                    result.records.forEach(function (record) {
-                        record.forEach(function (v, k, r) {
+                .then(function(result) {
+                    result.records.forEach(function(record) {
+                        record.forEach(function(v, k, r) {
                             if (typeof v === "number") {
                                 self._addNode({ id: node.id, value: v });
                             } else if (v.constructor.name === "Integer") {
@@ -199,8 +198,8 @@ export default class NeoVis {
      */
     public buildEdgeVisObject(r: Relationship): vis.Edge {
 
-        const weightKey = this._config && this._config.relationships && this._config.relationships[r.type] && this._config.relationships[r.type].thickness,
-            captionKey = this._config && this._config.relationships && this._config.relationships[r.type] && this._config.relationships[r.type].caption;
+        const weightKey = this._config && this._config.relationship && this._config.relationship.thickness,
+            captionKey = this._config && this._config.relationship && this._config.relationship.caption;
 
         const edge: vis.Edge = {};
         edge.id = r.identity.toInt();
@@ -239,8 +238,9 @@ export default class NeoVis {
         return edge;
     }
 
-    // public API
-
+    /**
+     * Render nodes to canvas
+     */
     public render() {
 
         // connect to Neo4j instance
@@ -250,76 +250,84 @@ export default class NeoVis {
         let recordCount = 0;
 
         const session = this._driver.session();
-        session
-            .run(this._query, { limit: 30 })
+
+        session.run(this._query, { limit: 30 })
             .subscribe({
                 onNext(record) {
                     recordCount++;
 
-                    // console.log("CLASS NAME");
-                    // console.log(record.constructor.name);
-                    // console.log(record);
+                    //console.log("CLASS NAME", record.constructor.name, record);
 
-                    record.forEach(function (v, k, r) {
-                        // console.log("Constructor:");
-                        // console.log(v.constructor.name);
-                        if (v.constructor.name === "Node") {
-                            const node = self.buildNodeVisObject(v);
+                    record.forEach(function(v, k, r) {
+                        //console.log("Constructor: ", v.constructor.name);
 
-                            try {
-                                self._addNode(node);
-                            } catch (e) {
-                                console.error(e);
-                            }
+                        switch (v.constructor.name as string) {
+                            case "Node":
+                                const node = self.buildNodeVisObject(v as Node);
 
-                        } else if (v.constructor.name === "Relationship") {
-
-                            const edge = self.buildEdgeVisObject(v);
-
-                            try {
-                                self._addEdge(edge);
-                            } catch (e) {
-                                console.error(e);
-                            }
-
-                        } else if (v.constructor.name === "Path") {
-                            // console.log("PATH");
-                            // console.log(v);
-                            const n1 = self.buildNodeVisObject(v.start);
-                            const n2 = self.buildNodeVisObject(v.end);
-
-                            self._addNode(n1);
-                            self._addNode(n2);
-
-                            v.segments.forEach((obj: PathSegment) => {
-
-                                self._addNode(self.buildNodeVisObject(obj.start));
-                                self._addNode(self.buildNodeVisObject(obj.end));
-                                self._addEdge(self.buildEdgeVisObject(obj.relationship));
-                            });
-
-                        } else if (v.constructor.name === "Array") {
-                            v.forEach(function (obj: any) {
-                                // console.log("Array element constructor:");
-                                // console.log(obj.constructor.name);
-                                if (obj.constructor.name === "Node") {
-                                    const node = self.buildNodeVisObject(obj);
-
-                                    try {
-                                        self._addNode(node);
-                                    } catch (e) {
-                                        console.error(e);
-                                    }
-                                } else if (obj.constructor.name === "Relationship") {
-                                    const edge = self.buildEdgeVisObject(obj);
-
-                                    try {
-                                        self._addEdge(edge);
-                                    } catch (e) {
-                                        console.error(e);
-                                    }
+                                try {
+                                    self._addNode(node);
+                                } catch (e) {
+                                    console.error(e);
                                 }
-                            });
+                                break;
+
+                            case "Relationship":
+                                const edge = self.buildEdgeVisObject(v as Relationship);
+                                try {
+                                    self._addEdge(edge);
+                                } catch (e) {
+                                    console.error(e);
+                                }
+                                break;
+
+                            case "Path":
+                                //console.log("PATH: ", v);
+                                const value = v as Path;
+
+                                const n1 = self.buildNodeVisObject(value.start);
+                                const n2 = self.buildNodeVisObject(value.end);
+
+                                self._addNode(n1);
+                                self._addNode(n2);
+
+                                value.segments.forEach((obj) => {
+                                    self._addNode(self.buildNodeVisObject(obj.start));
+                                    self._addNode(self.buildNodeVisObject(obj.end));
+                                    self._addEdge(self.buildEdgeVisObject(obj.relationship));
+                                });
+                                break;
+
+                            case "Array":
+                                (v as Array<Node | Relationship>).forEach(function(obj: any) {
+                                    //console.log("Array element constructor: ", obj.constructor.name);
+                                    switch (obj.constructor.name) {
+                                        case "Node":
+                                            const node = self.buildNodeVisObject(obj as Node);
+                                            try {
+                                                self._addNode(node);
+                                            } catch (e) {
+                                                console.error(e);
+                                            }
+                                            break;
+
+                                        case "Relationship":
+                                            const edge = self.buildEdgeVisObject(obj as Relationship);
+
+                                            try {
+                                                self._addEdge(edge);
+                                            } catch (e) {
+                                                console.error(e);
+                                            }
+                                            break;
+
+                                        default: break;
+                                    }
+
+                                });
+                                break;
+
+                            default: break;
                         }
 
                     });
@@ -369,12 +377,12 @@ export default class NeoVis {
 
                     const container = self._container;
                     self._data = {
-                        nodes: new vis.DataSet(Object.keys(self._nodes).map((key) => self._nodes.get(key))),
-                        edges: new vis.DataSet(Object.keys(self._edges).map((key) => self._edges.get(key)))
+                        nodes: new vis.DataSet(Array.from(self._nodes.values())),
+                        edges: new vis.DataSet(Array.from(self._edges.values()))
                     };
 
-                    // console.log(self._data.nodes);
-                    // console.log(self._data.edges);
+                    //console.log(self._data.nodes);
+                    //console.log(self._data.edges);
 
                     // Create duplicate node for any self reference relationships
                     // NOTE: Is this only useful for data model type data
@@ -384,7 +392,7 @@ export default class NeoVis {
                     //             var newNode = self._data.nodes.get(item.from)
                     //             delete newNode.id;
                     //             var newNodeIds = self._data.nodes.add(newNode);
-                    //             //console.log("Adding new node and changing self-ref to node: " + item.to);
+                    //             ////console.log("Adding new node and changing self-ref to node: " + item.to);
                     //             item.to = newNodeIds[0];
                     //          }
                     //          return item;
@@ -397,24 +405,24 @@ export default class NeoVis {
                         const session = self._driver.session();
                         session.run(cypher)
                             .then((results) => {
-                                // console.log(cypher);
+                                //console.log(cypher);
                                 self._events.generateEvent(NodeSelectionEvent, results.records);
                                 session.close();
                             });
                     });
 
                     self._network.on("selectEdge", (properties) => {
-                        const cypher = "MATCH ()-[r:TRANSFER]->() WHERE ID(r) IN [" + properties.edges.join(", ") + "] RETURN r";
+                        const cypher = "MATCH ()-[r]->() WHERE ID(r) IN [" + properties.edges.join(", ") + "] RETURN r";
                         const session = self._driver.session();
                         session.run(cypher)
                             .then((results) => {
-                                // console.log(cypher);
+                                //console.log(cypher);
                                 self._events.generateEvent(EdgeSelectionEvent, results.records);
                                 session.close();
                             });
                     });
 
-                    // console.log("completed");
+                    //console.log("completed");
                     setTimeout(() => { self._network.stopSimulation(); }, 10000);
 
                     self._events.generateEvent(CompletionEvent, { record_count: recordCount });

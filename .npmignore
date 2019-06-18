@@ -4,3 +4,8 @@ test
 .idea
 scripts
 vendor
+.git
+.gitignore
+.gitmodules
+tsconfig.json
+tslint.json

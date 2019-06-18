@@ -1,12 +1,10 @@
 {
-  "name": "neovis.js",
-  "version": "1.0.0",
+  "name": "neovis-ts",
+  "version": "1.0.4",
   "description": "Graph visualizations powered by vis.js with data from Neo4j.",
   "main": "dist/neovis.js",
   "types": "dist/index.d.ts",
   "directories": {
-    "doc": "doc",
-    "example": "examples",
     "test": "test"
   },
   "scripts": {
@@ -19,7 +17,7 @@
     "url": "git+https://github.com/neo4j-contrib/neovis.js.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Minh-Hoang DANG",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/neo4j-contrib/neovis.js/issues"
@@ -34,7 +32,7 @@
   "dependencies": {
     "@types/node": "^12.0.5",
     "@types/vis": "^4.21.16",
-    "neo4j-driver": "^1.7.4",
+    "neo4j-driver": "^1.7.5",
     "tslint": "^5.17.0",
     "typescript": "^3.5.1",
     "vis": "^4.21.0"
