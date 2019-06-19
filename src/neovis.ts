@@ -39,6 +39,25 @@ export interface RelationshipProp {
     caption?: any;
 }
 
+export interface VisualisationStrategy {
+    NodeStrategy: { [dbProps: string]: StylingStrategy[] };
+    EdgeStrategy: { [dbProps: string]: StylingStrategy[] };
+}
+
+export interface StylingStrategy {
+    infoName: string;
+    htmlStyling?: HTMLStyling;
+}
+
+export interface HTMLStyling {
+    htmlTag: string;
+    htmlAttr: { [attr: string]: string | StylingProcess };
+    htmlContent?: StylingProcess;
+    htmlSuffix?: string | StylingProcess;
+}
+
+export type StylingProcess = (dbProp: string) => string;
+
 export default class NeoVis {
     private _config: NeoVisConfig;
     private _encrypted: boolean | EncryptionLevel;
@@ -51,6 +70,8 @@ export default class NeoVis {
     private _network: vis.Network;
     private _container: HTMLElement;
     private _events: EventController;
+
+    private _strategy: VisualisationStrategy;
 
     /**
      *
@@ -184,11 +205,18 @@ export default class NeoVis {
         }
 
         // set all properties as tooltip
-        node.title = "";
-        for (const key in n.properties) {
-            node.title += "<strong>" + key + ":</strong>" + " " + this.getProperty(n.properties, key) + "<br>";
-        }
+        node.title = this.formatNodes(n.properties);
+        // console.log(node.title);
+
         return node;
+    }
+
+    /**
+     * Set the formatter for the node tooltip
+     * @param formatter
+     */
+    public setStrategy(vs: VisualisationStrategy) {
+        this._strategy = vs;
     }
 
     /**
@@ -207,10 +235,7 @@ export default class NeoVis {
         edge.to = r.end.toInt();
 
         // hover tooltip. show all properties in the format <strong>key:</strong> value
-        edge.title = "";
-        for (const key in r.properties) {
-            edge.title += "<strong>" + key + ":</strong>" + " " + this.getProperty(r.properties, key) + "<br>";
-        }
+        edge.title = this.formatEdges(r.properties);
 
         // set relationship thickness
         if (weightKey && typeof weightKey === "string") {
@@ -256,10 +281,10 @@ export default class NeoVis {
                 onNext(record) {
                     recordCount++;
 
-                    //console.log("CLASS NAME", record.constructor.name, record);
+                    // console.log("CLASS NAME", record.constructor.name, record);
 
                     record.forEach(function(v, k, r) {
-                        //console.log("Constructor: ", v.constructor.name);
+                        // console.log("Constructor: ", v.constructor.name);
 
                         switch (v.constructor.name as string) {
                             case "Node":
@@ -282,7 +307,7 @@ export default class NeoVis {
                                 break;
 
                             case "Path":
-                                //console.log("PATH: ", v);
+                                // console.log("PATH: ", v);
                                 const value = v as Path;
 
                                 const n1 = self.buildNodeVisObject(value.start);
@@ -300,7 +325,7 @@ export default class NeoVis {
 
                             case "Array":
                                 (v as Array<Node | Relationship>).forEach(function(obj: any) {
-                                    //console.log("Array element constructor: ", obj.constructor.name);
+                                    // console.log("Array element constructor: ", obj.constructor.name);
                                     switch (obj.constructor.name) {
                                         case "Node":
                                             const node = self.buildNodeVisObject(obj as Node);
@@ -381,8 +406,8 @@ export default class NeoVis {
                         edges: new vis.DataSet(Array.from(self._edges.values()))
                     };
 
-                    //console.log(self._data.nodes);
-                    //console.log(self._data.edges);
+                    // console.log(self._data.nodes);
+                    // console.log(self._data.edges);
 
                     // Create duplicate node for any self reference relationships
                     // NOTE: Is this only useful for data model type data
@@ -405,7 +430,7 @@ export default class NeoVis {
                         const session = self._driver.session();
                         session.run(cypher)
                             .then((results) => {
-                                //console.log(cypher);
+                                // console.log(cypher);
                                 self._events.generateEvent(NodeSelectionEvent, results.records);
                                 session.close();
                             });
@@ -416,13 +441,13 @@ export default class NeoVis {
                         const session = self._driver.session();
                         session.run(cypher)
                             .then((results) => {
-                                //console.log(cypher);
+                                // console.log(cypher);
                                 self._events.generateEvent(EdgeSelectionEvent, results.records);
                                 session.close();
                             });
                     });
 
-                    //console.log("completed");
+                    // console.log("completed");
                     setTimeout(() => { self._network.stopSimulation(); }, 10000);
 
                     self._events.generateEvent(CompletionEvent, { record_count: recordCount });
@@ -513,6 +538,107 @@ export default class NeoVis {
                 session.close();
             })
             .catch((reason) => { console.log(reason); });
+    }
+
+    /**
+     * Generate HTML description tooltip using strategies
+     * @param neoNodeProps
+     */
+    private formatNodes(neoNodeProps: object): string {
+
+        if (!this) { return ""; }
+
+        const map = new Map(Object.entries(neoNodeProps));
+        const keys = Array.from(map.keys()).sort();
+
+        const description: Map<string, string> = new Map<string, string>();
+        keys.map((key) => {
+            const value = map.get(key);
+            const keyStrats = this._strategy.NodeStrategy[key];
+
+            if (keyStrats) {
+
+                keyStrats.map((keyStrat) => {
+
+                    if (keyStrat.htmlStyling) {
+                        const tagAttrs = Object.keys(keyStrat.htmlStyling.htmlAttr).map((attr) => {
+                            const style = keyStrat.htmlStyling.htmlAttr[attr];
+                            const styledValue = (typeof style == "string") ? style : (style as StylingProcess)(value);
+                            return attr + "=" + '"' + styledValue + '"';
+                        }).join(" ");
+
+                        let html = "<strong>" + keyStrat.infoName + ":</strong> " + "<" + keyStrat.htmlStyling.htmlTag + " " + tagAttrs + ">";
+
+                        switch (keyStrat.htmlStyling.htmlTag) {
+                            case "img":
+                                break;
+                            default:
+                                html += value + "</" + keyStrat.htmlStyling.htmlTag + ">";
+                                break;
+                        }
+
+                        description.set(keyStrat.infoName, html);
+
+                    } else {
+                        description.set(key, "<strong>" + keyStrat.infoName + ":</strong> " + value);
+                    }
+                });
+            } else {
+                description.set(key, "<strong>" + key + ":</strong> " + value);
+            }
+        });
+
+        return Array.from(description.keys()).sort().map((key) => description.get(key)).join(" <br> ");
+    }
+
+    /**
+     * Generate HTML description tooltip using strategies
+     * @param neoEdgeProps
+     */
+    private formatEdges(neoEdgeProps: object): string {
+
+        if (!this) { return ""; }
+
+        const map = new Map(Object.entries(neoEdgeProps));
+        const keys = Array.from(map.keys()).sort();
+
+        const description: Map<string, string> = new Map<string, string>();
+        keys.map((key) => {
+            const value = map.get(key);
+            const keyStrats = this._strategy.EdgeStrategy[key];
+
+            if (keyStrats) {
+                keyStrats.map((keyStrat) => {
+
+                    if (keyStrat.htmlStyling) {
+                        const tagAttrs = Object.keys(keyStrat.htmlStyling.htmlAttr).map((attr) => {
+                            const style = keyStrat.htmlStyling.htmlAttr[attr];
+                            const styledValue = (typeof style == "string") ? style : (style as StylingProcess)(value);
+                            return attr + "=" + '"' + styledValue + '"';
+                        }).join(" ");
+
+                        let html = "<strong>" + keyStrat.infoName + ":</strong> " + "<" + keyStrat.htmlStyling.htmlTag + " " + tagAttrs + ">";
+
+                        switch (keyStrat.htmlStyling.htmlTag) {
+                            case "img":
+                                break;
+                            default:
+                                html += value + "</" + keyStrat.htmlStyling.htmlTag + ">";
+                                break;
+                        }
+
+                        description.set(keyStrat.infoName, html);
+
+                    } else {
+                        description.set(key, "<strong>" + keyStrat.infoName + ":</strong> " + value);
+                    }
+                });
+            } else {
+                description.set(key, "<strong>" + key + ":</strong> " + value);
+            }
+        });
+
+        return Array.from(description.keys()).sort().map((key) => description.get(key)).join(" <br> ");
     }
 
     /**
