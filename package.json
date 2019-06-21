@@ -1,6 +1,6 @@
 {
   "name": "neovis-ts",
-  "version": "1.0.4",
+  "version": "1.0.8",
   "description": "Graph visualizations powered by vis.js with data from Neo4j.",
   "main": "dist/neovis.js",
   "types": "dist/index.d.ts",

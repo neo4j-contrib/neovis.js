@@ -1,7 +1,6 @@
 import * as neo4j from "neo4j-driver";
 import { EncryptionLevel, Node, Path, Relationship, TrustStrategy } from "neo4j-driver/types/v1";
 import * as vis from "vis";
-import "../node_modules/vis/dist/vis-network.min.css";
 import { NeoVisDefault as defaults } from "./defaults";
 import { CompletionEvent, EdgeSelectionEvent, EventController, NodeSelectionEvent } from "./events";
 
@@ -47,13 +46,13 @@ export interface VisualisationStrategy {
 export interface StylingStrategy {
     infoName: string;
     htmlStyling?: HTMLStyling;
+    htmlSuffix?: string | StylingProcess;
 }
 
 export interface HTMLStyling {
     htmlTag: string;
     htmlAttr: { [attr: string]: string | StylingProcess };
     htmlContent?: StylingProcess;
-    htmlSuffix?: string | StylingProcess;
 }
 
 export type StylingProcess = (dbProp: string) => string;
@@ -553,12 +552,16 @@ export default class NeoVis {
 
         const description: Map<string, string> = new Map<string, string>();
         keys.map((key) => {
-            const value = map.get(key);
+            let value = map.get(key);
             const keyStrats = this._strategy.NodeStrategy[key];
 
             if (keyStrats) {
 
                 keyStrats.map((keyStrat) => {
+
+                    if (keyStrat.htmlSuffix) {
+                        value = typeof (keyStrat.htmlSuffix) === "function" ? keyStrat.htmlSuffix(value) : value;
+                    }
 
                     if (keyStrat.htmlStyling) {
                         const tagAttrs = Object.keys(keyStrat.htmlStyling.htmlAttr).map((attr) => {
@@ -604,16 +607,21 @@ export default class NeoVis {
 
         const description: Map<string, string> = new Map<string, string>();
         keys.map((key) => {
-            const value = map.get(key);
+            let value = map.get(key);
             const keyStrats = this._strategy.EdgeStrategy[key];
 
             if (keyStrats) {
                 keyStrats.map((keyStrat) => {
 
+                    if (keyStrat.htmlSuffix) {
+                        value = typeof (keyStrat.htmlSuffix) === "function" ? keyStrat.htmlSuffix(value) : value;
+                    }
+
                     if (keyStrat.htmlStyling) {
+
                         const tagAttrs = Object.keys(keyStrat.htmlStyling.htmlAttr).map((attr) => {
                             const style = keyStrat.htmlStyling.htmlAttr[attr];
-                            const styledValue = (typeof style == "string") ? style : (style as StylingProcess)(value);
+                            const styledValue = (typeof style === "function") ? style(value) : value;
                             return attr + "=" + '"' + styledValue + '"';
                         }).join(" ");
 
