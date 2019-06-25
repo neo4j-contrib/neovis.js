@@ -278,6 +278,16 @@ export default class NeoVis {
 					await Promise.all(dataBuildPromises);
 					session.close();
 					let options = {
+						interaction: {
+						    dragNodes: true,
+						    dragView: true,
+						    hover: true,
+						    hoverConnectedEdges: true,
+						    multiselect: true,
+						    selectable: true,
+						    selectConnectedEdges: true,
+						    zoomView: true,
+						},
 						nodes: {
 							shape: 'dot',
 							font: {
@@ -348,6 +358,16 @@ export default class NeoVis {
 					// );
 					this._network = new vis.Network(container, this._data, options);
 					this._consoleLog('completed');
+					this._network.on('dragEnd', (params) => {
+					    if (params.nodes.length > 0) {
+						this._data.nodes.update({ id: params.nodes[0], fixed: { x: true, y: true } });
+					    }
+					});
+					this._network.on('dragStart', (params) => {
+					    if (params.nodes.length > 0) {
+						this._data.nodes.update({ id: params.nodes[0], fixed: { x: false, y: false } });
+					    }
+					});
 					setTimeout(
 						() => {
 							this._network.stopSimulation();
