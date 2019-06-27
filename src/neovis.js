@@ -368,6 +368,11 @@ export default class NeoVis {
 						this._data.nodes.update({ id: params.nodes[0], fixed: { x: false, y: false } });
 					    }
 					});
+					this._network.on('doubleClick',(params) => {
+					    if (params.nodes.length > 0) {
+						this._data.nodes.update({ id: params.nodes[0], fixed: { x: false, y: false } });
+					    } 
+                                        });
 					setTimeout(
 						() => {
 							this._network.stopSimulation();
