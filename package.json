@@ -4,6 +4,7 @@
   "description": "Graph visualizations powered by vis.js with data from Neo4j.",
   "main": "./dist/neovis.js",
   "module": "./dist/neovis-without-dependencies.js",
+  "types": "./neovis.d.ts",
   "directories": {
     "doc": "doc",
     "example": "examples",
