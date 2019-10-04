@@ -4,3 +4,4 @@ examples
 doc
 dist
 webpack.config.js
+*.ts
