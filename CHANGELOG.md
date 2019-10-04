@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0
+
+- [TypeScript support](https://github.com/neo4j-contrib/neovis.js/pull/66)
+- [Fixed the way neovis.js use polyfills](https://github.com/neo4j-contrib/neovis.js/pull/69)
+
 ## 1.1.0
 
 - [Add version without bundled vendors](https://github.com/neo4j-contrib/neovis.js/pull/62)
