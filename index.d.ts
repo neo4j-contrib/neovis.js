@@ -1,21 +1,25 @@
-interface INeovisConfig {
+export interface ILabelConfig {
+    caption?: string;
+    size?: string;
+    community?: string;
+    sizeCypher?: string;
+}
+
+export interface IRelationshipConfig {
+    thickness?: string;
+    caption?: boolean;
+}
+
+export interface INeovisConfig {
     container_id: string;
     server_url: string;
     server_user: string;
     server_password: string;
     labels?: {
-        [label: string]: {
-            caption?: string;
-            size?: string;
-            community?: string;
-            sizeCypher?: string;
-        }
+        [label: string]: ILabelConfig
     };
     relationships?: {
-        [relationship: string]: {
-            thickness?: string;
-            caption?: boolean;
-        }
+        [relationship: string]: IRelationshipConfig
     };
     arrows?: boolean;
     hierarchical? :boolean;
