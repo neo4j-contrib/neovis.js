@@ -35,8 +35,10 @@ export default class NeoVis {
 	}
 
 	_consoleLog(message, level = 'log') {
-		// eslint-disable-next-line no-console
-		this._config.console_debug && console[level](message);
+		if(level !== 'log' || this._config.console_debug) {
+			// eslint-disable-next-line no-console
+			console[level](message);
+		}
 	}
 
 	_init(config) {
@@ -223,12 +225,12 @@ export default class NeoVis {
 					recordCount++;
 
 					this._consoleLog('CLASS NAME');
-					this._consoleLog(record.constructor.name);
+					this._consoleLog(record && record.constructor.name);
 					this._consoleLog(record);
 
 					const dataPromises = Object.values(record.toObject()).map(async (v) => {
 						this._consoleLog('Constructor:');
-						this._consoleLog(v.constructor.name);
+						this._consoleLog(v && v.constructor.name);
 						if (v instanceof Neo4j.types.Node) {
 							let node = await this.buildNodeVisObject(v);
 							try {
@@ -259,7 +261,7 @@ export default class NeoVis {
 						} else if (v instanceof Array) {
 							for (let obj of v) {
 								this._consoleLog('Array element constructor:');
-								this._consoleLog(obj.constructor.name);
+								this._consoleLog(obj && obj.constructor.name);
 								if (obj instanceof Neo4j.types.Node) {
 									let node = await this.buildNodeVisObject(obj);
 									this._addNode(node);
@@ -357,7 +359,7 @@ export default class NeoVis {
 					this._events.generateEvent(CompletionEvent, {record_count: recordCount});
 				},
 				onError: (error) => {
-					this._consoleLog(error);
+					this._consoleLog(error, 'error');
 				}
 			});
 	}
