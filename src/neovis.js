@@ -83,6 +83,10 @@ export default class NeoVis {
 		const sizeCypher = labelConfig && labelConfig['sizeCypher'];
 		const communityKey = labelConfig && labelConfig['community'];
 
+		const title_properties = (
+			labelConfig && labelConfig.title_properties
+		) || Object.keys(neo4jNode.properties);
+
 		node.id = neo4jNode.identity.toInt();
 
 		// node size
@@ -148,9 +152,9 @@ export default class NeoVis {
 				node.group = 0;
 			}
 		}
-		// set all properties as tooltip
+		// set configured/all properties as tooltip
 		node.title = '';
-		for (let key in neo4jNode.properties) {
+		for (const key of title_properties) {
 			if (neo4jNode.properties.hasOwnProperty(key)) {
 				node.title += `<strong>${key}:</strong> ${neo4jNode.properties[key]}<br>`;
 			}
