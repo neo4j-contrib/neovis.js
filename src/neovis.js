@@ -4,7 +4,7 @@ import Neo4j from 'neo4j-driver';
 import * as vis from 'vis/dist/vis-network.min';
 import 'vis/dist/vis-network.min.css';
 import { defaults } from './defaults';
-import { EventController, CompletionEvent } from './events';
+import { EventController, CompletionEvent, ErrorEvent } from './events';
 
 export default class NeoVis {
 	_nodes = {};
@@ -360,6 +360,7 @@ export default class NeoVis {
 				},
 				onError: (error) => {
 					this._consoleLog(error, 'error');
+					this._events.generateEvent(ErrorEvent, {error_msg: error});
 				}
 			});
 	}
@@ -427,4 +428,3 @@ export default class NeoVis {
 //    define (function () {return NeoVis;})
 //}
 }
-
