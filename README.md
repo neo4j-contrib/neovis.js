@@ -318,6 +318,8 @@ Defaults to not showing console messages
 
 `"ENCRYPTION_OFF"` (default) or `"ENCRYPTION_ON"`
 
+This must be set to `"ENCRYPTION_ON"` when using a secure WebSocket connection, such as with Neo4j Aura.
+
 #### `config.trust`
 
 `"TRUST_ALL_CERTIFICATES"` (default) or `"TRUST_SYSTEM_CA_SIGNED_CERTIFICATES"`
