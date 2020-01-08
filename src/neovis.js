@@ -4,7 +4,7 @@ import Neo4j from 'neo4j-driver';
 import * as vis from 'vis/dist/vis-network.min';
 import 'vis/dist/vis-network.min.css';
 import { defaults } from './defaults';
-import { EventController, CompletionEvent } from './events';
+import { EventController, CompletionEvent, ClickEdgeEvent, ClickNodeEvent } from './events';
 
 export default class NeoVis {
 	_nodes = {};
@@ -356,7 +356,18 @@ export default class NeoVis {
 						},
 						10000
 					);
-					this._events.generateEvent(CompletionEvent, {record_count: recordCount});
+                    this._events.generateEvent(CompletionEvent, {record_count: recordCount});
+
+                    let neoVis = this;
+                    this._network.on("click", function (params) {
+                        if (params.nodes.length > 0) {
+                            let nodeId = this.getNodeAt(params.pointer.DOM);
+                            neoVis._events.generateEvent(ClickNodeEvent, {nodeId: nodeId, node: neoVis._nodes[nodeId]});
+                        } else if (params.edges.length > 0) {
+                            let edgeId = this.getEdgeAt(params.pointer.DOM);
+                            neoVis._events.generateEvent(ClickEdgeEvent, {edgeId: edgeId, edge: neoVis._edges[edgeId]});
+                        }
+                    });
 				},
 				onError: (error) => {
 					this._consoleLog(error, 'error');
