@@ -28,13 +28,14 @@ describe('Neovis', () => {
 			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledWith(initial_cypher, {limit: 30});
 		});
 
-		it('should call completed when complete', (done) => {
+		it('should call completed when complete', () => new Promise(done => {
 			testUtils.mockNormalRunSubscribe();
 			neovis.render();
 			neovis.registerOnEvent(CompletionEvent, () => {
+				expect(true).toBe(true);
 				done();
 			});
-		});
+		}));
 
 		it('should save records to dataset', async () => {
 			testUtils.mockNormalRunSubscribe([
