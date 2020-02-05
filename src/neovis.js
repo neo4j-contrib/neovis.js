@@ -1,8 +1,8 @@
 'use strict';
 
 import Neo4j from 'neo4j-driver';
-import * as vis from 'vis/dist/vis-network.min';
-import 'vis/dist/vis-network.min.css';
+import * as vis from 'vis-network/dist/vis-network.min';
+import 'vis-network/dist/vis-network.min.css';
 import { defaults } from './defaults';
 import { EventController, CompletionEvent } from './events';
 
@@ -70,9 +70,10 @@ export default class NeoVis {
 	 * FIXME: use config
 	 * FIXME: move to private api
 	 * @param neo4jNode
+	 * @param session
 	 * @returns {{}}
 	 */
-	async buildNodeVisObject(neo4jNode) {
+	async buildNodeVisObject(neo4jNode, session=null) {
 		let node = {};
 		let label = neo4jNode.labels[0];
 
@@ -92,7 +93,7 @@ export default class NeoVis {
 			// the cypher statement will be passed a parameter {id} with the value
 			// of the internal node id
 
-			let session = this._driver.session();
+			session = session || this._driver.session();
 			const result = await session.run(sizeCypher, {id: Neo4j.int(node.id)});
 			for (let record of result.records) {
 				record.forEach((v) => {
@@ -232,7 +233,7 @@ export default class NeoVis {
 						this._consoleLog('Constructor:');
 						this._consoleLog(v && v.constructor.name);
 						if (v instanceof Neo4j.types.Node) {
-							let node = await this.buildNodeVisObject(v);
+							let node = await this.buildNodeVisObject(v, session);
 							try {
 								this._addNode(node);
 							} catch (e) {
@@ -246,15 +247,15 @@ export default class NeoVis {
 						} else if (v instanceof Neo4j.types.Path) {
 							this._consoleLog('PATH');
 							this._consoleLog(v);
-							let startNode = await this.buildNodeVisObject(v.start);
-							let endNode = await this.buildNodeVisObject(v.end);
+							let startNode = await this.buildNodeVisObject(v.start, session);
+							let endNode = await this.buildNodeVisObject(v.end, session);
 
 							this._addNode(startNode);
 							this._addNode(endNode);
 
 							for (let obj of v.segments) {
-								this._addNode(await this.buildNodeVisObject(obj.start));
-								this._addNode(await this.buildNodeVisObject(obj.end));
+								this._addNode(await this.buildNodeVisObject(obj.start, session));
+								this._addNode(await this.buildNodeVisObject(obj.end, session));
 								this._addEdge(this.buildEdgeVisObject(obj.relationship));
 							}
 
@@ -263,7 +264,7 @@ export default class NeoVis {
 								this._consoleLog('Array element constructor:');
 								this._consoleLog(obj && obj.constructor.name);
 								if (obj instanceof Neo4j.types.Node) {
-									let node = await this.buildNodeVisObject(obj);
+									let node = await this.buildNodeVisObject(obj, session);
 									this._addNode(node);
 
 								} else if (obj instanceof Neo4j.types.Relationship) {
