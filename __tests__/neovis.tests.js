@@ -1,5 +1,6 @@
 import Neo4j, * as Neo4jMock from 'neo4j-driver';
 import Neovis from '../src/neovis';
+import { NEOVIS_DEFAULT_CONFIG } from '../src/neovis';
 import { CompletionEvent } from '../src/events';
 import * as testUtils from './testUtils';
 
@@ -16,6 +17,92 @@ describe('Neovis', () => {
 	beforeEach(() => {
 		testUtils.clearIdCounter();
 		document.body.innerHTML = `<div id="${container_id}"></div>`;
+	});
+
+	describe('NeoVis config defaults behavior', () => {
+		let config = {};
+		beforeEach(() => {
+			config = {};
+		});
+		it('should merge default symbol for each label config', () => {
+			config.labels = {
+				a: {
+					caption: 'name'
+				},
+				[NEOVIS_DEFAULT_CONFIG]: {
+					test: 'test'
+				}
+			};
+			const neovis = new Neovis(config);
+			expect(neovis._config.labels.a).toMatchObject({caption: 'name', test: 'test'});
+		});
+		it('should not change the config sent', () => {
+			config = {
+				labels: {
+					a: {
+						caption: 'name'
+					},
+					[NEOVIS_DEFAULT_CONFIG]: {
+						test: 'test'
+					}
+				},
+				relationships: {
+					a: {
+						thickness: 0.1
+					},
+					[NEOVIS_DEFAULT_CONFIG]: {
+						test: 'test'
+					}
+				}
+			};
+			const configTemp = {...config};
+			new Neovis(config);
+			expect(config).toMatchObject(configTemp);
+		});
+		it('should override default config if specific label have one', () => {
+			config.relationships = {
+				a: {
+					caption: 'name',
+					overrideThis: 'overridden'
+				},
+				[NEOVIS_DEFAULT_CONFIG]: {
+					test: 'test',
+					overrideThis: 'override'
+				}
+			};
+			const neovis = new Neovis(config);
+			expect(neovis._config.relationships.a).toMatchObject({
+				caption: 'name', test: 'test', overrideThis: 'overridden'
+			});
+		});
+		it('should merge default symbol for each relationship config', () => {
+			config.labels = {
+				a: {
+					caption: 'name'
+				},
+				[NEOVIS_DEFAULT_CONFIG]: {
+					test: 'test'
+				}
+			};
+			const neovis = new Neovis(config);
+			expect(neovis._config.labels.a).toMatchObject({caption: 'name', test: 'test'});
+		});
+		it('should override default config if specific relationship have one', () => {
+			config.relationships = {
+				a: {
+					caption: 'name',
+					overrideThis: 'overridden'
+				},
+				[NEOVIS_DEFAULT_CONFIG]: {
+					test: 'test',
+					overrideThis: 'override'
+				}
+			};
+			const neovis = new Neovis(config);
+			expect(neovis._config.relationships.a).toMatchObject({
+				caption: 'name', test: 'test', overrideThis: 'overridden'
+			});
+		});
 	});
 
 	describe('Neovis default behavior', () => {
@@ -90,7 +177,7 @@ describe('Neovis', () => {
 			expect(neovis._data.edges.length).toBe(2);
 		});
 	});
-	
+
 	describe('neovis with sizeCypher', () => {
 		const sizeCypher = 'sizeCypher';
 		const neovisConfig = {
@@ -123,5 +210,4 @@ describe('Neovis', () => {
 			expect(neovis._data.nodes.get(1)).toHaveProperty('value', 1);
 		});
 	});
-
 });

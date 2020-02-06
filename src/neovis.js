@@ -6,6 +6,8 @@ import 'vis-network/dist/vis-network.min.css';
 import { defaults } from './defaults';
 import { EventController, CompletionEvent } from './events';
 
+export const NEOVIS_DEFAULT_CONFIG = Symbol();
+
 export default class NeoVis {
 	_nodes = {};
 	_edges = {};
@@ -35,13 +37,37 @@ export default class NeoVis {
 	}
 
 	_consoleLog(message, level = 'log') {
-		if(level !== 'log' || this._config.console_debug) {
+		if (level !== 'log' || this._config.console_debug) {
 			// eslint-disable-next-line no-console
 			console[level](message);
 		}
 	}
 
 	_init(config) {
+		if (config.labels && config.labels[NEOVIS_DEFAULT_CONFIG]) {
+			for (let key of Object.keys(config.labels)) {
+				// getting out of my for not changing the original config object
+				config = {
+					...config,
+					labels: {
+						...config.labels,
+						[key]: {...config.labels[NEOVIS_DEFAULT_CONFIG], ...config.labels[key]}
+					}
+				};
+			}
+		}
+		if (config.relationships && config.relationships[NEOVIS_DEFAULT_CONFIG]) {
+			// getting out of my for not changing the original config object
+			for (let key of Object.keys(config.relationships)) {
+				config = {
+					...config,
+					relationships: {
+						...config.relationships,
+						[key]: {...config.relationships[NEOVIS_DEFAULT_CONFIG], ...config.relationships[key]}
+					}
+				};
+			}
+		}
 		this._config = config;
 		this._encrypted = config.encrypted || defaults.neo4j.encrypted;
 		this._trust = config.trust || defaults.neo4j.trust;
@@ -73,7 +99,7 @@ export default class NeoVis {
 	 * @param session
 	 * @returns {{}}
 	 */
-	async buildNodeVisObject(neo4jNode, session=null) {
+	async buildNodeVisObject(neo4jNode, session = null) {
 		let node = {};
 		let label = neo4jNode.labels[0];
 

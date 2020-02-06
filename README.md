@@ -251,12 +251,23 @@ var config = {
                         "size": "pagerank",
                         "community": "community"
                         //"sizeCypher": "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
+                    },
+                    [NeoVis.NEOVIS_DEFAULT_CONFIG]: {
+                         "caption": "defaultCaptionProperty",
+                         "size": "defaultPagerank",
+                         "community": "defaultCommunity"
+                         //"sizeCypher": "defaultSizeCypher"
+                                            
                     }
                 },
                 relationships: {
                     "INTERACTS": {
                         "thickness": "weight",
                         "caption": false
+                    },
+                    [NeoVis.NEOVIS_DEFAULT_CONFIG]: {
+                         "thickness": "defaultThicknessProperty",
+                         "caption": "defaultCaption"
                     }
                 },
                 initial_cypher: "MATCH (n)-[r:INTERACTS]->(m) RETURN n,r,m"
@@ -274,9 +285,18 @@ var config = {
 
 #### `config.server_password`
 
+### `NeoVis.NEOVIS_DEFAULT_CONFIG`
+For both `config.labels` and `config.relationships` NeoVis.NEOVIS_DEFAULT_CONFIG 
+symbol can be added, which have the have the same properties as the normal config for specific 
+label/relationshipType
+you can use it by either `NeoVis.NEOVIS_DEFAULT_CONFIG` if you are using NeoVis as global
+or you can use it by 
+~~~js
+import { NEOVIS_DEFAULT_CONFIG } from 'neovis.js'; 
+~~~
 #### `config.labels`
 
-```
+``` 
 "Character": {
     "caption": "name",
     "size": "pagerank",
@@ -295,7 +315,6 @@ var config = {
     }
 }
 ```
-
 #### `config.arrows`
 
 Boolean. Defaults to false.
