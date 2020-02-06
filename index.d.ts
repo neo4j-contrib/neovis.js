@@ -19,11 +19,11 @@ export interface INeovisConfig {
     server_password: string;
     labels?: {
         [label: string]: ILabelConfig,
-        [NEOVIS_DEFAULT_CONFIG]: IRelationshipConfig
+        [NEOVIS_DEFAULT_CONFIG]?: IRelationshipConfig
     };
     relationships?: {
         [relationship: string]: IRelationshipConfig,
-        [NEOVIS_DEFAULT_CONFIG]: IRelationshipConfig
+        [NEOVIS_DEFAULT_CONFIG]?: IRelationshipConfig
     };
     arrows?: boolean;
     hierarchical? :boolean;
