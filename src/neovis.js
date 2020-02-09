@@ -103,7 +103,7 @@ export default class NeoVis {
 		let node = {};
 		let label = neo4jNode.labels[0];
 
-		let labelConfig = this._config && this._config.labels && this._config.labels[label];
+		let labelConfig = this._config && this._config.labels && (this._config.labels[label] || this._config.labels[NEOVIS_DEFAULT_CONFIG]);
 
 		const captionKey = labelConfig && labelConfig['caption'];
 		const sizeKey = labelConfig && labelConfig['size'];
@@ -191,7 +191,8 @@ export default class NeoVis {
 	 * @returns {{}}
 	 */
 	buildEdgeVisObject(r) {
-		const nodeTypeConfig = this._config && this._config.relationships && this._config.relationships[r.type];
+		const nodeTypeConfig = this._config && this._config.relationships &&
+			(this._config.relationships[r.type] || this._config.relationships[NEOVIS_DEFAULT_CONFIG]);
 		let weightKey = nodeTypeConfig && nodeTypeConfig.thickness,
 			captionKey = nodeTypeConfig && nodeTypeConfig.caption;
 
