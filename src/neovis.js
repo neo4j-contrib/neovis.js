@@ -4,7 +4,7 @@ import Neo4j from 'neo4j-driver';
 import * as vis from 'vis-network/dist/vis-network.min';
 import 'vis-network/dist/vis-network.min.css';
 import { defaults } from './defaults';
-import { EventController, CompletionEvent, ErrorEvent } from './events';
+import { EventController, CompletionEvent, ClickEdgeEvent, ClickNodeEvent, ErrorEvent } from './events';
 
 export const NEOVIS_DEFAULT_CONFIG = Symbol();
 
@@ -179,7 +179,7 @@ export default class NeoVis {
 		node.title = '';
 		for (let key in neo4jNode.properties) {
 			if (neo4jNode.properties.hasOwnProperty(key)) {
-				node.title += `<strong>${key}:</strong> ${neo4jNode.properties[key]}<br>`;
+                node.title += this.propertyToString(key, neo4jNode.properties[key]);
 			}
 		}
 		return node;
@@ -205,7 +205,7 @@ export default class NeoVis {
 		edge.title = '';
 		for (let key in r.properties) {
 			if (r.properties.hasOwnProperty(key)) {
-				edge['title'] += `<strong>${key}:</strong> ${r.properties[key]}<br>`;
+				edge['title'] += this.propertyToString(key, r.properties[key]);
 			}
 		}
 
@@ -234,7 +234,18 @@ export default class NeoVis {
 		}
 
 		return edge;
-	}
+    }
+    
+    propertyToString(key, value) {
+        if (Array.isArray(value) && value.length > 1) {
+            let out = `<strong>${key}:</strong><br /><ul>`;
+            for (let val of value) {
+                out += `<li>${val}</li>`;
+            }
+            return out + "</ul>";
+        }
+        return  `<strong>${key}:</strong> ${value}<br>`;
+    }
 
 	// public API
 
@@ -384,7 +395,18 @@ export default class NeoVis {
 						},
 						10000
 					);
-					this._events.generateEvent(CompletionEvent, {record_count: recordCount});
+                    this._events.generateEvent(CompletionEvent, {record_count: recordCount});
+
+                    let neoVis = this;
+                    this._network.on("click", function (params) {
+                        if (params.nodes.length > 0) {
+                            let nodeId = this.getNodeAt(params.pointer.DOM);
+                            neoVis._events.generateEvent(ClickNodeEvent, {nodeId: nodeId, node: neoVis._nodes[nodeId]});
+                        } else if (params.edges.length > 0) {
+                            let edgeId = this.getEdgeAt(params.pointer.DOM);
+                            neoVis._events.generateEvent(ClickEdgeEvent, {edgeId: edgeId, edge: neoVis._edges[edgeId]});
+                        }
+                    });
 				},
 				onError: (error) => {
 					this._consoleLog(error, 'error');
