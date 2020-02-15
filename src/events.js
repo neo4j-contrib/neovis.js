@@ -1,4 +1,6 @@
 export const CompletionEvent = 'completed';
+export const ClickNodeEvent = 'clickNode';
+export const ClickEdgeEvent = 'clickEdge';
 export const ErrorEvent = 'error';
 
 export class EventController {
@@ -7,6 +9,8 @@ export class EventController {
 		this._handlers = {
 			[CompletionEvent]: [],
 			[ErrorEvent]: [],
+            [ClickNodeEvent]: [],
+            [ClickEdgeEvent]: [],
 		};
 	}
 
