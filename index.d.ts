@@ -1,3 +1,5 @@
+export const NEOVIS_DEFAULT_CONFIG: unique symbol;
+
 export interface ILabelConfig {
     caption?: string;
     size?: string;
@@ -16,10 +18,12 @@ export interface INeovisConfig {
     server_user: string;
     server_password: string;
     labels?: {
-        [label: string]: ILabelConfig
+        [label: string]: ILabelConfig,
+        [NEOVIS_DEFAULT_CONFIG]?: IRelationshipConfig
     };
     relationships?: {
-        [relationship: string]: IRelationshipConfig
+        [relationship: string]: IRelationshipConfig,
+        [NEOVIS_DEFAULT_CONFIG]?: IRelationshipConfig
     };
     arrows?: boolean;
     hierarchical? :boolean;
