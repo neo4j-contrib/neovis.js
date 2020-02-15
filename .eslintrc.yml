@@ -26,5 +26,6 @@ rules:
     - always
   no-console:
     - error
+  no-prototype-builtins: off
   jest/no-mocks-import:
     - error
