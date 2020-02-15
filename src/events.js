@@ -9,8 +9,8 @@ export class EventController {
 		this._handlers = {
 			[CompletionEvent]: [],
 			[ErrorEvent]: [],
-            [ClickNodeEvent]: [],
-            [ClickEdgeEvent]: [],
+			[ClickNodeEvent]: [],
+			[ClickEdgeEvent]: [],
 		};
 	}
 
