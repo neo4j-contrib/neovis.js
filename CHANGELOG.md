@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.0
+
+- [Error callback added](https://github.com/neo4j-contrib/neovis.js/pull/75)
+- [Fix type error -- registerOnEvent should have void return type](https://github.com/neo4j-contrib/neovis.js/pull/72)
+- [Improve display of large properties](https://github.com/neo4j-contrib/neovis.js/pull/82)
+- [Reuse session between sizeCypher calls](https://github.com/neo4j-contrib/neovis.js/pull/86)
+- [Add default configuration for labels and relationships](https://github.com/neo4j-contrib/neovis.js/pull/87)
+
 ## 1.2.1
 
 - [Fix bug when null value is returned from OPTIONAL MATCH](https://github.com/neo4j-contrib/neovis.js/pull/70)
