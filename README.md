@@ -143,7 +143,11 @@ And define our draw() function:
                     "Character": {
                         "caption": "name",
                         "size": "pagerank",
-                        "community": "community"
+                        "community": "community",
+                        "title_properties": [
+                            "name",
+                            "pagerank"
+                        ]
                     }
                 },
                 relationships: {
@@ -249,7 +253,11 @@ var config = {
                     "Character": {
                         "caption": "name",
                         "size": "pagerank",
-                        "community": "community"
+                        "community": "community",
+                        "title_properties": [
+                            "name",
+                            "pagerank"
+                        ],
                         //"sizeCypher": "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
                     }
                 },
@@ -281,9 +289,16 @@ var config = {
     "caption": "name",
     "size": "pagerank",
     "community": "community",
+    "title_properties": [
+        "name",
+        "pagerank"
+    ],
     sizeCypher: "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
 }
 ```
+
+If title_properties is supplied, only the attributes listed in it are displayed in the tooltip.
+Otherwise, all attributes are present in the tooltip.
 
 #### `config.relationships`
 
