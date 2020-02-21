@@ -6231,10 +6231,10 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-vis-network@^7.3.3:
-  version "7.3.3"
-  resolved "https://registry.yarnpkg.com/vis-network/-/vis-network-7.3.3.tgz#02501dc1a87ea9fd5870f1f242394e8af31b8844"
-  integrity sha512-cTBQHjcENJ7Nz0vFziXh0C6mf+Q1sKGfRm0J5S39LjSsBqOTOem3xSh2B9mCvgS+LicK5lmqYcdIiNinNMB16w==
+vis-network@^7.3.5:
+  version "7.3.5"
+  resolved "https://registry.yarnpkg.com/vis-network/-/vis-network-7.3.5.tgz#367f3a1c19ba1b677dc3dec495f7e0d235e1fd59"
+  integrity sha512-i9Ow9qqYGhXwcTEetbKCHBTzYvjsag5xM+Zl009ajjZyAvMLqu3Gljk/VpcAn2WqQHZAz0g/Cg3+xfALxYwLGA==
 
 vm-browserify@^1.0.1:
   version "1.1.2"
