@@ -15,7 +15,7 @@ Graph visualizations powered by vis.js with data from Neo4j.
 - [x] Specify edge property for edge thickness
 - [x] Specify node property for community / clustering
 - [x] Specify node property for node size
-- [ ] Configure popover
+- [x] Configure popover
 
 
 ## Install
@@ -35,13 +35,13 @@ For ease of use Neovis.js can be obtained from Neo4jLabs CDN:
 *Most recent release*
 
 ```
-<script src="https://cdn.neo4jlabs.com/neovis.js/v1.3.0/neovis.js"></script>
+<script src="https://cdn.neo4jlabs.com/neovis.js/v1.4.0/neovis.js"></script>
 ```
 
 *Version without neo4j-driver dependency*
 
 ```
-<script src="https://cdn.neo4jlabs.com/neovis.js/v1.3.0/neovis-without-dependencies.js"></script>
+<script src="https://cdn.neo4jlabs.com/neovis.js/v1.4.0/neovis-without-dependencies.js"></script>
 ```
 
 ## Quickstart Example
