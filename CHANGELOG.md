@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.0
+
+- [Add configurable title properties](https://github.com/neo4j-contrib/neovis.js/pull/74)
+- [Fix label not showing](https://github.com/neo4j-contrib/neovis.js/pull/94)
+
 ## 1.3.0
 
 - [Error callback added](https://github.com/neo4j-contrib/neovis.js/pull/75)
