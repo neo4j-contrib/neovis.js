@@ -326,9 +326,6 @@ export default class NeoVis {
 								strokeWidth: 7
 							},
 							scaling: {
-								label: {
-									enabled: true
-								}
 							}
 						},
 						edges: {
