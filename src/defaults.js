@@ -14,6 +14,14 @@ const defaults = {
 		trust: 'TRUST_ALL_CERTIFICATES'
 	},
 
+	data: {
+		initial_nodes : [],
+		node_expansion_query : 'match p = (node) -[] -> () where ID(node) = $nodeid return p limit $limit',
+		default_neighbour_limit : 25,
+		nodeid_parameter : '$nodeid',
+		limit_parameter : '$limit'
+	},
+
 	visjs: {
 		interaction: {
 			hover: true,

@@ -1,6 +1,8 @@
 export const CompletionEvent = 'completed';
 export const ClickNodeEvent = 'clickNode';
 export const ClickEdgeEvent = 'clickEdge';
+export const DoubleClickNodeEvent = 'doubleClickNode';
+export const DoubleClickEdgeEvent = 'doubleClickEdge';
 export const ErrorEvent = 'error';
 
 export class EventController {
@@ -11,6 +13,8 @@ export class EventController {
 			[ErrorEvent]: [],
 			[ClickNodeEvent]: [],
 			[ClickEdgeEvent]: [],
+			[DoubleClickNodeEvent]: [],
+			[DoubleClickEdgeEvent]: []
 		};
 	}
 

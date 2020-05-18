@@ -4,7 +4,7 @@ import Neo4j from 'neo4j-driver';
 import * as vis from 'vis-network/dist/vis-network.min';
 import 'vis-network/dist/vis-network.min.css';
 import { defaults } from './defaults';
-import { EventController, CompletionEvent, ClickEdgeEvent, ClickNodeEvent, ErrorEvent } from './events';
+import { EventController, CompletionEvent, ClickEdgeEvent, DoubleClickEdgeEvent, ClickNodeEvent, DoubleClickNodeEvent, ErrorEvent } from './events';
 
 export const NEOVIS_DEFAULT_CONFIG = Symbol();
 
@@ -14,6 +14,8 @@ export default class NeoVis {
 	_data = {};
 	_network = null;
 	_events = new EventController();
+	_expanded_nodes = [];
+	_self = {};
 
 	/**
 	 *
@@ -79,8 +81,31 @@ export default class NeoVis {
 				trust: this._trust
 			}
 		);
-		this._query = config.initial_cypher || defaults.neo4j.initialQuery;
 		this._container = document.getElementById(config.container_id);
+		this._expanded_nodes = config.initial_nodes || defaults.data.initial_nodes;
+		this._query = this._nodelist_to_cypher(this._expanded_nodes) || config.initial_cypher;
+		// register double click event for node expansion/reduction
+		var _self = this;
+		this._events.register('doubleClickNode', function(node) {
+			console.log('Clicked on ' + node.nodeId);
+			// first obtain nodeId and check if it is already available
+			let nodeId = node.nodeId;
+
+			let index = _self._expanded_nodes.indexOf(nodeId);
+			// update the initial query
+			if(index >= 0) {
+				// remove the node from array of expanded nodes
+				_self._expanded_nodes.splice(index, 1);
+			} else {
+				// push node into array of expanded nodes
+				_self._expanded_nodes.push(nodeId)
+			}
+
+			_self._query = _self._nodelist_to_cypher(_self._expanded_nodes);
+
+			// finally re-render the image
+			_self.render();
+		});
 	}
 
 	_addNode(node) {
@@ -89,6 +114,28 @@ export default class NeoVis {
 
 	_addEdge(edge) {
 		this._edges[edge.id] = edge;
+	}
+
+	// helper function to 
+	_nodelist_to_cypher(expansion_list) {
+		let query = '';
+		let data_defaults = defaults.data;
+		// check if expansion list have at least one element
+		if(expansion_list.length < 1) {
+			this._events.generateEvent(ErrorEvent, {error_msg: 'Node list does not contain a single node id'});
+		}
+
+		let nodeId = expansion_list[0];
+		query += data_defaults.node_expansion_query.replace(data_defaults.nodeid_parameter, nodeId).replace(data_defaults.limit_parameter, data_defaults.default_neighbour_limit);
+
+		// loop over the array and generate union query
+		for(let i = 1 ; i < expansion_list.length ; i++) {
+			let nodeId = expansion_list[i];
+			query += ' UNION '
+			query += data_defaults.node_expansion_query.replace(data_defaults.nodeid_parameter, nodeId).replace(data_defaults.limit_parameter, data_defaults.default_neighbour_limit);
+		}
+
+		return query;
 	}
 
 	/**
@@ -406,6 +453,17 @@ export default class NeoVis {
 						} else if (params.edges.length > 0) {
 							let edgeId = this.getEdgeAt(params.pointer.DOM);
 							neoVis._events.generateEvent(ClickEdgeEvent, {edgeId: edgeId, edge: neoVis._edges[edgeId]});
+						}
+					});
+
+					// override doubleclick event for node expansion
+					this._network.on('doubleClick', function (params) {
+						if (params.nodes.length > 0) {
+							let nodeId = this.getNodeAt(params.pointer.DOM);
+							neoVis._events.generateEvent(DoubleClickNodeEvent, {nodeId: nodeId, node: neoVis._nodes[nodeId]});
+						} else if (params.edges.length > 0) {
+							let edgeId = this.getEdgeAt(params.pointer.DOM);
+							neoVis._events.generateEvent(DoubleClickEdgeEvent, {edgeId: edgeId, edge: neoVis._edges[edgeId]});
 						}
 					});
 				},
