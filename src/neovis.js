@@ -104,6 +104,7 @@ export default class NeoVis {
 			_self._query = _self._nodelist_to_cypher(_self._expanded_nodes);
 
 			// finally re-render the image
+			_self.clearNetwork();
 			_self.render();
 		});
 	}
