@@ -24,6 +24,7 @@ export default class NeoVis {
 	 *    server_url:
 	 *    server_password?:
 	 *    server_username?:
+	 *    server_database?:
 	 *    labels:
 	 *
 	 *  }
@@ -79,6 +80,7 @@ export default class NeoVis {
 				trust: this._trust
 			}
 		);
+		this._database = config.server_database;
 		this._query = config.initial_cypher || defaults.neo4j.initialQuery;
 		this._container = document.getElementById(config.container_id);
 	}
@@ -123,7 +125,7 @@ export default class NeoVis {
 			// the cypher statement will be passed a parameter {id} with the value
 			// of the internal node id
 
-			session = session || this._driver.session();
+			session = session || this._driver.session(this._database && { database: this._database });
 			const result = await session.run(sizeCypher, {id: Neo4j.int(node.id)});
 			for (let record of result.records) {
 				record.forEach((v) => {
@@ -259,7 +261,7 @@ export default class NeoVis {
 		// run query
 		let recordCount = 0;
 
-		let session = this._driver.session();
+		let session = this._driver.session(this._database && { database: this._database });
 		const dataBuildPromises = [];
 		session
 			.run(this._query, {limit: 30})
