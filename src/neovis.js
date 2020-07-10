@@ -158,6 +158,8 @@ export default class NeoVis {
 		// node caption
 		if (typeof captionKey === 'function') {
 			node.label = captionKey(neo4jNode);
+		} else if (Neo4j.isInt(neo4jNode.properties[captionKey])) {
+			node.label = neo4jNode.properties[captionKey].toString();
 		} else {
 			node.label = neo4jNode.properties[captionKey] || label || '';
 		}
