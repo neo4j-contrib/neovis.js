@@ -158,8 +158,8 @@ export default class NeoVis {
 		// node caption
 		if (typeof captionKey === 'function') {
 			node.label = captionKey(neo4jNode);
-		} else if (Neo4j.isInt(neo4jNode.properties[captionKey])) {
-			node.label = neo4jNode.properties[captionKey].toString();
+		} else if (captionKey && (typeof neo4jNode.properties[captionKey] === 'number' || Neo4j.isInt(neo4jNode.properties[captionKey]))) {
+			node.label = neo4jNode.properties[captionKey].toString() || '';
 		} else {
 			node.label = neo4jNode.properties[captionKey] || label || '';
 		}
@@ -234,11 +234,14 @@ export default class NeoVis {
 				edge.label = r.type;
 			}
 		} else if (captionKey && typeof captionKey === 'string') {
-			edge.label = r.properties[captionKey] || '';
+			if (typeof r.properties[captionKey] === 'number' || Neo4j.isInt(r.properties[captionKey])) {
+				edge.label = r.properties[captionKey].toString() || '';
+			} else {
+				edge.label = r.properties[captionKey] || '';
+			}
 		} else {
 			edge.label = r.type;
 		}
-
 		return edge;
 	}
     
