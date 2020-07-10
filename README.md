@@ -204,6 +204,7 @@ will build `dist/neovis.js` and `dist/neovis-without-dependencies.js`
 * `Neovis.reload()`
 * `Neovis.stabilize()`
 * `Neovis.renderWithCypher(statement)`
+* `Neovis.updateWithCypher(statement)`
 
 * `config`
 
@@ -229,7 +230,11 @@ Stop the physics simulation.
 
 ### `Neovis.renderWithCypher(statement)`
 
-Render a new visualization with results from a Cypher statement. Any `Node` and `Relationship` objects returned in the Cypher query will be rendered in the visualization. Paths are not currently supported. 
+Render a new visualization with results from a Cypher statement. Any `Node` and `Relationship` objects returned in the Cypher query will be rendered in the visualization. Paths are not currently supported.
+
+### `Neovis.updateWithCypher(statement)`
+
+Update the current visualization with results from a Cypher statement. Any `Node` and `Relationship` objects returned in the Cypher query will be rendered in the visualization. Paths are not currently supported.
 
 ### `config`
 

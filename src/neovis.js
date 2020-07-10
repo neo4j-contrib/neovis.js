@@ -258,16 +258,18 @@ export default class NeoVis {
 
 	// public API
 
-	render() {
+	render(query) {
 
 		// connect to Neo4j instance
 		// run query
 		let recordCount = 0;
 
 		let session = this._driver.session();
+
+		const _query = query ? query : this._query; 
 		const dataBuildPromises = [];
 		session
-			.run(this._query, {limit: 30})
+			.run(_query, {limit: 30})
 			.subscribe({
 				onNext: (record) => {
 					recordCount++;
@@ -327,73 +329,79 @@ export default class NeoVis {
 				onCompleted: async () => {
 					await Promise.all(dataBuildPromises);
 					session.close();
-					let options = {
-						nodes: {
-							shape: 'dot',
-							font: {
-								size: 26,
-								strokeWidth: 7
+
+					if(this._network && this._network.body.data.nodes.length > 0) {
+						this._data.nodes.update(Object.values(this._nodes));
+						this._data.edges.update(Object.values(this._edges));
+					} else {
+						let options = {
+							nodes: {
+								shape: 'dot',
+								font: {
+									size: 26,
+									strokeWidth: 7
+								},
+								scaling: {
+								}
 							},
-							scaling: {
-							}
-						},
-						edges: {
-							arrows: {
-								to: {enabled: this._config.arrows || false} // FIXME: handle default value
+							edges: {
+								arrows: {
+									to: {enabled: this._config.arrows || false} // FIXME: handle default value
+								},
+								length: 200
 							},
-							length: 200
-						},
-						layout: {
-							improvedLayout: false,
-							hierarchical: {
-								enabled: this._config.hierarchical || false,
-								sortMethod: this._config.hierarchical_sort_method || 'hubsize'
+							layout: {
+								improvedLayout: false,
+								hierarchical: {
+									enabled: this._config.hierarchical || false,
+									sortMethod: this._config.hierarchical_sort_method || 'hubsize'
+								}
+							},
+							physics: { // TODO: adaptive physics settings based on size of graph rendered
+								// enabled: true,
+								// timestep: 0.5,
+								// stabilization: {
+								//     iterations: 10
+								// }
+	
+								adaptiveTimestep: true,
+								// barnesHut: {
+								//     gravitationalConstant: -8000,
+								//     springConstant: 0.04,
+								//     springLength: 95
+								// },
+								stabilization: {
+									iterations: 200,
+									fit: true
+								}
 							}
-						},
-						physics: { // TODO: adaptive physics settings based on size of graph rendered
-							// enabled: true,
-							// timestep: 0.5,
-							// stabilization: {
-							//     iterations: 10
-							// }
-
-							adaptiveTimestep: true,
-							// barnesHut: {
-							//     gravitationalConstant: -8000,
-							//     springConstant: 0.04,
-							//     springLength: 95
-							// },
-							stabilization: {
-								iterations: 200,
-								fit: true
-							}
-						}
-					};
-
-					const container = this._container;
-					this._data = {
-						nodes: new vis.DataSet(Object.values(this._nodes)),
-						edges: new vis.DataSet(Object.values(this._edges))
-					};
-
-					this._consoleLog(this._data.nodes);
-					this._consoleLog(this._data.edges);
-
-					// Create duplicate node for any this reference relationships
-					// NOTE: Is this only useful for data model type data
-					// this._data.edges = this._data.edges.map(
-					//     function (item) {
-					//          if (item.from == item.to) {
-					//             const newNode = this._data.nodes.get(item.from)
-					//             delete newNode.id;
-					//             const newNodeIds = this._data.nodes.add(newNode);
-					//             this._consoleLog("Adding new node and changing this-ref to node: " + item.to);
-					//             item.to = newNodeIds[0];
-					//          }
-					//          return item;
-					//     }
-					// );
-					this._network = new vis.Network(container, this._data, options);
+						};
+	
+						const container = this._container;
+						this._data = {
+							nodes: new vis.DataSet(Object.values(this._nodes)),
+							edges: new vis.DataSet(Object.values(this._edges))
+						};
+	
+						this._consoleLog(this._data.nodes);
+						this._consoleLog(this._data.edges);
+	
+						// Create duplicate node for any this reference relationships
+						// NOTE: Is this only useful for data model type data
+						// this._data.edges = this._data.edges.map(
+						//     function (item) {
+						//          if (item.from == item.to) {
+						//             const newNode = this._data.nodes.get(item.from)
+						//             delete newNode.id;
+						//             const newNodeIds = this._data.nodes.add(newNode);
+						//             this._consoleLog("Adding new node and changing this-ref to node: " + item.to);
+						//             item.to = newNodeIds[0];
+						//          }
+						//          return item;
+						//     }
+						// );
+						this._network = new vis.Network(container, this._data, options);
+					}
 					this._consoleLog('completed');
 					setTimeout(
 						() => {
@@ -475,6 +483,15 @@ export default class NeoVis {
 		this.clearNetwork();
 		this._query = query;
 		this.render();
+	}
+
+	/**
+	 * Execute an arbitrary Cypher query and update the current visualization, retaning current nodes
+	 * This function will not change the original query given by renderWithCypher or the inital cypher.
+	 * @param query 
+	 */
+	updateWithCypher(query) {
+		this.render(query);
 	}
 
 // configure exports based on environment (ie Node.js or browser)

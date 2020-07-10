@@ -43,6 +43,8 @@ declare class Neovis {
     reload(): void;
     stabilize(): void;
     renderWithCypher(query: string): void;
+    updateWithCypher(query: string): void;
+
 }
 
 export default Neovis;
