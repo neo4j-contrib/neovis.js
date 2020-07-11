@@ -299,6 +299,8 @@ var config = {
 
 #### `config.server_password`
 
+#### `config.server_database`
+
 ### `NeoVis.NEOVIS_DEFAULT_CONFIG`
 For both `config.labels` and `config.relationships` NeoVis.NEOVIS_DEFAULT_CONFIG 
 symbol can be added, which have the have the same properties as the normal config for specific 
