@@ -59,7 +59,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "^7.8.4",
-    "neo4j-driver": "^1.7.5",
+    "neo4j-driver": "^4.1.0",
     "vis-network": "^7.3.5"
   },
   "jest": {
