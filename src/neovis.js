@@ -109,6 +109,7 @@ export default class NeoVis {
 		const sizeKey = labelConfig && labelConfig['size'];
 		const sizeCypher = labelConfig && labelConfig['sizeCypher'];
 		const communityKey = labelConfig && labelConfig['community'];
+		const imageUrl = labelConfig && labelConfig['image'];
 
 		const title_properties = (
 			labelConfig && labelConfig.title_properties
@@ -187,6 +188,14 @@ export default class NeoVis {
 			if (neo4jNode.properties.hasOwnProperty(key)) {
 				node.title += this.propertyToString(key, neo4jNode.properties[key]);
 			}
+		}
+
+		// set node shape and image url if a image url is provided in config
+		if (imageUrl) {
+			node.shape = 'image';
+			node.image = imageUrl;
+		} else {
+			node.shape = 'dot';
 		}
 		return node;
 	}
@@ -336,7 +345,7 @@ export default class NeoVis {
 					} else {
 						let options = {
 							nodes: {
-								shape: 'dot',
+								//shape: 'dot',
 								font: {
 									size: 26,
 									strokeWidth: 7

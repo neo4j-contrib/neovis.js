@@ -11,7 +11,7 @@ Graph visualizations powered by vis.js with data from Neo4j.
 - [x] Connect to Neo4j instance to get live data
 - [x] User specified labels and property to be displayed
 - [x] User specified Cypher query to populate 
-- [ ] Specify node property for url of image for node
+- [x] Specify node property for url of image for node
 - [x] Specify edge property for edge thickness
 - [x] Specify node property for community / clustering
 - [x] Specify node property for node size
@@ -210,7 +210,7 @@ will build `dist/neovis.js` and `dist/neovis-without-dependencies.js`
 
 ### `Neovis.default(config)`
 
-Constructor for Neovis. Creates new Neovis object, given configuration. See [config]()
+Constructor for Neovis. Creates new Neovis object, given configuration. See [config](#config)
 
 ### `Neovis.clearNetwork()`
 
@@ -218,7 +218,7 @@ Clears network visualization
 
 ### `Neovis.reinit(config)`
 
-Reinitializes the network visualization with a new `config` object. See [config]()
+Reinitializes the network visualization with a new `config` object. See [config](#config)
 
 ### `Neovis.reload()`
 
@@ -259,6 +259,7 @@ var config = {
                         "caption": "name",
                         "size": "pagerank",
                         "community": "community",
+                        //"image": 'https://visjs.org/images/visjs_logo.png',
                         "title_properties": [
                             "name",
                             "pagerank"
@@ -314,6 +315,7 @@ import { NEOVIS_DEFAULT_CONFIG } from 'neovis.js';
     "caption": "name",
     "size": "pagerank",
     "community": "community",
+    //"image": 'https://visjs.org/images/visjs_logo.png',
     "title_properties": [
         "name",
         "pagerank"
@@ -322,8 +324,10 @@ import { NEOVIS_DEFAULT_CONFIG } from 'neovis.js';
 }
 ```
 
-If title_properties is supplied, only the attributes listed in it are displayed in the tooltip.
-Otherwise, all attributes are present in the tooltip.
+`caption` currently takes Neo4j `String` or `Number`.  
+If `title_properties` is supplied, only the attributes listed in it are displayed in the tooltip.
+Otherwise, all attributes are present in the tooltip.  
+If `image` is supplied, the node will appear as the image, otherwise a default dot will be displayed.
 
 #### `config.relationships`
 
