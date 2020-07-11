@@ -110,6 +110,7 @@ export default class NeoVis {
 		const sizeCypher = labelConfig && labelConfig['sizeCypher'];
 		const communityKey = labelConfig && labelConfig['community'];
 		const imageUrl = labelConfig && labelConfig['image'];
+		const font = labelConfig && labelConfig['font'];
 
 		const title_properties = (
 			labelConfig && labelConfig.title_properties
@@ -197,6 +198,12 @@ export default class NeoVis {
 		} else {
 			node.shape = 'dot';
 		}
+
+		// set node caption font if font setting is provided in config
+		if (font) {
+			node.font = font;
+		}
+
 		return node;
 	}
 

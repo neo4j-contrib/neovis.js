@@ -316,6 +316,10 @@ import { NEOVIS_DEFAULT_CONFIG } from 'neovis.js';
     "size": "pagerank",
     "community": "community",
     //"image": 'https://visjs.org/images/visjs_logo.png',
+    //"font": {
+    //    "size":26,
+    //    "color":"#000000"
+    //},
     "title_properties": [
         "name",
         "pagerank"
@@ -327,8 +331,8 @@ import { NEOVIS_DEFAULT_CONFIG } from 'neovis.js';
 `caption` currently takes Neo4j `String` or `Number`.  
 If `title_properties` is supplied, only the attributes listed in it are displayed in the tooltip.
 Otherwise, all attributes are present in the tooltip.  
-If `image` is supplied, the node will appear as the image, otherwise a default dot will be displayed.
-
+If `image` is supplied, the node will appear as the image, otherwise a default dot will be displayed.  
+If `font` is supplied, the default font size configuration for node captions will be overwritten by the customized config. See `font` in [vis-network - nodes](https://visjs.github.io/vis-network/docs/network/nodes.html) for all available configuration for fonts.   
 #### `config.relationships`
 
 ```
