@@ -281,7 +281,7 @@ export default class NeoVis {
 		// connect to Neo4j instance
 		// run query
 		let recordCount = 0;
-		const _query = query ? query : this._query;
+		const _query = query || this._query;
 		let session = this._driver.session(this._database && { database: this._database });
 		const dataBuildPromises = [];
 		session

@@ -11,4 +11,3 @@ node_modules
 docs/build
 /lib
 .npmrc
-examples/neovis.html
