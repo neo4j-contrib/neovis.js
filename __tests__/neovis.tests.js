@@ -10,6 +10,7 @@ describe('Neovis', () => {
 	const container_id = 'randomId';
 	const initial_cypher = 'test query';
 	const label1 = 'label1';
+	const label2 = 'label2';
 	const relationshipType = 'TEST';
 	let neovis;
 
@@ -208,6 +209,185 @@ describe('Neovis', () => {
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1 + 1); // once for initial cypher and once for the sizeCypher
 			expect(neovis._data.nodes.get(1)).toHaveProperty('value', 1);
+		});
+	});
+
+	describe('neovis with update cypher', () => {
+		const updateWithCypher = 'updateCypher';
+		beforeEach(() => {
+			neovis = new Neovis({initial_cypher, container_id});
+		});
+
+		it('should call updateWithCypher and add the new node to visualization', async () => {
+			const node1 = testUtils.makeNode([label1]);
+			const node2 = testUtils.makeNode([label1]);
+			testUtils.mockFullRunSubscribe({
+				[initial_cypher]: {
+					default: [testUtils.makeRecord([node1])]
+				},
+				[updateWithCypher]: {
+					default: [testUtils.makeRecord([node2])]
+				}
+			});
+
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1);
+			expect(neovis._data.nodes.length).toBe(1); // 1 node before update with cypher
+			neovis.updateWithCypher(updateWithCypher); // do the update
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1 + 1); // once for initial cypher and once for the update
+			expect(neovis._data.nodes.length).toBe(2); // 2 node after update with cypher
+		});
+
+		it('call updateWithCypher with same init query should not create duplicate nodes', async () => {
+			const node1 = testUtils.makeNode([label1]);
+			testUtils.mockFullRunSubscribe({
+				[initial_cypher]: {
+					default: [testUtils.makeRecord([node1])]
+				}
+			});
+
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1);
+			expect(neovis._data.nodes.length).toBe(1); // 1 node before update with cypher
+			neovis.updateWithCypher(initial_cypher); // do the update
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1 + 1); // once for initial cypher and once for the update
+			expect(neovis._data.nodes.length).toBe(1); // 1 node after update with cypher
+		});
+	});
+
+	describe('neovis config test', () => {
+		const imageUrl = 'https://visjs.org/images/visjs_logo.png';
+		const fontSize = 28;
+		const fontColor = '#00FF00';
+		let config = {
+			container_id: container_id,
+			labels: {
+				[label1]: {
+					image: imageUrl,
+					font: {
+						'size': fontSize,
+						'color': fontColor,
+					}
+				}
+			},
+			initial_cypher: initial_cypher
+		};
+		beforeEach(() => {
+			neovis = new Neovis(config);
+		});
+
+		it('image field in config should reflect in node data', async () => {
+			const node1 = testUtils.makeNode([label1]);
+			testUtils.mockFullRunSubscribe({
+				[initial_cypher]: {
+					default: [testUtils.makeRecord([node1])]
+				}
+			});
+
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(neovis._data.nodes.get(1)).toHaveProperty('image', imageUrl);
+		});
+
+		it('image field for type not specified in config should not reflect in node data', async () => {
+			const node1 = testUtils.makeNode([label2]);
+			testUtils.mockFullRunSubscribe({
+				[initial_cypher]: {
+					default: [testUtils.makeRecord([node1])]
+				}
+			});
+
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(neovis._data.nodes.get(1)).toHaveProperty('image', undefined);
+		});
+
+		it('font field in config should reflect in node data', async () => {
+			const node1 = testUtils.makeNode([label1]);
+			testUtils.mockFullRunSubscribe({
+				[initial_cypher]: {
+					default: [testUtils.makeRecord([node1])]
+				}
+			});
+
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(neovis._data.nodes.get(1).font).toBeDefined();
+			expect(neovis._data.nodes.get(1).font.size).toBe(fontSize);
+			expect(neovis._data.nodes.get(1).font.color).toBe(fontColor);
+		});
+
+		it('font field for type not specified in config should not reflect in node data', async () => {
+			const node1 = testUtils.makeNode([label2]);
+			testUtils.mockFullRunSubscribe({
+				[initial_cypher]: {
+					default: [testUtils.makeRecord([node1])]
+				}
+			});
+
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(neovis._data.nodes.get(1)).toHaveProperty('font', undefined);
+		});
+	});
+
+	describe('neovis type casting test', () => {
+		const intProperity = 'intProperity';
+		const intProperityValue = 40;
+		const expectedIntProperityCaption = '40';
+
+		const floatProperity = 'floatProperity';
+		const floatProperityValue = 40.5;
+		const expectedFloatProperityCaption = '40.5';
+
+		it('should cast int type properity as caption', async () => {
+			let config = {
+				container_id: container_id,
+				labels: {
+					[label1]: {
+						'caption': intProperity
+					}
+				},
+				initial_cypher: initial_cypher
+			};
+			neovis = new Neovis(config);
+			const node1 = testUtils.makeNode([label1], {[intProperity]: intProperityValue});
+			testUtils.mockFullRunSubscribe({
+				[initial_cypher]: {
+					default: [testUtils.makeRecord([node1])]
+				}
+			});
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1);
+			expect(neovis._data.nodes.get(1)).toHaveProperty('label', expectedIntProperityCaption); // 1 node before update with cypher
+		});
+
+		it('should cast float type properity as caption', async () => {
+			let config = {
+				container_id: container_id,
+				labels: {
+					[label1]: {
+						'caption': floatProperity
+					}
+				},
+				initial_cypher: initial_cypher
+			};
+			neovis = new Neovis(config);
+			const node1 = testUtils.makeNode([label1], {[floatProperity]: floatProperityValue});
+			testUtils.mockFullRunSubscribe({
+				[initial_cypher]: {
+					default: [testUtils.makeRecord([node1])]
+				}
+			});
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1);
+			expect(neovis._data.nodes.get(1)).toHaveProperty('label', expectedFloatProperityCaption); // 1 node before update with cypher
 		});
 	});
 });
