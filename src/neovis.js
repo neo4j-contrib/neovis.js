@@ -77,7 +77,9 @@ export default class NeoVis {
 			Neo4j.auth.basic(config.server_user || defaults.neo4j.neo4jUser, config.server_password || defaults.neo4j.neo4jPassword),
 			{
 				encrypted: this._encrypted,
-				trust: this._trust
+				trust: this._trust,
+				maxConnectionPoolSize: 100,
+				connectionAcquisitionTimeout:10000,
 			}
 		);
 		this._database = config.server_database;
@@ -98,10 +100,9 @@ export default class NeoVis {
 	 * FIXME: use config
 	 * FIXME: move to private api
 	 * @param neo4jNode
-	 * @param session
 	 * @returns {{}}
 	 */
-	async buildNodeVisObject(neo4jNode, session = null) {
+	async buildNodeVisObject(neo4jNode) {
 		let node = {};
 		let label = neo4jNode.labels[0];
 
@@ -127,16 +128,21 @@ export default class NeoVis {
 			// the cypher statement will be passed a parameter {id} with the value
 			// of the internal node id
 			// TODO: refactor and put all size cypher in one transaction to commit to improve efficiency
-			let session = this._driver.session(this._database && { database: this._database });
-			const result = await session.run(sizeCypher, {id: Neo4j.int(node.id)});
-			for (let record of result.records) {
-				record.forEach((v) => {
-					if (typeof v === 'number') {
-						node.value = v;
-					} else if (Neo4j.isInt(v)) {
-						node.value = v.toNumber();
-					}
-				});
+			node.value = 1.0;
+			const session = this._driver.session(this._database && { database: this._database });
+			try {
+				const result = await session.readTransaction(tx => tx.run(sizeCypher, {id: Neo4j.int(node.id)})); // FIXME: One time transaction is not recommend for production
+				for (let record of result.records) {
+					record.forEach((v) => {
+						if (typeof v === 'number') {
+							node.value = v;
+						} else if (Neo4j.isInt(v)) {
+							node.value = v.toNumber();
+						}
+					});
+				}
+			} finally {
+				session.close();
 			}
 		} else if (typeof sizeKey === 'number') {
 			node.value = sizeKey;
@@ -298,7 +304,7 @@ export default class NeoVis {
 						this._consoleLog('Constructor:');
 						this._consoleLog(v && v.constructor.name);
 						if (v instanceof Neo4j.types.Node) {
-							let node = await this.buildNodeVisObject(v, session);
+							let node = await this.buildNodeVisObject(v);
 							try {
 								this._addNode(node);
 							} catch (e) {
@@ -312,15 +318,15 @@ export default class NeoVis {
 						} else if (v instanceof Neo4j.types.Path) {
 							this._consoleLog('PATH');
 							this._consoleLog(v);
-							let startNode = await this.buildNodeVisObject(v.start, session);
-							let endNode = await this.buildNodeVisObject(v.end, session);
+							let startNode = await this.buildNodeVisObject(v.start);
+							let endNode = await this.buildNodeVisObject(v.end);
 
 							this._addNode(startNode);
 							this._addNode(endNode);
 
 							for (let obj of v.segments) {
-								this._addNode(await this.buildNodeVisObject(obj.start, session));
-								this._addNode(await this.buildNodeVisObject(obj.end, session));
+								this._addNode(await this.buildNodeVisObject(obj.start));
+								this._addNode(await this.buildNodeVisObject(obj.end));
 								this._addEdge(this.buildEdgeVisObject(obj.relationship));
 							}
 
@@ -329,7 +335,7 @@ export default class NeoVis {
 								this._consoleLog('Array element constructor:');
 								this._consoleLog(obj && obj.constructor.name);
 								if (obj instanceof Neo4j.types.Node) {
-									let node = await this.buildNodeVisObject(obj, session);
+									let node = await this.buildNodeVisObject(obj);
 									this._addNode(node);
 
 								} else if (obj instanceof Neo4j.types.Relationship) {
