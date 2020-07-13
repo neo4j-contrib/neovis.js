@@ -126,8 +126,8 @@ export default class NeoVis {
 			// use a cypher statement to determine the size of the node
 			// the cypher statement will be passed a parameter {id} with the value
 			// of the internal node id
-
-			session = session || this._driver.session(this._database && { database: this._database });
+			// TODO: refactor and put all size cypher in one transaction to commit to improve efficiency
+			let session = this._driver.session(this._database && { database: this._database });
 			const result = await session.run(sizeCypher, {id: Neo4j.int(node.id)});
 			for (let record of result.records) {
 				record.forEach((v) => {
