@@ -131,7 +131,7 @@ export default class NeoVis {
 			node.value = 1.0;
 			const session = this._driver.session(this._database && { database: this._database });
 			try {
-				const result = await session.readTransaction(tx => tx.run(sizeCypher, {id: Neo4j.int(node.id)})); // FIXME: One time transaction is not recommend for production
+				const result = await session.readTransaction(tx => tx.run(sizeCypher, {id: Neo4j.int(node.id)}));
 				for (let record of result.records) {
 					record.forEach((v) => {
 						if (typeof v === 'number') {
