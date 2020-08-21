@@ -5,11 +5,12 @@ export interface ILabelConfig {
     size?: string;
     community?: string;
     sizeCypher?: string;
+    image?: string;
 }
 
 export interface IRelationshipConfig {
     thickness?: string;
-    caption?: boolean;
+    caption?: boolean | string;
 }
 
 export interface INeovisConfig {
@@ -43,6 +44,8 @@ declare class Neovis {
     reload(): void;
     stabilize(): void;
     renderWithCypher(query: string): void;
+    updateWithCypher(query: string): void;
+
 }
 
 export default Neovis;

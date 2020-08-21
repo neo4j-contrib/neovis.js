@@ -24,6 +24,7 @@ export default class NeoVis {
 	 *    server_url:
 	 *    server_password?:
 	 *    server_username?:
+	 *    server_database?:
 	 *    labels:
 	 *
 	 *  }
@@ -76,9 +77,12 @@ export default class NeoVis {
 			Neo4j.auth.basic(config.server_user || defaults.neo4j.neo4jUser, config.server_password || defaults.neo4j.neo4jPassword),
 			{
 				encrypted: this._encrypted,
-				trust: this._trust
+				trust: this._trust,
+				maxConnectionPoolSize: 100,
+				connectionAcquisitionTimeout:10000,
 			}
 		);
+		this._database = config.server_database;
 		this._query = config.initial_cypher || defaults.neo4j.initialQuery;
 		this._container = document.getElementById(config.container_id);
 	}
@@ -96,10 +100,9 @@ export default class NeoVis {
 	 * FIXME: use config
 	 * FIXME: move to private api
 	 * @param neo4jNode
-	 * @param session
 	 * @returns {{}}
 	 */
-	async buildNodeVisObject(neo4jNode, session = null) {
+	async buildNodeVisObject(neo4jNode) {
 		let node = {};
 		let label = neo4jNode.labels[0];
 
@@ -109,6 +112,8 @@ export default class NeoVis {
 		const sizeKey = labelConfig && labelConfig['size'];
 		const sizeCypher = labelConfig && labelConfig['sizeCypher'];
 		const communityKey = labelConfig && labelConfig['community'];
+		const imageUrl = labelConfig && labelConfig['image'];
+		const font = labelConfig && labelConfig['font'];
 
 		const title_properties = (
 			labelConfig && labelConfig.title_properties
@@ -122,17 +127,22 @@ export default class NeoVis {
 			// use a cypher statement to determine the size of the node
 			// the cypher statement will be passed a parameter {id} with the value
 			// of the internal node id
-
-			session = session || this._driver.session();
-			const result = await session.run(sizeCypher, {id: Neo4j.int(node.id)});
-			for (let record of result.records) {
-				record.forEach((v) => {
-					if (typeof v === 'number') {
-						node.value = v;
-					} else if (Neo4j.isInt(v)) {
-						node.value = v.toNumber();
-					}
-				});
+			// TODO: refactor and put all size cypher in one transaction to commit to improve efficiency
+			node.value = 1.0;
+			const session = this._driver.session(this._database && { database: this._database });
+			try {
+				const result = await session.readTransaction(tx => tx.run(sizeCypher, {id: Neo4j.int(node.id)}));
+				for (let record of result.records) {
+					record.forEach((v) => {
+						if (typeof v === 'number') {
+							node.value = v;
+						} else if (Neo4j.isInt(v)) {
+							node.value = v.toNumber();
+						}
+					});
+				}
+			} finally {
+				session.close();
 			}
 		} else if (typeof sizeKey === 'number') {
 			node.value = sizeKey;
@@ -158,6 +168,8 @@ export default class NeoVis {
 		// node caption
 		if (typeof captionKey === 'function') {
 			node.label = captionKey(neo4jNode);
+		} else if (captionKey && (typeof neo4jNode.properties[captionKey] === 'number' || Neo4j.isInt(neo4jNode.properties[captionKey]))) {
+			node.label = neo4jNode.properties[captionKey].toString() || '';
 		} else {
 			node.label = neo4jNode.properties[captionKey] || label || '';
 		}
@@ -186,6 +198,20 @@ export default class NeoVis {
 				node.title += this.propertyToString(key, neo4jNode.properties[key]);
 			}
 		}
+
+		// set node shape and image url if a image url is provided in config
+		if (imageUrl) {
+			node.shape = 'image';
+			node.image = imageUrl;
+		} else {
+			node.shape = 'dot';
+		}
+
+		// set node caption font if font setting is provided in config
+		if (font) {
+			node.font = font;
+		}
+
 		return node;
 	}
 
@@ -232,11 +258,14 @@ export default class NeoVis {
 				edge.label = r.type;
 			}
 		} else if (captionKey && typeof captionKey === 'string') {
-			edge.label = r.properties[captionKey] || '';
+			if (typeof r.properties[captionKey] === 'number' || Neo4j.isInt(r.properties[captionKey])) {
+				edge.label = r.properties[captionKey].toString() || '';
+			} else {
+				edge.label = r.properties[captionKey] || '';
+			}
 		} else {
 			edge.label = r.type;
 		}
-
 		return edge;
 	}
     
@@ -253,16 +282,16 @@ export default class NeoVis {
 
 	// public API
 
-	render() {
+	render(query) {
 
 		// connect to Neo4j instance
 		// run query
 		let recordCount = 0;
-
-		let session = this._driver.session();
+		const _query = query || this._query;
+		let session = this._driver.session(this._database && { database: this._database });
 		const dataBuildPromises = [];
 		session
-			.run(this._query, {limit: 30})
+			.run(_query, {limit: 30})
 			.subscribe({
 				onNext: (record) => {
 					recordCount++;
@@ -275,7 +304,7 @@ export default class NeoVis {
 						this._consoleLog('Constructor:');
 						this._consoleLog(v && v.constructor.name);
 						if (v instanceof Neo4j.types.Node) {
-							let node = await this.buildNodeVisObject(v, session);
+							let node = await this.buildNodeVisObject(v);
 							try {
 								this._addNode(node);
 							} catch (e) {
@@ -289,15 +318,15 @@ export default class NeoVis {
 						} else if (v instanceof Neo4j.types.Path) {
 							this._consoleLog('PATH');
 							this._consoleLog(v);
-							let startNode = await this.buildNodeVisObject(v.start, session);
-							let endNode = await this.buildNodeVisObject(v.end, session);
+							let startNode = await this.buildNodeVisObject(v.start);
+							let endNode = await this.buildNodeVisObject(v.end);
 
 							this._addNode(startNode);
 							this._addNode(endNode);
 
 							for (let obj of v.segments) {
-								this._addNode(await this.buildNodeVisObject(obj.start, session));
-								this._addNode(await this.buildNodeVisObject(obj.end, session));
+								this._addNode(await this.buildNodeVisObject(obj.start));
+								this._addNode(await this.buildNodeVisObject(obj.end));
 								this._addEdge(this.buildEdgeVisObject(obj.relationship));
 							}
 
@@ -306,7 +335,7 @@ export default class NeoVis {
 								this._consoleLog('Array element constructor:');
 								this._consoleLog(obj && obj.constructor.name);
 								if (obj instanceof Neo4j.types.Node) {
-									let node = await this.buildNodeVisObject(obj, session);
+									let node = await this.buildNodeVisObject(obj);
 									this._addNode(node);
 
 								} else if (obj instanceof Neo4j.types.Relationship) {
@@ -322,73 +351,79 @@ export default class NeoVis {
 				onCompleted: async () => {
 					await Promise.all(dataBuildPromises);
 					session.close();
-					let options = {
-						nodes: {
-							shape: 'dot',
-							font: {
-								size: 26,
-								strokeWidth: 7
+
+					if(this._network && this._network.body.data.nodes.length > 0) {
+						this._data.nodes.update(Object.values(this._nodes));
+						this._data.edges.update(Object.values(this._edges));
+					} else {
+						let options = {
+							nodes: {
+								//shape: 'dot',
+								font: {
+									size: 26,
+									strokeWidth: 7
+								},
+								scaling: {
+								}
 							},
-							scaling: {
-							}
-						},
-						edges: {
-							arrows: {
-								to: {enabled: this._config.arrows || false} // FIXME: handle default value
+							edges: {
+								arrows: {
+									to: {enabled: this._config.arrows || false} // FIXME: handle default value
+								},
+								length: 200
 							},
-							length: 200
-						},
-						layout: {
-							improvedLayout: false,
-							hierarchical: {
-								enabled: this._config.hierarchical || false,
-								sortMethod: this._config.hierarchical_sort_method || 'hubsize'
+							layout: {
+								improvedLayout: false,
+								hierarchical: {
+									enabled: this._config.hierarchical || false,
+									sortMethod: this._config.hierarchical_sort_method || 'hubsize'
+								}
+							},
+							physics: { // TODO: adaptive physics settings based on size of graph rendered
+								// enabled: true,
+								// timestep: 0.5,
+								// stabilization: {
+								//     iterations: 10
+								// }
+	
+								adaptiveTimestep: true,
+								// barnesHut: {
+								//     gravitationalConstant: -8000,
+								//     springConstant: 0.04,
+								//     springLength: 95
+								// },
+								stabilization: {
+									iterations: 200,
+									fit: true
+								}
 							}
-						},
-						physics: { // TODO: adaptive physics settings based on size of graph rendered
-							// enabled: true,
-							// timestep: 0.5,
-							// stabilization: {
-							//     iterations: 10
-							// }
-
-							adaptiveTimestep: true,
-							// barnesHut: {
-							//     gravitationalConstant: -8000,
-							//     springConstant: 0.04,
-							//     springLength: 95
-							// },
-							stabilization: {
-								iterations: 200,
-								fit: true
-							}
-						}
-					};
-
-					const container = this._container;
-					this._data = {
-						nodes: new vis.DataSet(Object.values(this._nodes)),
-						edges: new vis.DataSet(Object.values(this._edges))
-					};
-
-					this._consoleLog(this._data.nodes);
-					this._consoleLog(this._data.edges);
-
-					// Create duplicate node for any this reference relationships
-					// NOTE: Is this only useful for data model type data
-					// this._data.edges = this._data.edges.map(
-					//     function (item) {
-					//          if (item.from == item.to) {
-					//             const newNode = this._data.nodes.get(item.from)
-					//             delete newNode.id;
-					//             const newNodeIds = this._data.nodes.add(newNode);
-					//             this._consoleLog("Adding new node and changing this-ref to node: " + item.to);
-					//             item.to = newNodeIds[0];
-					//          }
-					//          return item;
-					//     }
-					// );
-					this._network = new vis.Network(container, this._data, options);
+						};
+	
+						const container = this._container;
+						this._data = {
+							nodes: new vis.DataSet(Object.values(this._nodes)),
+							edges: new vis.DataSet(Object.values(this._edges))
+						};
+	
+						this._consoleLog(this._data.nodes);
+						this._consoleLog(this._data.edges);
+	
+						// Create duplicate node for any this reference relationships
+						// NOTE: Is this only useful for data model type data
+						// this._data.edges = this._data.edges.map(
+						//     function (item) {
+						//          if (item.from == item.to) {
+						//             const newNode = this._data.nodes.get(item.from)
+						//             delete newNode.id;
+						//             const newNodeIds = this._data.nodes.add(newNode);
+						//             this._consoleLog("Adding new node and changing this-ref to node: " + item.to);
+						//             item.to = newNodeIds[0];
+						//          }
+						//          return item;
+						//     }
+						// );
+						this._network = new vis.Network(container, this._data, options);
+					}
 					this._consoleLog('completed');
 					setTimeout(
 						() => {
@@ -470,6 +505,15 @@ export default class NeoVis {
 		this.clearNetwork();
 		this._query = query;
 		this.render();
+	}
+
+	/**
+	 * Execute an arbitrary Cypher query and update the current visualization, retaning current nodes
+	 * This function will not change the original query given by renderWithCypher or the inital cypher.
+	 * @param query 
+	 */
+	updateWithCypher(query) {
+		this.render(query);
 	}
 
 // configure exports based on environment (ie Node.js or browser)

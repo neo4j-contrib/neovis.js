@@ -11,7 +11,7 @@ Graph visualizations powered by vis.js with data from Neo4j.
 - [x] Connect to Neo4j instance to get live data
 - [x] User specified labels and property to be displayed
 - [x] User specified Cypher query to populate 
-- [ ] Specify node property for url of image for node
+- [x] Specify node property for url of image for node
 - [x] Specify edge property for edge thickness
 - [x] Specify node property for community / clustering
 - [x] Specify node property for node size
@@ -204,12 +204,13 @@ will build `dist/neovis.js` and `dist/neovis-without-dependencies.js`
 * `Neovis.reload()`
 * `Neovis.stabilize()`
 * `Neovis.renderWithCypher(statement)`
+* `Neovis.updateWithCypher(statement)`
 
 * `config`
 
 ### `Neovis.default(config)`
 
-Constructor for Neovis. Creates new Neovis object, given configuration. See [config]()
+Constructor for Neovis. Creates new Neovis object, given configuration. See [config](#config)
 
 ### `Neovis.clearNetwork()`
 
@@ -217,7 +218,7 @@ Clears network visualization
 
 ### `Neovis.reinit(config)`
 
-Reinitializes the network visualization with a new `config` object. See [config]()
+Reinitializes the network visualization with a new `config` object. See [config](#config)
 
 ### `Neovis.reload()`
 
@@ -229,7 +230,11 @@ Stop the physics simulation.
 
 ### `Neovis.renderWithCypher(statement)`
 
-Render a new visualization with results from a Cypher statement. Any `Node` and `Relationship` objects returned in the Cypher query will be rendered in the visualization. Paths are not currently supported. 
+Render a new visualization with results from a Cypher statement. Any `Node` and `Relationship` objects returned in the Cypher query will be rendered in the visualization. Paths are not currently supported.
+
+### `Neovis.updateWithCypher(statement)`
+
+Update the current visualization with results from a Cypher statement. Any `Node` and `Relationship` objects returned in the Cypher query will be rendered in the visualization. Paths are not currently supported.
 
 ### `config`
 
@@ -254,6 +259,7 @@ var config = {
                         "caption": "name",
                         "size": "pagerank",
                         "community": "community",
+                        //"image": 'https://visjs.org/images/visjs_logo.png',
                         "title_properties": [
                             "name",
                             "pagerank"
@@ -293,6 +299,9 @@ var config = {
 
 #### `config.server_password`
 
+#### `config.server_database`
+(Only for Neo4j 4 and above) The name of database connecting to.  
+
 ### `NeoVis.NEOVIS_DEFAULT_CONFIG`
 For both `config.labels` and `config.relationships` NeoVis.NEOVIS_DEFAULT_CONFIG 
 symbol can be added, which have the have the same properties as the normal config for specific 
@@ -309,17 +318,39 @@ import { NEOVIS_DEFAULT_CONFIG } from 'neovis.js';
     "caption": "name",
     "size": "pagerank",
     "community": "community",
+    "image": 'https://visjs.org/images/visjs_logo.png',
+    "font": {
+        "size":26,
+        "color":"#000000"
+    },
     "title_properties": [
         "name",
         "pagerank"
     ],
-    sizeCypher: "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
+    sizeCypher: "MATCH (n) WHERE id(n) = $id MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
 }
 ```
-
-If title_properties is supplied, only the attributes listed in it are displayed in the tooltip.
-Otherwise, all attributes are present in the tooltip.
-
+##### `config.labels.caption`
+`String`: The property name to use as node caption.  
+or `Function`: A function takes a [Neo4j node](https://neo4j.com/docs/api/javascript-driver/current/class/src/graph-types.js~Node.html) and return a string caption.  
+Default to no caption.  
+##### `config.labels.size`
+`String`: The property name to use as node size.   
+Default to `1`.  
+##### `config.labels.community`
+`String`: The property name to use as community (color).  \
+Default to color by label.   
+##### `config.labels.image`
+`String`. The url of image to display.  
+Default to no image (a dot will be displayed).
+##### `config.labels.font`
+`Object`: If `font` is supplied, the default font size configuration for node captions will be overwritten by the customized config. See `font` in [vis-network - nodes](https://visjs.github.io/vis-network/docs/network/nodes.html) for all available configuration for fonts.  
+##### `config.labels.title_properties`
+`Array`: If `title_properties` is supplied, only the attributes listed in it are displayed in the tooltip.
+         Otherwise, all attributes are present in the tooltip.   
+##### `config.labels.sizeCypher`
+`String`: A Cypher query to get the size of the node. `$id` represent the id of the node to query size, and the Cypher query should return a Neo4j `Number`.  
+`config.labels.sizeCypher` has a higher priority than `config.labels.size`, i.e. `sizeCypher` will overwrite the resulting size from `size` field.
 #### `config.relationships`
 
 ```
@@ -330,6 +361,12 @@ Otherwise, all attributes are present in the tooltip.
     }
 }
 ```
+##### `config.relationships.thickness`
+`String`: The property name to use as edge thickness.   
+Default to `1`.  
+##### `config.relationships.caption`
+`Boolean`: If set to true, the relationship type will be displayed as edge caption.  
+or `String`: The property name to use as edge caption.    
 #### `config.arrows`
 
 Boolean. Defaults to false.
