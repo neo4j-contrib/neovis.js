@@ -1,4 +1,4 @@
-const Neo4j = jest.requireActual('neo4j-driver').v1;
+const Neo4j = jest.requireActual('neo4j-driver');
 
 export const mockSessionRun = jest.fn(() => {
 	const observablePromise = Promise.resolve();
