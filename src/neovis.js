@@ -2,7 +2,7 @@
 
 import Neo4j from 'neo4j-driver';
 import * as vis from 'vis-network/dist/vis-network.min';
-import 'vis-network/dist/vis-network.min.css';
+import 'vis-network/dist/dist/vis-network.min.css';
 import { defaults } from './defaults';
 import { EventController, CompletionEvent, ClickEdgeEvent, ClickNodeEvent, ErrorEvent } from './events';
 
