@@ -157,7 +157,9 @@ describe('Neovis', () => {
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(neovis._data.nodes.length).toBe(2);
+			expect(Object.keys(neovis.nodes).length).toBe(2);
 			expect(neovis._data.edges.length).toBe(1);
+			expect(Object.keys(neovis.edges).length).toBe(1);
 		});
 
 		it('should save multiple records from different types', async () => {
@@ -175,7 +177,9 @@ describe('Neovis', () => {
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(neovis._data.nodes.length).toBe(5);
+			expect(Object.keys(neovis.nodes).length).toBe(5);
 			expect(neovis._data.edges.length).toBe(2);
+			expect(Object.keys(neovis.edges).length).toBe(2);
 		});
 	});
 
