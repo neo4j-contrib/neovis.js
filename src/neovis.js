@@ -430,7 +430,7 @@ export default class NeoVis {
 						},
 						10000
 					);
-					this._events.generateEvent(CompletionEvent, {record_count: recordCount});
+					this._events.generateEvent(CompletionEvent, {record_count: recordCount, nodes: this._nodes, edges: this._edges});
 
 					let neoVis = this;
 					this._network.on('click', function (params) {
