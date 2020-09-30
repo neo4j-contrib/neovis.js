@@ -8,29 +8,11 @@ import { EventController, CompletionEvent, ClickEdgeEvent, ClickNodeEvent, Error
 export const NEOVIS_DEFAULT_CONFIG = Symbol();
 
 export default class NeoVis {
-	_neo4jNodes = {};
-	_neo4jEdges = {};
 	_nodes = {};
 	_edges = {};
 	_data = {};
 	_network = null;
 	_events = new EventController();
-
-	/**
-	 * Get current neo4j nodes from the graph
-	 * @returns {Neo4j.Node} neo4jNodes
-	 */
-	get neo4jNodes() {
-		return this._neo4jNodes;
-	}
-
-	/**
-	 * Get current neo4j edges from the graph
-	 * @returns {Neo4j.Relationship}
-	 */
-	get neo4jEdges() {
-		return this._neo4jEdges;
-	}
 
 	/**
 	 * Get current vis nodes from the graph
@@ -151,9 +133,7 @@ export default class NeoVis {
 		) || Object.keys(neo4jNode.properties);
 
 		node.id = neo4jNode.identity.toInt();
-
-		// save raw neo4j node
-		this._neo4jNodes[node.id] = neo4jNode;
+		node.raw = neo4jNode;
 
 		// node size
 
@@ -264,9 +244,7 @@ export default class NeoVis {
 		edge.id = r.identity.toInt();
 		edge.from = r.start.toInt();
 		edge.to = r.end.toInt();
-
-		// save raw neo4j edge
-		this._neo4jEdges[edge.id] = r;
+		edge.raw = r;
 
 		// hover tooltip. show all properties in the format <strong>key:</strong> value
 		edge.title = '';
