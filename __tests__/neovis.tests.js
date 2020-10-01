@@ -193,8 +193,7 @@ describe('Neovis', () => {
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(neovis._data.nodes.get(1).raw).toBeDefined();
 			expect(neovis._data.nodes.get(2).raw).toBeDefined();
-			// Map neovis._data.edges is empty in test mode
-			//expect(neovis._data.edges.get(1).raw).toBeDefined();
+			expect(neovis._data.edges.get(3).raw).toBeDefined();
 		});
 	});
 
