@@ -35,33 +35,9 @@ export interface INeovisConfig {
     trust?: "TRUST_ALL_CERTIFICATES" | "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES";
 }
 
-export interface INode {
-    group: string;
-    id: number;
-    label: string;
-    raw: any;
-    shape: string;
-    title: string;
-    value: number;
-}
-
-export interface IEdge {
-    from: number;
-    id: number;
-    label: string;
-    raw: any;
-    title: string;
-    to: number;
-    value: number;
-}
-
 declare class Neovis {
-    nodes: {
-        [id: number]: INode,
-    }
-    edges: {
-        [id: number]: IEdge,
-    }
+    nodes: any;
+    edges: any;
     constructor(config: INeovisConfig);
     render(): void;
     clearNetwork(): void;

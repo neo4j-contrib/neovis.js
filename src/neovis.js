@@ -18,14 +18,14 @@ export default class NeoVis {
 	 * Get current vis nodes from the graph
 	 */
 	get nodes() {
-		return this._nodes;
+		return this._data.nodes;
 	}
 
 	/**
 	 * Get current vis edges from the graph
 	 */
 	get edges() {
-		return this._edges;
+		return this._data.edges;
 	}
 
 	/**
