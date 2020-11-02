@@ -5,3 +5,4 @@ doc
 dist
 webpack.config.js
 *.ts
+babel.config.js
