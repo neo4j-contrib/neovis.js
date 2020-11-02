@@ -1,6 +1,6 @@
 # neovis.js
 
-[![CircleCI](https://circleci.com/gh/neo4j-contrib/neovis.js/tree/master.svg?style=svg)](https://circleci.com/gh/neo4j-contrib/neovis.js/tree/master)  [![npm version](https://badge.fury.io/js/neovis.js.svg)](https://badge.fury.io/js/neovis.js)
+[![Actions Build Status](https://github.com/neo4j-contrib/neovis.js/workflows/CI/badge.svg?branch=master)]()[![npm version](https://badge.fury.io/js/neovis.js.svg)](https://badge.fury.io/js/neovis.js)
 
 Graph visualizations powered by vis.js with data from Neo4j.
 
