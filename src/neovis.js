@@ -15,6 +15,20 @@ export default class NeoVis {
 	_events = new EventController();
 
 	/**
+	 * Get current vis nodes from the graph
+	 */
+	get nodes() {
+		return this._data.nodes;
+	}
+
+	/**
+	 * Get current vis edges from the graph
+	 */
+	get edges() {
+		return this._data.edges;
+	}
+
+	/**
 	 *
 	 * @constructor
 	 * @param {object} config - configures the visualization and Neo4j server connection
@@ -51,7 +65,7 @@ export default class NeoVis {
 					...config,
 					labels: {
 						...config.labels,
-						[key]: {...config.labels[NEOVIS_DEFAULT_CONFIG], ...config.labels[key]}
+						[key]: { ...config.labels[NEOVIS_DEFAULT_CONFIG], ...config.labels[key] }
 					}
 				};
 			}
@@ -63,7 +77,7 @@ export default class NeoVis {
 					...config,
 					relationships: {
 						...config.relationships,
-						[key]: {...config.relationships[NEOVIS_DEFAULT_CONFIG], ...config.relationships[key]}
+						[key]: { ...config.relationships[NEOVIS_DEFAULT_CONFIG], ...config.relationships[key] }
 					}
 				};
 			}
@@ -78,7 +92,7 @@ export default class NeoVis {
 				encrypted: this._encrypted,
 				trust: this._trust,
 				maxConnectionPoolSize: 100,
-				connectionAcquisitionTimeout:10000,
+				connectionAcquisitionTimeout: 10000,
 			}
 		);
 		this._database = config.server_database;
@@ -119,6 +133,7 @@ export default class NeoVis {
 		) || Object.keys(neo4jNode.properties);
 
 		node.id = neo4jNode.identity.toInt();
+		node.raw = neo4jNode;
 
 		// node size
 
@@ -130,7 +145,7 @@ export default class NeoVis {
 			node.value = 1.0;
 			const session = this._driver.session(this._database && { database: this._database });
 			try {
-				const result = await session.readTransaction(tx => tx.run(sizeCypher, {id: Neo4j.int(node.id)}));
+				const result = await session.readTransaction(tx => tx.run(sizeCypher, { id: Neo4j.int(node.id) }));
 				for (let record of result.records) {
 					record.forEach((v) => {
 						if (typeof v === 'number') {
@@ -229,6 +244,7 @@ export default class NeoVis {
 		edge.id = r.identity.toInt();
 		edge.from = r.start.toInt();
 		edge.to = r.end.toInt();
+		edge.raw = r;
 
 		// hover tooltip. show all properties in the format <strong>key:</strong> value
 		edge.title = '';
@@ -267,7 +283,7 @@ export default class NeoVis {
 		}
 		return edge;
 	}
-    
+
 	propertyToString(key, value) {
 		if (Array.isArray(value) && value.length > 1) {
 			let out = `<strong>${key}:</strong><br /><ul>`;
@@ -276,7 +292,7 @@ export default class NeoVis {
 			}
 			return out + '</ul>';
 		}
-		return  `<strong>${key}:</strong> ${value}<br>`;
+		return `<strong>${key}:</strong> ${value}<br>`;
 	}
 
 	// public API
@@ -290,7 +306,7 @@ export default class NeoVis {
 		let session = this._driver.session(this._database && { database: this._database });
 		const dataBuildPromises = [];
 		session
-			.run(_query, {limit: 30})
+			.run(_query, { limit: 30 })
 			.subscribe({
 				onNext: (record) => {
 					recordCount++;
@@ -351,7 +367,7 @@ export default class NeoVis {
 					await Promise.all(dataBuildPromises);
 					session.close();
 
-					if(this._network && this._network.body.data.nodes.length > 0) {
+					if (this._network && this._network.body.data.nodes.length > 0) {
 						this._data.nodes.update(Object.values(this._nodes));
 						this._data.edges.update(Object.values(this._edges));
 					} else {
@@ -367,7 +383,7 @@ export default class NeoVis {
 							},
 							edges: {
 								arrows: {
-									to: {enabled: this._config.arrows || false} // FIXME: handle default value
+									to: { enabled: this._config.arrows || false } // FIXME: handle default value
 								},
 								length: 200
 							},
@@ -384,7 +400,7 @@ export default class NeoVis {
 								// stabilization: {
 								//     iterations: 10
 								// }
-	
+
 								adaptiveTimestep: true,
 								// barnesHut: {
 								//     gravitationalConstant: -8000,
@@ -397,16 +413,16 @@ export default class NeoVis {
 								}
 							}
 						};
-	
+
 						const container = this._container;
 						this._data = {
 							nodes: new vis.DataSet(Object.values(this._nodes)),
 							edges: new vis.DataSet(Object.values(this._edges))
 						};
-	
+
 						this._consoleLog(this._data.nodes);
 						this._consoleLog(this._data.edges);
-	
+
 						// Create duplicate node for any this reference relationships
 						// NOTE: Is this only useful for data model type data
 						// this._data.edges = this._data.edges.map(
@@ -430,22 +446,22 @@ export default class NeoVis {
 						},
 						10000
 					);
-					this._events.generateEvent(CompletionEvent, {record_count: recordCount});
+					this._events.generateEvent(CompletionEvent, { record_count: recordCount });
 
 					let neoVis = this;
 					this._network.on('click', function (params) {
 						if (params.nodes.length > 0) {
 							let nodeId = this.getNodeAt(params.pointer.DOM);
-							neoVis._events.generateEvent(ClickNodeEvent, {nodeId: nodeId, node: neoVis._nodes[nodeId]});
+							neoVis._events.generateEvent(ClickNodeEvent, { nodeId: nodeId, node: neoVis._nodes[nodeId] });
 						} else if (params.edges.length > 0) {
 							let edgeId = this.getEdgeAt(params.pointer.DOM);
-							neoVis._events.generateEvent(ClickEdgeEvent, {edgeId: edgeId, edge: neoVis._edges[edgeId]});
+							neoVis._events.generateEvent(ClickEdgeEvent, { edgeId: edgeId, edge: neoVis._edges[edgeId] });
 						}
 					});
 				},
 				onError: (error) => {
 					this._consoleLog(error, 'error');
-					this._events.generateEvent(ErrorEvent, {error_msg: error});
+					this._events.generateEvent(ErrorEvent, { error_msg: error });
 				}
 			});
 	}
@@ -454,6 +470,8 @@ export default class NeoVis {
 	 * Clear the data for the visualization
 	 */
 	clearNetwork() {
+		this._neo4jNodes = {};
+		this._neo4jEdges = {};
 		this._nodes = {};
 		this._edges = {};
 		this._network.setData([]);
@@ -515,10 +533,10 @@ export default class NeoVis {
 		this.render(query);
 	}
 
-// configure exports based on environment (ie Node.js or browser)
-//if (typeof exports === 'object') {
-//    module.exports = NeoVis;
-//} else {
-//    define (function () {return NeoVis;})
-//}
+	// configure exports based on environment (ie Node.js or browser)
+	//if (typeof exports === 'object') {
+	//    module.exports = NeoVis;
+	//} else {
+	//    define (function () {return NeoVis;})
+	//}
 }

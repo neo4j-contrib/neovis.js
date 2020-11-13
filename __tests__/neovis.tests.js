@@ -35,7 +35,7 @@ describe('Neovis', () => {
 				}
 			};
 			const neovis = new Neovis(config);
-			expect(neovis._config.labels.a).toMatchObject({caption: 'name', test: 'test'});
+			expect(neovis._config.labels.a).toMatchObject({ caption: 'name', test: 'test' });
 		});
 		it('should not change the config sent', () => {
 			config = {
@@ -56,7 +56,7 @@ describe('Neovis', () => {
 					}
 				}
 			};
-			const configTemp = {...config};
+			const configTemp = { ...config };
 			new Neovis(config);
 			expect(config).toMatchObject(configTemp);
 		});
@@ -86,7 +86,7 @@ describe('Neovis', () => {
 				}
 			};
 			const neovis = new Neovis(config);
-			expect(neovis._config.labels.a).toMatchObject({caption: 'name', test: 'test'});
+			expect(neovis._config.labels.a).toMatchObject({ caption: 'name', test: 'test' });
 		});
 		it('should override default config if specific relationship have one', () => {
 			config.relationships = {
@@ -108,12 +108,12 @@ describe('Neovis', () => {
 
 	describe('Neovis default behavior', () => {
 		beforeEach(() => {
-			neovis = new Neovis({initial_cypher, container_id});
+			neovis = new Neovis({ initial_cypher, container_id });
 		});
 
 		it('should call run with query', () => {
 			neovis.render();
-			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledWith(initial_cypher, {limit: 30});
+			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledWith(initial_cypher, { limit: 30 });
 		});
 
 		it('should call completed when complete', () => new Promise(done => {
@@ -157,7 +157,9 @@ describe('Neovis', () => {
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(neovis._data.nodes.length).toBe(2);
+			expect(neovis.nodes.length).toBe(2);
 			expect(neovis._data.edges.length).toBe(1);
+			expect(neovis.edges.length).toBe(1);
 		});
 
 		it('should save multiple records from different types', async () => {
@@ -175,7 +177,23 @@ describe('Neovis', () => {
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(neovis._data.nodes.length).toBe(5);
+			expect(neovis.nodes.length).toBe(5);
 			expect(neovis._data.edges.length).toBe(2);
+			expect(neovis.edges.length).toBe(2);
+		});
+
+		it('should save raw records', async () => {
+			const firstNode = testUtils.makeNode([label1]);
+			const secondNode = testUtils.makeNode([label1]);
+			const relationship = testUtils.makeRelationship(relationshipType, firstNode, secondNode);
+			testUtils.mockNormalRunSubscribe([
+				testUtils.makeRecord([firstNode, secondNode, relationship])
+			]);
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(neovis._data.nodes.get(1).raw).toBeDefined();
+			expect(neovis._data.nodes.get(2).raw).toBeDefined();
+			expect(neovis._data.edges.get(3).raw).toBeDefined();
 		});
 	});
 
@@ -217,7 +235,7 @@ describe('Neovis', () => {
 	describe('neovis with update cypher', () => {
 		const updateWithCypher = 'updateCypher';
 		beforeEach(() => {
-			neovis = new Neovis({initial_cypher, container_id});
+			neovis = new Neovis({ initial_cypher, container_id });
 		});
 
 		it('should call updateWithCypher and add the new node to visualization', async () => {
@@ -357,7 +375,7 @@ describe('Neovis', () => {
 				initial_cypher: initial_cypher
 			};
 			neovis = new Neovis(config);
-			const node1 = testUtils.makeNode([label1], {[intProperity]: intProperityValue});
+			const node1 = testUtils.makeNode([label1], { [intProperity]: intProperityValue });
 			testUtils.mockFullRunSubscribe({
 				[initial_cypher]: {
 					default: [testUtils.makeRecord([node1])]
@@ -380,7 +398,7 @@ describe('Neovis', () => {
 				initial_cypher: initial_cypher
 			};
 			neovis = new Neovis(config);
-			const node1 = testUtils.makeNode([label1], {[floatProperity]: floatProperityValue});
+			const node1 = testUtils.makeNode([label1], { [floatProperity]: floatProperityValue });
 			testUtils.mockFullRunSubscribe({
 				[initial_cypher]: {
 					default: [testUtils.makeRecord([node1])]

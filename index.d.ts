@@ -1,3 +1,7 @@
+import { DataSet } from "vis-data";
+import { Node as VisNode, Edge as VisEdge } from "vis-network";
+import { Node as Neo4jNode, Relationship as Neo4jRelationship } from "neo4j-driver";
+
 export const NEOVIS_DEFAULT_CONFIG: unique symbol;
 
 export interface ILabelConfig {
@@ -35,8 +39,18 @@ export interface INeovisConfig {
     trust?: "TRUST_ALL_CERTIFICATES" | "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES";
 }
 
+export interface INode extends VisNode {
+    raw: Neo4jNode
+}
+
+export interface IEdge extends VisEdge {
+    raw: Neo4jRelationship
+}
+
 declare class Neovis {
     constructor(config: INeovisConfig);
+    get nodes(): DataSet<INode>;
+    get edges(): DataSet<IEdge>;
     render(): void;
     clearNetwork(): void;
     registerOnEvent(eventType: string, handler: (event: any) => void): void;
