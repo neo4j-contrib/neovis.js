@@ -7,13 +7,23 @@ import { EventController, CompletionEvent, ClickEdgeEvent, ClickNodeEvent, Error
 
 export const NEOVIS_DEFAULT_CONFIG = Symbol();
 
+export let NEOVIS_STATIC = 1;
+
+/*
+const TYPES = {
+	STATIC: 1,
+	PROP_NAME: 2,
+	CYPHER_QUERY: 3,
+	FUNCTION: 4,
+};
+ */
+
 export default class NeoVis {
 	_nodes = {};
 	_edges = {};
 	_data = {};
 	_network = null;
 	_events = new EventController();
-
 	/**
 	 * Get current vis nodes from the graph
 	 */
@@ -114,7 +124,7 @@ export default class NeoVis {
 		let results = [];
 
 		try {
-			const result = await session.readTransaction(tx => tx.run(cypher, { id: Neo4j.int(id) }));
+			const result = await session.readTransaction(tx => tx.run(cypher, { id: id}));
 			for (let record of result.records) {
 				record.forEach((v) => {
 					results.push(v);
@@ -141,8 +151,8 @@ export default class NeoVis {
 	}
 
 	_retrieveProperty(prop, node) {
-		if (typeof node === 'object' && typeof node.properties === 'object' && node.properties[prop]) {
-			return prop;
+		if (typeof node === 'object' && typeof node.properties === 'object') {
+			return node.properties[prop];
 		}
 		return undefined;
 	}
@@ -167,11 +177,13 @@ export default class NeoVis {
 		const imageUrl = labelConfig && labelConfig['image'];
 		const font = labelConfig && labelConfig['font'];
 
+		const advancedConfig = labelConfig && labelConfig['advanced'];
+
 		const title_properties = (
 			labelConfig && labelConfig.title_properties
 		) || Object.keys(neo4jNode.properties);
 
-		node.id = neo4jNode.identity.toInt();
+		node.id = neo4jNode.identity;
 		node.raw = neo4jNode;
 
 		// node size
@@ -182,7 +194,7 @@ export default class NeoVis {
 			// of the internal node id
 			// TODO: refactor and put all size cypher in one transaction to commit to improve efficiency
 			node.value = 1.0;
-			const size = await this._runCypher(sizeCypher);
+			const size = await this._runCypher(sizeCypher, node.id);
 			if (typeof size === 'number') {
 				node.value = size;
 			}
@@ -237,6 +249,33 @@ export default class NeoVis {
 			node.font = font;
 		}
 
+		if (advancedConfig && typeof advancedConfig === 'object') {
+			for (const prop in advancedConfig) {
+				const propConfig = advancedConfig[prop];
+				if (propConfig && typeof propConfig === 'object') {
+					const value = propConfig.value;
+					const type = propConfig.type;
+					// 0: STATIC
+					if (type === 0) {
+						node[prop] = value;
+					}
+					// 1: PROP_NAME
+					if (type === 1) {
+						node[prop] = this._retrieveProperty(value, neo4jNode);
+					}
+					// 2: CYPHER_QUERY
+					if (type === 2) {
+						const result = await this._runCypher(value, node.id);
+						node[prop] = result;
+					}
+					// 3: FUNCTION
+					if (type === 3) {
+						const result = this._runFunction(value, neo4jNode);
+						node[prop] = result;
+					}
+				}
+			}
+		}
 		return node;
 	}
 
@@ -252,9 +291,9 @@ export default class NeoVis {
 			captionKey = nodeTypeConfig && nodeTypeConfig.caption;
 
 		let edge = {};
-		edge.id = r.identity.toInt();
-		edge.from = r.start.toInt();
-		edge.to = r.end.toInt();
+		edge.id = r.identity;
+		edge.from = r.start;
+		edge.to = r.end;
 		edge.raw = r;
 
 		// hover tooltip. show all properties in the format <strong>key:</strong> value
