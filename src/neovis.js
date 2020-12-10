@@ -93,6 +93,7 @@ export default class NeoVis {
 				trust: this._trust,
 				maxConnectionPoolSize: 100,
 				connectionAcquisitionTimeout: 10000,
+				disableLosslessIntegers: true,
 			}
 		);
 		this._database = config.server_database;
@@ -106,6 +107,44 @@ export default class NeoVis {
 
 	_addEdge(edge) {
 		this._edges[edge.id] = edge;
+	}
+
+	async _runCypher(cypher, id) {
+		const session = this._driver.session(this._database && { database: this._database });
+		let results = [];
+
+		try {
+			const result = await session.readTransaction(tx => tx.run(cypher, { id: Neo4j.int(id) }));
+			for (let record of result.records) {
+				record.forEach((v) => {
+					results.push(v);
+				});
+			}
+		} finally {
+			session.close();
+		}
+
+		if (results.length === 0) {
+			return undefined;
+		} else if (results.length === 1) {
+			return results.pop();
+		}
+
+		return results;
+	}
+
+	_runFunction(func, node) {
+		if (typeof func === 'function') {
+			return func(node);
+		}
+		return undefined;
+	}
+
+	_retrieveProperty(prop, node) {
+		if (typeof node === 'object' && typeof node.properties === 'object' && node.properties[prop]) {
+			return prop;
+		}
+		return undefined;
 	}
 
 	/**
@@ -143,47 +182,23 @@ export default class NeoVis {
 			// of the internal node id
 			// TODO: refactor and put all size cypher in one transaction to commit to improve efficiency
 			node.value = 1.0;
-			const session = this._driver.session(this._database && { database: this._database });
-			try {
-				const result = await session.readTransaction(tx => tx.run(sizeCypher, { id: Neo4j.int(node.id) }));
-				for (let record of result.records) {
-					record.forEach((v) => {
-						if (typeof v === 'number') {
-							node.value = v;
-						} else if (Neo4j.isInt(v)) {
-							node.value = v.toNumber();
-						}
-					});
-				}
-			} finally {
-				session.close();
+			const size = await this._runCypher(sizeCypher);
+			if (typeof size === 'number') {
+				node.value = size;
 			}
 		} else if (typeof sizeKey === 'number') {
 			node.value = sizeKey;
 		} else {
-			let sizeProp = neo4jNode.properties[sizeKey];
-
-			if (sizeProp && typeof sizeProp === 'number') {
-				// property value is a number, OK to use
-				node.value = sizeProp;
-			} else if (sizeProp && typeof sizeProp === 'object' && Neo4j.isInt(sizeProp)) {
-				// property value might be a Neo4j Integer, check if we can call toNumber on it:
-				if (sizeProp.inSafeRange()) {
-					node.value = sizeProp.toNumber();
-				} else {
-					// couldn't convert to Number, use default
-					node.value = 1.0;
-				}
-			} else {
-				node.value = 1.0;
+			node.value = 1.0;
+			const size = this._retrieveProperty(sizeKey, neo4jNode);
+			if (typeof size === 'number') {
+				node.value = size;
 			}
 		}
 
 		// node caption
 		if (typeof captionKey === 'function') {
-			node.label = captionKey(neo4jNode);
-		} else if (captionKey && (typeof neo4jNode.properties[captionKey] === 'number' || Neo4j.isInt(neo4jNode.properties[captionKey]))) {
-			node.label = neo4jNode.properties[captionKey].toString() || '';
+			node.label = this._runFunction(captionKey, neo4jNode);
 		} else {
 			node.label = neo4jNode.properties[captionKey] || label || '';
 		}
@@ -193,23 +208,19 @@ export default class NeoVis {
 		if (!communityKey) {
 			node.group = label;
 		} else {
-			try {
-				if (neo4jNode.properties[communityKey]) {
-					node.group = neo4jNode.properties[communityKey].toNumber() || label || 0;  // FIXME: cast to Integer
-
-				} else {
-					node.group = 0;
-				}
-
-			} catch (e) {
+			const community = this._retrieveProperty(communityKey, neo4jNode);
+			if (community) {
+				node.group = community;
+			} else {
 				node.group = 0;
 			}
 		}
 		// set configured/all properties as tooltip
 		node.title = '';
 		for (const key of title_properties) {
-			if (neo4jNode.properties.hasOwnProperty(key)) {
-				node.title += this.propertyToString(key, neo4jNode.properties[key]);
+			const propVal = this._retrieveProperty(key, neo4jNode);
+			if (propVal) {
+				node.title += this.propertyToString(key, propVal);
 			}
 		}
 
@@ -249,14 +260,15 @@ export default class NeoVis {
 		// hover tooltip. show all properties in the format <strong>key:</strong> value
 		edge.title = '';
 		for (let key in r.properties) {
-			if (r.properties.hasOwnProperty(key)) {
-				edge['title'] += this.propertyToString(key, r.properties[key]);
+			const propVal = this._retrieveProperty(key, r);
+			if (propVal) {
+				edge.title += this.propertyToString(key, propVal);
 			}
 		}
 
 		// set relationship thickness
 		if (weightKey && typeof weightKey === 'string') {
-			edge.value = r.properties[weightKey];
+			edge.value = this._retrieveProperty(weightKey, r);
 		} else if (weightKey && typeof weightKey === 'number') {
 			edge.value = weightKey;
 		} else {
@@ -273,11 +285,7 @@ export default class NeoVis {
 				edge.label = r.type;
 			}
 		} else if (captionKey && typeof captionKey === 'string') {
-			if (typeof r.properties[captionKey] === 'number' || Neo4j.isInt(r.properties[captionKey])) {
-				edge.label = r.properties[captionKey].toString() || '';
-			} else {
-				edge.label = r.properties[captionKey] || '';
-			}
+			edge.label = this._retrieveProperty(captionKey, r) || '';
 		} else {
 			edge.label = r.type;
 		}
