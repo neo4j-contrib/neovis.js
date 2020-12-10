@@ -4,17 +4,28 @@ import { Node as Neo4jNode, Relationship as Neo4jRelationship } from "neo4j-driv
 
 export const NEOVIS_DEFAULT_CONFIG: unique symbol;
 
+export interface IAdvancedConfigProperty {
+    value: any;
+    type: TYPES;
+}
+
 export interface ILabelConfig {
     caption?: string;
     size?: string;
     community?: string;
     sizeCypher?: string;
     image?: string;
+    advanced?: {
+        [label: string]: IAdvancedConfigProperty
+    };
 }
 
 export interface IRelationshipConfig {
     thickness?: string;
-    caption?: boolean | string;
+    caption?: boolean | string
+    advanced?: {
+        [label: string]: IAdvancedConfigProperty
+    };
 }
 
 export interface INeovisConfig {
@@ -59,7 +70,6 @@ declare class Neovis {
     stabilize(): void;
     renderWithCypher(query: string): void;
     updateWithCypher(query: string): void;
-
 }
 
 export default Neovis;
