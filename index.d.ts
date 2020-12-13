@@ -3,11 +3,8 @@ import { Node as VisNode, Edge as VisEdge } from "vis-network";
 import { Node as Neo4jNode, Relationship as Neo4jRelationship } from "neo4j-driver";
 
 export const NEOVIS_DEFAULT_CONFIG: unique symbol;
+export const NEOVIS_ADVANCED_CONFIG: unique symbol;
 
-export interface IAdvancedConfigProperty {
-    value: any;
-    type: TYPES;
-}
 
 export interface ILabelConfig {
     caption?: string;
@@ -15,17 +12,22 @@ export interface ILabelConfig {
     community?: string;
     sizeCypher?: string;
     image?: string;
-    advanced?: {
-        [label: string]: IAdvancedConfigProperty
+    [NEOVIS_ADVANCED_CONFIG]?: {
+        propertyName: {
+
+        },
+        cypher: {
+
+        },
+        function: {
+
+        }
     };
 }
 
 export interface IRelationshipConfig {
     thickness?: string;
-    caption?: boolean | string
-    advanced?: {
-        [label: string]: IAdvancedConfigProperty
-    };
+    caption?: boolean | string;
 }
 
 export interface INeovisConfig {
@@ -70,6 +72,7 @@ declare class Neovis {
     stabilize(): void;
     renderWithCypher(query: string): void;
     updateWithCypher(query: string): void;
+    propertyNamesToString(neo4jNode: Neo4jNode, title_properties: [string]): string;
 }
 
 export default Neovis;

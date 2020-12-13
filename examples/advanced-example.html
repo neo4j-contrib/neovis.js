@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+<head>
+    <title>Neovis.js Simple Example</title>
+    <style type="text/css">
+        html, body {
+            font: 16pt arial;
+        }
+
+        #viz {
+            width: 900px;
+            height: 700px;
+            border: 1px solid lightgray;
+            font: 22pt arial;
+        }
+
+    </style>
+
+    <!-- FIXME: load from dist -->
+    <script type="text/javascript" src="../dist/neovis.js"></script>
+
+
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+		// define config car
+		// instantiate nodevis object
+		// draw
+
+
+
+
+		var viz;
+
+		function draw() {
+			var config = {
+				container_id: 'viz',
+				server_url: 'bolt://localhost:7687',
+				server_user: 'neo4j',
+				server_password: 'sorts-swims-burglaries',
+				labels: {
+					//"Character": "name",
+					'Character': {
+						'shape': 'dot',
+						//"sizeCypher": "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
+						[NeoVis.NEOVIS_ADVANCED_CONFIG]: {
+							'propertyName': {
+								'value': 'pagerank',
+                                'group': 'community',
+                                'label': 'name'
+							},
+							'function': {
+								'title': (node) => {
+									return viz.propertyNamesToString(node, undefined);
+                                }
+							},
+						}
+					}
+				},
+				relationships: {
+					'INTERACTS': {
+						//"sizeCypher": "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
+						[NeoVis.NEOVIS_ADVANCED_CONFIG]: {
+							'propertyName': {
+								'value': 'weight',
+							},
+							'function': {
+								'title': (edge) => {
+									return viz.propertyNamesToString(edge, undefined);
+								}
+							},
+						}
+					}
+				},
+				initial_cypher: 'MATCH (n)-[r:INTERACTS]->(m) where id(n) < 40 and id(m) < 40 RETURN n,r,m'
+			};
+
+			viz = new NeoVis.default(config);
+			viz.render();
+			console.log(viz);
+
+		}
+    </script>
+</head>
+<body onload="draw()">
+<div id="viz"></div>
+
+
+Cypher query: <textarea rows="4" cols=50 id="cypher"></textarea><br>
+<input type="submit" value="Submit" id="reload">
+<input type="submit" value="Stabilize" id="stabilize">
+
+
+</body>
+
+<script>
+	$('#reload').click(function () {
+
+		var cypher = $('#cypher').val();
+
+		if (cypher.length > 3) {
+			viz.renderWithCypher(cypher);
+		} else {
+			console.log('reload');
+			viz.reload();
+
+		}
+
+	});
+
+	$('#stabilize').click(function () {
+		viz.stabilize();
+	});
+
+</script>
+</html>
