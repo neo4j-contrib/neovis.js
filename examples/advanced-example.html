@@ -44,13 +44,13 @@
 				labels: {
 					//"Character": "name",
 					'Character': {
-						'shape': 'dot',
+						'value': 'pagerank',
+						'group': 'community',
+						'label': 'name',
 						//"sizeCypher": "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
 						[NeoVis.NEOVIS_ADVANCED_CONFIG]: {
-							'propertyName': {
-								'value': 'pagerank',
-                                'group': 'community',
-                                'label': 'name'
+							'static': {
+								'shape': 'dot',
 							},
 							'function': {
 								'title': (node) => {
@@ -62,11 +62,9 @@
 				},
 				relationships: {
 					'INTERACTS': {
+						'value': 'weight',
 						//"sizeCypher": "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
 						[NeoVis.NEOVIS_ADVANCED_CONFIG]: {
-							'propertyName': {
-								'value': 'weight',
-							},
 							'function': {
 								'title': (edge) => {
 									return viz.propertyNamesToString(edge, undefined);
