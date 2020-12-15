@@ -179,16 +179,16 @@ export default class NeoVis {
 				continue;
 			}
 			const value = labelConfig[prop];
-			node[prop] = value;
+			node[prop] = this._retrieveProperty(value, neo4jNode);
 		}
 
 
 		if (advancedConfig && typeof advancedConfig === 'object') {
-			const propertyNameConfig = advancedConfig.propertyName;
+			const propertyNameConfig = advancedConfig.static;
 			if (propertyNameConfig && typeof propertyNameConfig === 'object') {
 				for (const prop in propertyNameConfig) {
 					const value = propertyNameConfig[prop];
-					node[prop] = this._retrieveProperty(value, neo4jNode);
+					node[prop] = value;
 				}
 			}
 
@@ -235,7 +235,7 @@ export default class NeoVis {
 				continue;
 			}
 			const value = nodeTypeConfig[prop];
-			edge[prop] = value;
+			edge[prop] = this._retrieveProperty(value, r);
 		}
 
 
@@ -244,7 +244,7 @@ export default class NeoVis {
 			if (propertyNameConfig && typeof propertyNameConfig === 'object') {
 				for (const prop in propertyNameConfig) {
 					const value = propertyNameConfig[prop];
-					edge[prop] = this._retrieveProperty(value, r);
+					edge[prop] = value;
 				}
 			}
 
