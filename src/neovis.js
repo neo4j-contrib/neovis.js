@@ -156,6 +156,76 @@ export default class NeoVis {
 		return undefined;
 	}
 
+	_buildStaticObject(staticConfig, object) {
+		if (staticConfig && typeof staticConfig === 'object') {
+			for (const prop in staticConfig) {
+				const value = staticConfig[prop];
+				if (value && typeof value === 'object') {
+					if (!object[prop]) {
+						object[prop] = {};
+					}
+					this._buildStaticObject(value, object[prop]);
+				} else {
+					object[prop] = value;
+				}
+			}
+		}
+	}
+
+	_buildPropertyNameObject(propertyNameConfig, object, neo4jObj) {
+		if (propertyNameConfig && typeof propertyNameConfig === 'object') {
+			for (const prop in propertyNameConfig) {
+				if (prop === NEOVIS_ADVANCED_CONFIG) {
+					continue;
+				}
+				const value = propertyNameConfig[prop];
+				if (value && typeof value === 'object') {
+					if (!object[prop]) {
+						object[prop] = {};
+					}
+					this._buildStaticObject(value, object[prop], neo4jObj);
+				} else {
+					const value = propertyNameConfig[prop];
+					object[prop] = this._retrieveProperty(value, neo4jObj);
+				}
+			}
+		}
+	}
+
+	async _buildCypherObject(cypherConfig, object, id) {
+		if (cypherConfig && typeof cypherConfig === 'object') {
+			for (const prop in cypherConfig) {
+				const value = cypherConfig[prop];
+				if (value && typeof value === 'object') {
+					if (!object[prop]) {
+						object[prop] = {};
+					}
+					await this._buildCypherObject(value, object[prop], id);
+				} else {
+					const result = await this._runCypher(value, id);
+					object[prop] = result;
+				}
+			}
+		}
+	}
+
+	_buildFunctionObject(functionConfig, object, neo4jObj) {
+		if (functionConfig && typeof functionConfig === 'object') {
+			for (const prop in functionConfig) {
+				const value = functionConfig[prop];
+				if (value && typeof value === 'object') {
+					if (!object[prop]) {
+						object[prop] = {};
+					}
+					this._buildFunctionObject(value, object[prop], neo4jObj);
+				} else {
+					const result = this._runFunction(value, neo4jObj);
+					object[prop] = result;
+				}
+			}
+		}
+	}
+
 	/**
 	 * Build node object for vis from a neo4j Node
 	 * FIXME: use config
@@ -174,48 +244,22 @@ export default class NeoVis {
 		node.id = neo4jNode.identity;
 		node.raw = neo4jNode;
 
-		for (const prop in labelConfig) {
-			if (prop === NEOVIS_ADVANCED_CONFIG) {
-				continue;
-			}
-			const value = labelConfig[prop];
-			node[prop] = this._retrieveProperty(value, neo4jNode);
-		}
-
+		this._buildPropertyNameObject(labelConfig, node, neo4jNode);
 
 		if (advancedConfig && typeof advancedConfig === 'object') {
-			const propertyNameConfig = advancedConfig.static;
-			if (propertyNameConfig && typeof propertyNameConfig === 'object') {
-				for (const prop in propertyNameConfig) {
-					const value = propertyNameConfig[prop];
-					node[prop] = value;
-				}
-			}
+			const staticConfig = advancedConfig.static;
+			this._buildStaticObject(staticConfig, node);
 
 			const cypherConfig = advancedConfig.cypher;
-			if (cypherConfig && typeof cypherConfig === 'object') {
-				for (const prop in cypherConfig) {
-					const value = cypherConfig[prop];
-					const result = await this._runCypher(value, node.id);
-					node[prop] = result;
-				}
-			}
+			await this._buildCypherObject(cypherConfig, node, node.id);
 
 			const functionConfig = advancedConfig.function;
-			if (functionConfig && typeof functionConfig === 'object') {
-				for (const prop in functionConfig) {
-					const value = functionConfig[prop];
-					const result = this._runFunction(value, neo4jNode);
-					node[prop] = result;
-				}
-			}
+			this._buildFunctionObject(functionConfig, node, neo4jNode);
 		}
 		return node;
 	}
 
-	buildStaticObject() {
 
-	}
 
 	/**
 	 * Build edge object for vis from a neo4j Relationship
@@ -234,41 +278,17 @@ export default class NeoVis {
 		edge.to = r.end;
 		edge.raw = r;
 
-		for (const prop in nodeTypeConfig) {
-			if (prop === NEOVIS_ADVANCED_CONFIG) {
-				continue;
-			}
-			const value = nodeTypeConfig[prop];
-			edge[prop] = this._retrieveProperty(value, r);
-		}
-
+		this._buildPropertyNameObject(nodeTypeConfig, edge, r);
 
 		if (advancedConfig && typeof advancedConfig === 'object') {
-			const propertyNameConfig = advancedConfig.static;
-			if (propertyNameConfig && typeof propertyNameConfig === 'object') {
-				for (const prop in propertyNameConfig) {
-					const value = propertyNameConfig[prop];
-					edge[prop] = value;
-				}
-			}
+			const staticConfig = advancedConfig.static;
+			this._buildStaticObject(staticConfig, edge);
 
 			const cypherConfig = advancedConfig.cypher;
-			if (cypherConfig && typeof cypherConfig === 'object') {
-				for (const prop in cypherConfig) {
-					const value = cypherConfig[prop];
-					const result = await this._runCypher(value, edge.id);
-					edge[prop] = result;
-				}
-			}
+			await this._buildCypherObject(cypherConfig, edge, edge.id);
 
 			const functionConfig = advancedConfig.function;
-			if (functionConfig && typeof functionConfig === 'object') {
-				for (const prop in functionConfig) {
-					const value = functionConfig[prop];
-					const result = this._runFunction(value, r);
-					edge[prop] = result;
-				}
-			}
+			this._buildFunctionObject(functionConfig, edge, r);
 		}
 		return edge;
 	}
