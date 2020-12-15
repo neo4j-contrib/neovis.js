@@ -213,6 +213,10 @@ export default class NeoVis {
 		return node;
 	}
 
+	buildStaticObject() {
+
+	}
+
 	/**
 	 * Build edge object for vis from a neo4j Relationship
 	 * @param r
@@ -240,7 +244,7 @@ export default class NeoVis {
 
 
 		if (advancedConfig && typeof advancedConfig === 'object') {
-			const propertyNameConfig = advancedConfig.propertyName;
+			const propertyNameConfig = advancedConfig.static;
 			if (propertyNameConfig && typeof propertyNameConfig === 'object') {
 				for (const prop in propertyNameConfig) {
 					const value = propertyNameConfig[prop];
