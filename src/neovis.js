@@ -518,7 +518,7 @@ export default class NeoVis {
 		this.render(query);
 	}
 
-	propertyNamesToString(neo4jNode, title_properties) {
+	nodeToHtml(neo4jNode, title_properties) {
 		let title = '';
 		if (!title_properties) {
 			title_properties = Object.keys(neo4jNode.properties);

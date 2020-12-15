@@ -54,7 +54,7 @@
 							},
 							'function': {
 								'title': (node) => {
-									return viz.propertyNamesToString(node, undefined);
+									return viz.nodeToHtml(node, undefined);
                                 }
 							},
 						}
@@ -67,7 +67,7 @@
 						[NeoVis.NEOVIS_ADVANCED_CONFIG]: {
 							'function': {
 								'title': (edge) => {
-									return viz.propertyNamesToString(edge, undefined);
+									return viz.nodeToHtml(edge, undefined);
 								}
 							},
 						}
