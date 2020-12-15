@@ -72,7 +72,7 @@ declare class Neovis {
     stabilize(): void;
     renderWithCypher(query: string): void;
     updateWithCypher(query: string): void;
-    propertyNamesToString(neo4jNode: Neo4jNode, title_properties: [string]): string;
+    nodeToHtml(neo4jNode: Neo4jNode, title_properties: [string]): string;
 }
 
 export default Neovis;
