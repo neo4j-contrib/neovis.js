@@ -10,11 +10,11 @@ export function clearIdCounter() {
 }
 
 export function makeNode(labels, properties = {}) {
-	return new Neo4j.types.Node(Neo4j.int(counter++), labels, properties);
+	return new Neo4j.types.Node(counter++, labels, properties);
 }
 
 export function makeRelationship(type, startNode, endNode, properties = {}) {
-	return new Neo4j.types.Relationship(Neo4j.int(counter++), startNode.identity, endNode.identity, type, properties);
+	return new Neo4j.types.Relationship(counter++, startNode.identity, endNode.identity, type, properties);
 }
 
 export function makePathFromNodes(nodes, relationshipType) {
@@ -36,14 +36,14 @@ export function makeRecord(parameters) {
 
 export function assertNodes(neovis, nodes, assertFunction) {
 	nodes.forEach(node => {
-		const dataSetNode = neovis._data.nodes.get(node.identity.toInt());
+		const dataSetNode = neovis._data.nodes.get(node.identity);
 		assertFunction(node, dataSetNode);
 	});
 }
 
 export function assertEdges(neovis, edges, assertFunction) {
 	edges.forEach(edges => {
-		const dataSetEdge = neovis._data.edges.get(edges.identity.toInt());
+		const dataSetEdge = neovis._data.edges.get(edges.identity);
 		assertFunction(edges, dataSetEdge);
 	});
 }
@@ -64,10 +64,10 @@ export function mockFullRunSubscribe(cypherIdsAndAnswers) {
 		if (!cypherIdsAndAnswers[cypher]) {
 			throw new Error(`the cypher '${cypher}' was not expected`);
 		}
-		if (!cypherIdsAndAnswers[cypher].default && !cypherIdsAndAnswers[cypher][parameters.id.toInt()]) {
+		if (!cypherIdsAndAnswers[cypher].default && !cypherIdsAndAnswers[cypher][parameters.id]) {
 			throw new Error(`the id '${parameters.id}' was not expected for cypher ${cypher}`);
 		}
-		const records = cypherIdsAndAnswers[cypher].default || cypherIdsAndAnswers[cypher][parameters.id.toInt()];
+		const records = cypherIdsAndAnswers[cypher].default || cypherIdsAndAnswers[cypher][parameters.id];
 		const observablePromise = Promise.resolve({records});
 		observablePromise.subscribe = ({onNext, onCompleted}) => {
 			records.forEach(onNext);
