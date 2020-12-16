@@ -38,19 +38,20 @@
 		function draw() {
 			var config = {
 				container_id: 'viz',
-				server_url: 'bolt://localhost:7687',
+				server_url: 'bolt://34.201.68.240:38312',
 				server_user: 'neo4j',
-				server_password: 'sorts-swims-burglaries',
+				server_password: 'gland-presentation-worry',
 				labels: {
 					//"Character": "name",
 					'Character': {
 						'value': 'pagerank',
 						'group': 'community',
-						'label': 'name',
+						//'label': 'name',
 						//"sizeCypher": "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
 						[NeoVis.NEOVIS_ADVANCED_CONFIG]: {
 							'static': {
 								'shape': 'dot',
+                                'label': '12'
 							},
 							'function': {
 								'title': (node) => {
