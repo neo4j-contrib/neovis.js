@@ -27,5 +27,8 @@ rules:
   no-console:
     - error
   no-prototype-builtins: off
+  object-curly-spacing:
+    - error
+    - always
   jest/no-mocks-import:
     - error

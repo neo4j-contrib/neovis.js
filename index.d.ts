@@ -5,35 +5,35 @@ import { Node as Neo4jNode, Relationship as Neo4jRelationship } from "neo4j-driv
 export const NEOVIS_DEFAULT_CONFIG: unique symbol;
 export const NEOVIS_ADVANCED_CONFIG: unique symbol;
 
+type RecursiveMapTo<T, New> = {
+    [P in keyof T]: T[P] extends object ? RecursiveMapTo<T[P], New> : New
+};
 
-export interface ILabelConfig {
-    caption?: string;
-    size?: string;
-    community?: string;
-    sizeCypher?: string;
-    image?: string;
-    [NEOVIS_ADVANCED_CONFIG]?: {
-        propertyName: {
+type RecursiveMapToFunction<T, NEO_TYPE> = {
+    [P in keyof T]: T[P] extends object ? ((node: NEO_TYPE) => T[P]) | (RecursiveMapToFunction<T[P], NEO_TYPE>) : (node: NEO_TYPE) => T[P]
+};
 
-        },
-        cypher: {
+type Cypher = string;
 
-        },
-        function: {
-
-        }
-    };
+interface INeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> {
+    static?: VIS_TYPE;
+    cypher?: RecursiveMapTo<VIS_TYPE, Cypher>;
+    function?: RecursiveMapToFunction<VIS_TYPE, NEO_TYPE>;
 }
 
-export interface IRelationshipConfig {
-    thickness?: string;
-    caption?: boolean | string;
+export interface ILabelConfig extends RecursiveMapTo<VisNode, string> {
+    [NEOVIS_ADVANCED_CONFIG]?: INeoVisAdvanceConfig<VisNode, Neo4jNode<number>>;
+}
+
+export interface IRelationshipConfig extends RecursiveMapTo<VisEdge, string>{
+    [NEOVIS_ADVANCED_CONFIG]?: INeoVisAdvanceConfig<VisEdge, Neo4jRelationship<number>>;
 }
 
 export interface INeovisConfig {
     container_id: string;
     server_url: string;
     server_user: string;
+    server_database: string;
     server_password: string;
     labels?: {
         [label: string]: ILabelConfig,

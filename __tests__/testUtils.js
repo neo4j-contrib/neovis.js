@@ -50,8 +50,8 @@ export function assertEdges(neovis, edges, assertFunction) {
 
 export function mockNormalRunSubscribe(records = []) {
 	Neo4jMock.mockSessionRun.mockImplementation(() => {
-		const observablePromise = Promise.resolve({records});
-		observablePromise.subscribe = ({onNext, onCompleted}) => {
+		const observablePromise = Promise.resolve({ records });
+		observablePromise.subscribe = ({ onNext, onCompleted }) => {
 			records.forEach(onNext);
 			onCompleted();
 		};
@@ -68,8 +68,8 @@ export function mockFullRunSubscribe(cypherIdsAndAnswers) {
 			throw new Error(`the id '${parameters.id}' was not expected for cypher ${cypher}`);
 		}
 		const records = cypherIdsAndAnswers[cypher].default || cypherIdsAndAnswers[cypher][parameters.id];
-		const observablePromise = Promise.resolve({records});
-		observablePromise.subscribe = ({onNext, onCompleted}) => {
+		const observablePromise = Promise.resolve({ records });
+		observablePromise.subscribe = ({ onNext, onCompleted }) => {
 			records.forEach(onNext);
 			onCompleted();
 		};

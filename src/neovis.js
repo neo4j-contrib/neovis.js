@@ -3,19 +3,10 @@
 import Neo4j from 'neo4j-driver';
 import * as vis from 'vis-network/standalone';
 import { defaults } from './defaults';
-import { EventController, CompletionEvent, ClickEdgeEvent, ClickNodeEvent, ErrorEvent } from './events';
+import { ClickEdgeEvent, ClickNodeEvent, CompletionEvent, ErrorEvent, EventController } from './events';
 
 export const NEOVIS_DEFAULT_CONFIG = Symbol();
 export const NEOVIS_ADVANCED_CONFIG = Symbol();
-
-/*
-const TYPES = {
-	STATIC: 1,
-	PROP_NAME: 2,
-	CYPHER_QUERY: 3,
-	FUNCTION: 4,
-};
- */
 
 export default class NeoVis {
 	_nodes = {};
@@ -23,6 +14,7 @@ export default class NeoVis {
 	_data = {};
 	_network = null;
 	_events = new EventController();
+
 	/**
 	 * Get current vis nodes from the graph
 	 */
@@ -123,7 +115,7 @@ export default class NeoVis {
 		let results = [];
 
 		try {
-			const result = await session.readTransaction(tx => tx.run(cypher, { id: id}));
+			const result = await session.readTransaction(tx => tx.run(cypher, { id: id }));
 			for (let record of result.records) {
 				record.forEach((v) => {
 					results.push(v);
@@ -158,7 +150,7 @@ export default class NeoVis {
 
 	_buildStaticObject(staticConfig, object) {
 		if (staticConfig && typeof staticConfig === 'object') {
-			for (const prop in staticConfig) {
+			for (const prop of Object.keys(staticConfig)) {
 				const value = staticConfig[prop];
 				if (value && typeof value === 'object') {
 					if (!object[prop]) {
@@ -174,10 +166,7 @@ export default class NeoVis {
 
 	_buildPropertyNameObject(propertyNameConfig, object, neo4jObj) {
 		if (propertyNameConfig && typeof propertyNameConfig === 'object') {
-			for (const prop in propertyNameConfig) {
-				if (prop === NEOVIS_ADVANCED_CONFIG) {
-					continue;
-				}
+			for (const prop of Object.keys(propertyNameConfig)) {
 				const value = propertyNameConfig[prop];
 				if (value && typeof value === 'object') {
 					if (!object[prop]) {
@@ -194,7 +183,7 @@ export default class NeoVis {
 
 	async _buildCypherObject(cypherConfig, object, id) {
 		if (cypherConfig && typeof cypherConfig === 'object') {
-			for (const prop in cypherConfig) {
+			for (const prop of Object.keys(cypherConfig)) {
 				const value = cypherConfig[prop];
 				if (value && typeof value === 'object') {
 					if (!object[prop]) {
@@ -202,8 +191,7 @@ export default class NeoVis {
 					}
 					await this._buildCypherObject(value, object[prop], id);
 				} else {
-					const result = await this._runCypher(value, id);
-					object[prop] = result;
+					object[prop] = await this._runCypher(value, id);
 				}
 			}
 		}
@@ -211,7 +199,7 @@ export default class NeoVis {
 
 	_buildFunctionObject(functionConfig, object, neo4jObj) {
 		if (functionConfig && typeof functionConfig === 'object') {
-			for (const prop in functionConfig) {
+			for (const prop of Object.keys(functionConfig)) {
 				const value = functionConfig[prop];
 				if (value && typeof value === 'object') {
 					if (!object[prop]) {
@@ -219,8 +207,7 @@ export default class NeoVis {
 					}
 					this._buildFunctionObject(value, object[prop], neo4jObj);
 				} else {
-					const result = this._runFunction(value, neo4jObj);
-					object[prop] = result;
+					object[prop] = this._runFunction(value, neo4jObj);
 				}
 			}
 		}
@@ -258,7 +245,6 @@ export default class NeoVis {
 		}
 		return node;
 	}
-
 
 
 	/**
@@ -387,8 +373,7 @@ export default class NeoVis {
 									size: 26,
 									strokeWidth: 7
 								},
-								scaling: {
-								}
+								scaling: {}
 							},
 							edges: {
 								arrows: {
@@ -461,10 +446,16 @@ export default class NeoVis {
 					this._network.on('click', function (params) {
 						if (params.nodes.length > 0) {
 							let nodeId = this.getNodeAt(params.pointer.DOM);
-							neoVis._events.generateEvent(ClickNodeEvent, { nodeId: nodeId, node: neoVis._nodes[nodeId] });
+							neoVis._events.generateEvent(ClickNodeEvent, {
+								nodeId: nodeId,
+								node: neoVis._nodes[nodeId]
+							});
 						} else if (params.edges.length > 0) {
 							let edgeId = this.getEdgeAt(params.pointer.DOM);
-							neoVis._events.generateEvent(ClickEdgeEvent, { edgeId: edgeId, edge: neoVis._edges[edgeId] });
+							neoVis._events.generateEvent(ClickEdgeEvent, {
+								edgeId: edgeId,
+								edge: neoVis._edges[edgeId]
+							});
 						}
 					});
 				},
@@ -515,7 +506,7 @@ export default class NeoVis {
 	}
 
 	/**
-	 * Stabilize the visuzliation
+	 * Stabilize the visualization
 	 */
 	stabilize() {
 		this._network.stopSimulation();
@@ -536,7 +527,7 @@ export default class NeoVis {
 	/**
 	 * Execute an arbitrary Cypher query and update the current visualization, retaning current nodes
 	 * This function will not change the original query given by renderWithCypher or the inital cypher.
-	 * @param query 
+	 * @param query
 	 */
 	updateWithCypher(query) {
 		this.render(query);
@@ -555,11 +546,4 @@ export default class NeoVis {
 		}
 		return title;
 	}
-
-	// configure exports based on environment (ie Node.js or browser)
-	//if (typeof exports === 'object') {
-	//    module.exports = NeoVis;
-	//} else {
-	//    define (function () {return NeoVis;})
-	//}
 }
