@@ -138,14 +138,14 @@ export default class NeoVis {
 		if (typeof func === 'function') {
 			return func(node);
 		}
-		return undefined;
+		throw 'Function type property field must be a function';
 	}
 
 	_retrieveProperty(prop, node) {
 		if (typeof node === 'object' && typeof node.properties === 'object') {
 			return node.properties[prop];
 		}
-		return undefined;
+		throw 'Neo4j node is not properly constructed';
 	}
 
 	_buildStaticObject(staticConfig, object) {
@@ -275,6 +275,8 @@ export default class NeoVis {
 
 			const functionConfig = advancedConfig.function;
 			this._buildFunctionObject(functionConfig, edge, r);
+		} else {
+			throw 'Advanced config should be an object. See documentation for details.';
 		}
 		return edge;
 	}
