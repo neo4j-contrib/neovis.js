@@ -232,7 +232,9 @@ export default class NeoVis {
 		node.raw = neo4jNode;
 
 		this._buildPropertyNameObject(labelConfig, node, neo4jNode);
-
+		if (advancedConfig != undefined && typeof advancedConfig != 'object') {
+			throw 'Advanced config should be an object. See documentation for details.';
+		}
 		if (advancedConfig && typeof advancedConfig === 'object') {
 			const staticConfig = advancedConfig.static;
 			this._buildStaticObject(staticConfig, node);
@@ -265,7 +267,9 @@ export default class NeoVis {
 		edge.raw = r;
 
 		this._buildPropertyNameObject(nodeTypeConfig, edge, r);
-
+		if (advancedConfig != undefined && typeof advancedConfig != 'object') {
+			throw 'Advanced config should be an object. See documentation for details.';
+		}
 		if (advancedConfig && typeof advancedConfig === 'object') {
 			const staticConfig = advancedConfig.static;
 			this._buildStaticObject(staticConfig, edge);
@@ -275,9 +279,8 @@ export default class NeoVis {
 
 			const functionConfig = advancedConfig.function;
 			this._buildFunctionObject(functionConfig, edge, r);
-		} else {
-			throw 'Advanced config should be an object. See documentation for details.';
 		}
+
 		return edge;
 	}
 
