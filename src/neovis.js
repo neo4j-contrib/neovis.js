@@ -138,14 +138,14 @@ export default class NeoVis {
 		if (typeof func === 'function') {
 			return func(node);
 		}
-		throw 'Function type property field must be a function';
+		throw new Error('Function type property field must be a function');
 	}
 
 	_retrieveProperty(prop, node) {
 		if (typeof node === 'object' && typeof node.properties === 'object') {
 			return node.properties[prop];
 		}
-		throw 'Neo4j node is not properly constructed';
+		throw new Error('Neo4j node is not properly constructed');
 	}
 
 	_buildStaticObject(staticConfig, object) {
@@ -233,7 +233,7 @@ export default class NeoVis {
 
 		this._buildPropertyNameObject(labelConfig, node, neo4jNode);
 		if (advancedConfig != undefined && typeof advancedConfig != 'object') {
-			throw 'Advanced config should be an object. See documentation for details.';
+			throw new Error('Advanced config should be an object. See documentation for details.');
 		}
 		if (advancedConfig && typeof advancedConfig === 'object') {
 			const staticConfig = advancedConfig.static;
@@ -268,7 +268,7 @@ export default class NeoVis {
 
 		this._buildPropertyNameObject(nodeTypeConfig, edge, r);
 		if (advancedConfig != undefined && typeof advancedConfig != 'object') {
-			throw 'Advanced config should be an object. See documentation for details.';
+			throw new Error('Advanced config should be an object. See documentation for details.');
 		}
 		if (advancedConfig && typeof advancedConfig === 'object') {
 			const staticConfig = advancedConfig.static;
