@@ -1,17 +1,30 @@
 export const CompletionEvent = 'completed';
 export const ClickNodeEvent = 'clickNode';
 export const ClickEdgeEvent = 'clickEdge';
+export const DoubleClickNodeEvent = 'doubleClickNode';
+export const DoubleClickEdgeEvent = 'doubleClickEdge';
 export const ErrorEvent = 'error';
 
 export class EventController {
-
-	constructor() {
-		this._handlers = {
-			[CompletionEvent]: [],
-			[ErrorEvent]: [],
-			[ClickNodeEvent]: [],
-			[ClickEdgeEvent]: [],
-		};
+	/**
+	 *
+	 * @param {object} eventHandlers - event handles to be used
+	 */
+	constructor(eventHandlers) {
+		eventHandlers = eventHandlers || {};
+		const availableEvents = [CompletionEvent, ErrorEvent, ClickNodeEvent, ClickEdgeEvent, DoubleClickNodeEvent, DoubleClickEdgeEvent];
+		let handlers = {};
+		for (const event of availableEvents) {
+			handlers = {
+				...handlers,
+				[event]: Array.isArray(eventHandlers[event]) ?
+					eventHandlers[event] :
+					eventHandlers[event] ?
+						[eventHandlers[event]] :
+						[],
+			};
+		}
+		this._handlers = handlers;
 	}
 
 	/**
