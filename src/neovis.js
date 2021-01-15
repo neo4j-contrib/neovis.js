@@ -108,60 +108,64 @@ export default class NeoVis {
 			[DoubleClickEdgeEvent]: [],
 		};
 		let RightClickHandlers = {};
-		for (let key of Object.keys(config.labels)) {
-			const onClickFunc = config.labels[key].click;
-			if (onClickFunc) {
-				if (typeof onClickFunc === 'function') {
-					eventHandlers[ClickNodeEvent].push((values) => {
-						if (values && typeof values === 'object' && values.node && values.node._neo4jLabel === key) {
-							onClickFunc(values);
-						}
-					});
-				}
-			}
-			const onDoubleClickFunc = config.labels[key].doubleClick;
-			if (onDoubleClickFunc) {
-				if (typeof onDoubleClickFunc === 'function') {
-					eventHandlers[DoubleClickNodeEvent].push((values) => {
-						if (values && typeof values === 'object' && values.node && values.node._neo4jLabel === key) {
-							onDoubleClickFunc(values);
-						}
-					});
-				}
-			}
-
-			const onRightClickConfig = config.labels[key].rightClick;
-			if (onRightClickConfig) {
-				if (typeof onRightClickConfig === 'object') {
-					let nameList = [];
-					let nameHandlers = {};
-					for (let operationName of Object.keys(onRightClickConfig)) {
-						nameList.push(operationName);
-						nameHandlers[operationName] = onRightClickConfig[operationName];
+		if (config.labels) {
+			for (let key of Object.keys(config.labels)) {
+				const onClickFunc = config.labels[key].click;
+				if (onClickFunc) {
+					if (typeof onClickFunc === 'function') {
+						eventHandlers[ClickNodeEvent].push((values) => {
+							if (values && typeof values === 'object' && values.node && values.node._neo4jLabel === key) {
+								onClickFunc(values);
+							}
+						});
 					}
-					RightClickHandlers[key] = [nameList, nameHandlers];
+				}
+				const onDoubleClickFunc = config.labels[key].doubleClick;
+				if (onDoubleClickFunc) {
+					if (typeof onDoubleClickFunc === 'function') {
+						eventHandlers[DoubleClickNodeEvent].push((values) => {
+							if (values && typeof values === 'object' && values.node && values.node._neo4jLabel === key) {
+								onDoubleClickFunc(values);
+							}
+						});
+					}
+				}
+
+				const onRightClickConfig = config.labels[key].rightClick;
+				if (onRightClickConfig) {
+					if (typeof onRightClickConfig === 'object') {
+						let nameList = [];
+						let nameHandlers = {};
+						for (let operationName of Object.keys(onRightClickConfig)) {
+							nameList.push(operationName);
+							nameHandlers[operationName] = onRightClickConfig[operationName];
+						}
+						RightClickHandlers[key] = [nameList, nameHandlers];
+					}
 				}
 			}
 		}
-		for (let key of Object.keys(config.relationships)) {
-			const onClickFunc = config.relationships[key].click;
-			if (onClickFunc) {
-				if (typeof onClickFunc === 'function') {
-					eventHandlers[ClickEdgeEvent].push((values) => {
-						if (values && typeof values === 'object' && values.edge && values.edge._neo4jLabel === key) {
-							onClickFunc(values);
-						}
-					});
+		if (config.relationships) {
+			for (let key of Object.keys(config.relationships)) {
+				const onClickFunc = config.relationships[key].click;
+				if (onClickFunc) {
+					if (typeof onClickFunc === 'function') {
+						eventHandlers[ClickEdgeEvent].push((values) => {
+							if (values && typeof values === 'object' && values.edge && values.edge._neo4jLabel === key) {
+								onClickFunc(values);
+							}
+						});
+					}
 				}
-			}
-			const onDoubleClickFunc = config.relationships[key].doubleClick;
-			if (onDoubleClickFunc) {
-				if (typeof onDoubleClickFunc === 'function') {
-					eventHandlers[DoubleClickEdgeEvent].push((values) => {
-						if (values && typeof values === 'object' && values.edge && values.edge._neo4jLabel === key) {
-							onDoubleClickFunc(values);
-						}
-					});
+				const onDoubleClickFunc = config.relationships[key].doubleClick;
+				if (onDoubleClickFunc) {
+					if (typeof onDoubleClickFunc === 'function') {
+						eventHandlers[DoubleClickEdgeEvent].push((values) => {
+							if (values && typeof values === 'object' && values.edge && values.edge._neo4jLabel === key) {
+								onDoubleClickFunc(values);
+							}
+						});
+					}
 				}
 			}
 		}
