@@ -551,6 +551,94 @@ export default class NeoVis {
 			});
 	}
 
+	remove(query) {
+
+		// connect to Neo4j instance
+		// run query
+		let recordCount = 0;
+		const _query = query || this._query;
+		let session = this._driver.session(this._database && { database: this._database });
+		const dataBuildPromises = [];
+		let nodesToRemove = {};
+		let edgesToRemove = {};
+		session
+			.run(_query, { limit: 30 })
+			.subscribe({
+				onNext: (record) => {
+					recordCount++;
+
+					this._consoleLog('CLASS NAME');
+					this._consoleLog(record && record.constructor.name);
+					this._consoleLog(record);
+
+					const dataPromises = Object.values(record.toObject()).map(async (v) => {
+						this._consoleLog('Constructor:');
+						this._consoleLog(v && v.constructor.name);
+						if (v instanceof Neo4j.types.Node) {
+							let nodeID = v.identity.toInt();
+							this._removeNodeByID(nodeID, nodesToRemove);
+
+						} else if (v instanceof Neo4j.types.Relationship) {
+							let edgeID = v.identity.toInt();
+							this._removeEdgeByID(edgeID, edgesToRemove);
+
+						} else if (v instanceof Neo4j.types.Path) {
+							this._consoleLog('PATH');
+							this._consoleLog(v);
+							let startNodeID = v.start.identity.toInt();
+							let endNodeID = v.end.identity.toInt();
+
+							this._removeNodeByID(startNodeID, nodesToRemove);
+							this._removeNodeByID(endNodeID, nodesToRemove);
+
+							for (let obj of v.segments) {
+								this._removeNodeByID(obj.start.identity.toInt(), nodesToRemove);
+								this._removeNodeByID(obj.end.identity.toInt(), nodesToRemove);
+								this._removeEdgeByID(obj.relationship.identity.toInt(), edgesToRemove);
+							}
+
+						} else if (v instanceof Array) {
+							for (let obj of v) {
+								this._consoleLog('Array element constructor:');
+								this._consoleLog(obj && obj.constructor.name);
+								if (obj instanceof Neo4j.types.Node) {
+									let nodeID = obj.identity.toInt();
+									this._removeNodeByID(nodeID, nodesToRemove);
+
+								} else if (obj instanceof Neo4j.types.Relationship) {
+									let edgeID = obj.identity.toInt();
+
+									this._removeEdgeByID(edgeID, edgesToRemove);
+								}
+							}
+						}
+					});
+					dataBuildPromises.push(Promise.all(dataPromises));
+				},
+				onCompleted: async () => {
+					await Promise.all(dataBuildPromises);
+					session.close();
+
+					if(this._network && this._network.body.data.nodes.length > 0) {
+						this._data.nodes.remove(Object.values(nodesToRemove));
+						this._data.edges.remove(Object.values(edgesToRemove));
+					}
+					this._consoleLog('completed');
+					setTimeout(
+						() => {
+							this._network.stopSimulation();
+						},
+						10000
+					);
+					this._events.generateEvent(CompletionEvent, { record_count: recordCount });
+				},
+				onError: (error) => {
+					this._consoleLog(error, 'error');
+					this._events.generateEvent(ErrorEvent, { error_msg: error });
+				}
+			});
+	}
+
 	/**
 	 * Clear the data for the visualization
 	 */
@@ -618,6 +706,10 @@ export default class NeoVis {
 		this.render(query);
 	}
 
+	removeWithCypher(query) {
+		this.remove(query);
+	}
+
 	nodeToHtml(neo4jNode, title_properties) {
 		let title = '';
 		if (!title_properties) {
@@ -634,7 +726,9 @@ export default class NeoVis {
 
 	registerRightClickEvent() {
 		let neovis = this;
+		this._network.off('oncontext');
 		this._network.on('oncontext', function (params) {
+			$(document).off('mousedown');
 			params.event.preventDefault();
 			$('.custom-menu').finish().toggle(100);
 			$('.custom-menu').css({
@@ -647,7 +741,7 @@ export default class NeoVis {
 				const label = node._neo4jLabel;
 				$('.custom-menu').empty();
 				for (let item in neovis._rightClickHandlers[label][0]) {
-					const name = neovis._rightClickHandlers[label][0][item]
+					const name = neovis._rightClickHandlers[label][0][item];
 					$('.custom-menu').append(`<li data-action="${name}">${name}</li>`);
 				}
 			}
@@ -665,13 +759,13 @@ export default class NeoVis {
 				// Hide it AFTER the action was triggered
 				$('.custom-menu').hide(100);
 			});
-		});
-		$(document).bind('mousedown', function (e) {
-			// If the clicked element is not the menu
-			if (!$(e.target).parents('.custom-menu').length > 0) {
-				// Hide it
-				$('.custom-menu').hide(100);
-			}
+			$(document).bind('mousedown', function (e) {
+				// If the clicked element is not the menu
+				if (!$(e.target).parents('.custom-menu').length > 0) {
+					// Hide it
+					$('.custom-menu').hide(100);
+				}
+			});
 		});
 	}
 
