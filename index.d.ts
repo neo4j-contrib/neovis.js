@@ -1,4 +1,4 @@
-import { Node as VisNode, Edge as VisEdge, Options as visNetworkOptions, DataSet } from "vis-network";
+import {Node as VisNode, Edge as VisEdge, Options as visNetworkOptions, DataSet, Network} from "vis-network";
 import { Node as Neo4jNode, Relationship as Neo4jRelationship, Driver as Neo4jDriver } from "neo4j-driver";
 
 export const NEOVIS_DEFAULT_CONFIG: unique symbol;
@@ -63,6 +63,7 @@ declare class Neovis {
     constructor(config: INeovisConfig);
     get nodes(): DataSet<INode>;
     get edges(): DataSet<IEdge>;
+    get network(): Network;
     render(): void;
     clearNetwork(): void;
     registerOnEvent(eventType: string, handler: (event: any) => void): void;
