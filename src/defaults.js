@@ -16,7 +16,6 @@ const defaults = {
 
 	visJs: {
 		nodes: {
-			//shape: 'dot',
 			font: {
 				size: 26,
 				strokeWidth: 7
