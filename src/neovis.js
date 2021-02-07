@@ -94,7 +94,7 @@ export default class NeoVis {
 			}
 		}
 		this._config = config;
-		this._driver = config.neo4j ?? Neo4j.driver(
+		this._driver = config.neo4j instanceof Neo4j.driver ? config.neo4j : Neo4j.driver(
 			config.neo4j?.server_url ?? defaults.neo4jUri,
 			Neo4j.auth.basic(
 				config.neo4j?.server_user ?? defaults.neo4j.neo4jUser,
