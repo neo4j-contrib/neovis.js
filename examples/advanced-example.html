@@ -38,9 +38,11 @@
 		function draw() {
 			var config = {
 				container_id: 'viz',
-				server_url: 'bolt://34.201.68.240:38312',
-				server_user: 'neo4j',
-				server_password: 'gland-presentation-worry',
+                neo4j: {
+					server_url: 'bolt://localhost:7687',
+					server_user: 'neo4j',
+					server_password: 'gland-presentation-worry',
+				},
 				labels: {
 					//"Character": "name",
 					'Character': {

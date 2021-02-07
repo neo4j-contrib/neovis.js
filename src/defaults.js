@@ -14,56 +14,45 @@ const defaults = {
 		trust: 'TRUST_ALL_CERTIFICATES'
 	},
 
-	visjs: {
-		interaction: {
-			hover: true,
-			hoverConnectedEdges: true,
-			selectConnectedEdges: false,
-			//        multiselect: true,
-			multiselect: 'alwaysOn',
-			zoomView: false,
-			experimental: {}
-		},
-		physics: {
-			barnesHut: {
-				damping: 0.1
-			}
-		},
+	visJs: {
 		nodes: {
-			mass: 4,
-			shape: 'neo',
-			labelHighlightBold: false,
-			widthConstraint: {
-				maximum: 40
+			font: {
+				size: 26,
+				strokeWidth: 7
 			},
-			heightConstraint: {
-				maximum: 40
-			}
+			scaling: {}
 		},
 		edges: {
-			hoverWidth: 0,
-			selectionWidth: 0,
-			smooth: {
-				type: 'continuous',
-				roundness: 0.15
-			},
-			font: {
-				size: 9,
-				strokeWidth: 0,
-				align: 'top'
-			},
-			color: {
-				inherit: false
-			},
 			arrows: {
-				to: {
-					enabled: true,
-					type: 'arrow',
-					scaleFactor: 0.5
-				}
+				to: { enabled: false } // FIXME: handle default value
+			},
+			length: 200
+		},
+		layout: {
+			improvedLayout: false,
+			hierarchical: {
+				enabled: false,
+				sortMethod: 'hubsize'
+			}
+		},
+		physics: { // TODO: adaptive physics settings based on size of graph rendered
+			// enabled: true,
+			// timestep: 0.5,
+			// stabilization: {
+			//     iterations: 10
+			// }
+
+			adaptiveTimestep: true,
+			// barnesHut: {
+			//     gravitationalConstant: -8000,
+			//     springConstant: 0.04,
+			//     springLength: 95
+			// },
+			stabilization: {
+				iterations: 200,
+				fit: true
 			}
 		}
-
 	}
 };
 

@@ -4,16 +4,18 @@ import Neo4j from 'neo4j-driver';
 import * as vis from 'vis-network/standalone';
 import { defaults } from './defaults';
 import { ClickEdgeEvent, ClickNodeEvent, CompletionEvent, ErrorEvent, EventController } from './events';
+import deepmerge from 'deepmerge';
 
 export const NEOVIS_DEFAULT_CONFIG = Symbol();
 export const NEOVIS_ADVANCED_CONFIG = Symbol();
 
 export default class NeoVis {
-	_nodes = {};
-	_edges = {};
-	_data = {};
-	_network = null;
-	_events = new EventController();
+	_data = {
+		nodes: new vis.DataSet(),
+		edges: new vis.DataSet()
+	};
+	#network = null;
+	#events = new EventController();
 
 	/**
 	 * Get current vis nodes from the graph
@@ -27,6 +29,13 @@ export default class NeoVis {
 	 */
 	get edges() {
 		return this._data.edges;
+	}
+
+	/**
+	 * Get current network
+	 */
+	get network() {
+		return this.#network;
 	}
 
 	/**
@@ -59,6 +68,7 @@ export default class NeoVis {
 	}
 
 	_init(config) {
+
 		if (config.labels && config.labels[NEOVIS_DEFAULT_CONFIG]) {
 			for (let key of Object.keys(config.labels)) {
 				// getting out of my for not changing the original config object
@@ -84,30 +94,23 @@ export default class NeoVis {
 			}
 		}
 		this._config = config;
-		this._encrypted = config.encrypted || defaults.neo4j.encrypted;
-		this._trust = config.trust || defaults.neo4j.trust;
-		this._driver = Neo4j.driver(
-			config.server_url || defaults.neo4j.neo4jUri,
-			Neo4j.auth.basic(config.server_user || defaults.neo4j.neo4jUser, config.server_password || defaults.neo4j.neo4jPassword),
+		this._driver = config.neo4j instanceof Neo4j.driver ? config.neo4j : Neo4j.driver(
+			config.neo4j?.server_url ?? defaults.neo4jUri,
+			Neo4j.auth.basic(
+				config.neo4j?.server_user ?? defaults.neo4j.neo4jUser,
+				config.neo4j?.server_password ?? defaults.neo4j.neo4jPassword
+			),
 			{
-				encrypted: this._encrypted,
-				trust: this._trust,
+				encrypted: config.neo4j?.encrypted ?? defaults.neo4j.encrypted,
+				trust: config.neo4j?.trust ?? defaults.neo4j.trust,
 				maxConnectionPoolSize: 100,
 				connectionAcquisitionTimeout: 10000,
 				disableLosslessIntegers: true,
 			}
 		);
 		this._database = config.server_database;
-		this._query = config.initial_cypher || defaults.neo4j.initialQuery;
+		this._query = config.initial_cypher ?? defaults.neo4j.initialQuery;
 		this._container = document.getElementById(config.container_id);
-	}
-
-	_addNode(node) {
-		this._nodes[node.id] = node;
-	}
-
-	_addEdge(edge) {
-		this._edges[edge.id] = edge;
 	}
 
 	async _runCypher(cypher, id) {
@@ -122,7 +125,7 @@ export default class NeoVis {
 				});
 			}
 		} finally {
-			session.close();
+			await session.close();
 		}
 
 		if (results.length === 0) {
@@ -232,7 +235,7 @@ export default class NeoVis {
 		node.raw = neo4jNode;
 
 		this._buildPropertyNameObject(labelConfig, node, neo4jNode);
-		if (advancedConfig != undefined && typeof advancedConfig != 'object') {
+		if (advancedConfig !== undefined && typeof advancedConfig != 'object') {
 			throw new Error('Advanced config should be an object. See documentation for details.');
 		}
 		if (advancedConfig && typeof advancedConfig === 'object') {
@@ -267,7 +270,7 @@ export default class NeoVis {
 		edge.raw = r;
 
 		this._buildPropertyNameObject(nodeTypeConfig, edge, r);
-		if (advancedConfig != undefined && typeof advancedConfig != 'object') {
+		if (advancedConfig !== undefined && typeof advancedConfig != 'object') {
 			throw new Error('Advanced config should be an object. See documentation for details.');
 		}
 		if (advancedConfig && typeof advancedConfig === 'object') {
@@ -303,7 +306,7 @@ export default class NeoVis {
 		// run query
 		let recordCount = 0;
 		const _query = query || this._query;
-		let session = this._driver.session(this._database && { database: this._database });
+		const session = this._driver.session(this._database && { database: this._database });
 		const dataBuildPromises = [];
 		session
 			.run(_query, { limit: 30 })
@@ -321,14 +324,14 @@ export default class NeoVis {
 						if (v instanceof Neo4j.types.Node) {
 							let node = await this.buildNodeVisObject(v);
 							try {
-								this._addNode(node);
+								this._data.nodes.update(node);
 							} catch (e) {
 								this._consoleLog(e, 'error');
 							}
 
 						} else if (v instanceof Neo4j.types.Relationship) {
 							let edge = await this.buildEdgeVisObject(v);
-							this._addEdge(edge);
+							this._data.edges.update(edge);
 
 						} else if (v instanceof Neo4j.types.Path) {
 							this._consoleLog('PATH');
@@ -336,13 +339,13 @@ export default class NeoVis {
 							let startNode = await this.buildNodeVisObject(v.start);
 							let endNode = await this.buildNodeVisObject(v.end);
 
-							this._addNode(startNode);
-							this._addNode(endNode);
+							this._data.nodes.update(startNode);
+							this._data.nodes.update(endNode);
 
 							for (let obj of v.segments) {
-								this._addNode(await this.buildNodeVisObject(obj.start));
-								this._addNode(await this.buildNodeVisObject(obj.end));
-								this._addEdge(await this.buildEdgeVisObject(obj.relationship));
+								this._data.nodes.update(await this.buildNodeVisObject(obj.start));
+								this._data.nodes.update(await this.buildNodeVisObject(obj.end));
+								this._data.edges.update(await this.buildEdgeVisObject(obj.relationship));
 							}
 
 						} else if (v instanceof Array) {
@@ -351,12 +354,12 @@ export default class NeoVis {
 								this._consoleLog(obj && obj.constructor.name);
 								if (obj instanceof Neo4j.types.Node) {
 									let node = await this.buildNodeVisObject(obj);
-									this._addNode(node);
+									this._data.nodes.update(node);
 
 								} else if (obj instanceof Neo4j.types.Relationship) {
 									let edge = await this.buildEdgeVisObject(obj);
 
-									this._addEdge(edge);
+									this._data.edges.update(edge);
 								}
 							}
 						}
@@ -365,99 +368,38 @@ export default class NeoVis {
 				},
 				onCompleted: async () => {
 					await Promise.all(dataBuildPromises);
-					session.close();
+					await session.close();
 
-					if (this._network && this._network.body.data.nodes.length > 0) {
-						this._data.nodes.update(Object.values(this._nodes));
-						this._data.edges.update(Object.values(this._edges));
-					} else {
-						let options = {
-							nodes: {
-								//shape: 'dot',
-								font: {
-									size: 26,
-									strokeWidth: 7
-								},
-								scaling: {}
-							},
-							edges: {
-								arrows: {
-									to: { enabled: this._config.arrows || false } // FIXME: handle default value
-								},
-								length: 200
-							},
-							layout: {
-								improvedLayout: false,
-								hierarchical: {
-									enabled: this._config.hierarchical || false,
-									sortMethod: this._config.hierarchical_sort_method || 'hubsize'
-								}
-							},
-							physics: { // TODO: adaptive physics settings based on size of graph rendered
-								// enabled: true,
-								// timestep: 0.5,
-								// stabilization: {
-								//     iterations: 10
-								// }
-
-								adaptiveTimestep: true,
-								// barnesHut: {
-								//     gravitationalConstant: -8000,
-								//     springConstant: 0.04,
-								//     springLength: 95
-								// },
-								stabilization: {
-									iterations: 200,
-									fit: true
-								}
-							}
-						};
+					if (!(this.#network?.body.data.nodes.length > 0)) {
+						let options = deepmerge(defaults.visJs, this._config.visConfig ?? {});
 
 						const container = this._container;
-						this._data = {
-							nodes: new vis.DataSet(Object.values(this._nodes)),
-							edges: new vis.DataSet(Object.values(this._edges))
-						};
 
 						this._consoleLog(this._data.nodes);
 						this._consoleLog(this._data.edges);
 
-						// Create duplicate node for any this reference relationships
-						// NOTE: Is this only useful for data model type data
-						// this._data.edges = this._data.edges.map(
-						//     function (item) {
-						//          if (item.from == item.to) {
-						//             const newNode = this._data.nodes.get(item.from)
-						//             delete newNode.id;
-						//             const newNodeIds = this._data.nodes.add(newNode);
-						//             this._consoleLog("Adding new node and changing this-ref to node: " + item.to);
-						//             item.to = newNodeIds[0];
-						//          }
-						//          return item;
-						//     }
-						// );
-						this._network = new vis.Network(container, this._data, options);
+						this.#network = new vis.Network(container, this._data, options);
 					}
 					this._consoleLog('completed');
 					setTimeout(
 						() => {
-							this._network.stopSimulation();
+							this.#network.stopSimulation();
 						},
 						10000
 					);
-					this._events.generateEvent(CompletionEvent, { record_count: recordCount });
+					this.#events.generateEvent(CompletionEvent, { record_count: recordCount });
 
 					let neoVis = this;
-					this._network.on('click', function (params) {
+					this.#network.on('click', function (params) {
 						if (params.nodes.length > 0) {
 							let nodeId = this.getNodeAt(params.pointer.DOM);
-							neoVis._events.generateEvent(ClickNodeEvent, {
+							neoVis.#events.generateEvent(ClickNodeEvent, {
 								nodeId: nodeId,
 								node: neoVis._nodes[nodeId]
 							});
 						} else if (params.edges.length > 0) {
 							let edgeId = this.getEdgeAt(params.pointer.DOM);
-							neoVis._events.generateEvent(ClickEdgeEvent, {
+							neoVis.#events.generateEvent(ClickEdgeEvent, {
 								edgeId: edgeId,
 								edge: neoVis._edges[edgeId]
 							});
@@ -466,7 +408,7 @@ export default class NeoVis {
 				},
 				onError: (error) => {
 					this._consoleLog(error, 'error');
-					this._events.generateEvent(ErrorEvent, { error_msg: error });
+					this.#events.generateEvent(ErrorEvent, { error_msg: error });
 				}
 			});
 	}
@@ -479,7 +421,7 @@ export default class NeoVis {
 		this._neo4jEdges = {};
 		this._nodes = {};
 		this._edges = {};
-		this._network.setData([]);
+		this.#network.setData([]);
 	}
 
 
@@ -489,7 +431,7 @@ export default class NeoVis {
 	 * @param {callback} handler Handler to manage the event
 	 */
 	registerOnEvent(eventType, handler) {
-		this._events.register(eventType, handler);
+		this.#events.register(eventType, handler);
 	}
 
 
@@ -514,7 +456,7 @@ export default class NeoVis {
 	 * Stabilize the visualization
 	 */
 	stabilize() {
-		this._network.stopSimulation();
+		this.#network.stopSimulation();
 		this._consoleLog('Calling stopSimulation');
 	}
 
