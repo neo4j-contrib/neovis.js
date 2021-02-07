@@ -1,6 +1,5 @@
-import { DataSet } from "vis-data";
-import { Node as VisNode, Edge as VisEdge } from "vis-network";
-import { Node as Neo4jNode, Relationship as Neo4jRelationship } from "neo4j-driver";
+import { Node as VisNode, Edge as VisEdge, Options as visNetworkOptions, DataSet } from "vis-network";
+import { Node as Neo4jNode, Relationship as Neo4jRelationship, Driver as Neo4jDriver } from "neo4j-driver";
 
 export const NEOVIS_DEFAULT_CONFIG: unique symbol;
 export const NEOVIS_ADVANCED_CONFIG: unique symbol;
@@ -31,10 +30,15 @@ export interface IRelationshipConfig extends RecursiveMapTo<VisEdge, string>{
 
 export interface INeovisConfig {
     container_id: string;
-    server_url: string;
-    server_user: string;
     server_database: string;
-    server_password: string;
+    neo4j: Neo4jDriver | {
+        server_url: string;
+        server_user: string;
+        server_password: string;
+        encrypted?: "ENCRYPTION_OFF" | "ENCRYPTION_ON";
+        trust?: "TRUST_ALL_CERTIFICATES" | "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES";
+    };
+    visConfig: visNetworkOptions;
     labels?: {
         [label: string]: ILabelConfig,
         [NEOVIS_DEFAULT_CONFIG]?: IRelationshipConfig
@@ -43,13 +47,8 @@ export interface INeovisConfig {
         [relationship: string]: IRelationshipConfig,
         [NEOVIS_DEFAULT_CONFIG]?: IRelationshipConfig
     };
-    arrows?: boolean;
-    hierarchical?: boolean;
-    hierarchical_sort_method?: "hubsize" | "directed";
     initial_cypher?: string;
     console_debug?: boolean;
-    encrypted?: "ENCRYPTION_OFF" | "ENCRYPTION_ON";
-    trust?: "TRUST_ALL_CERTIFICATES" | "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES";
 }
 
 export interface INode extends VisNode {

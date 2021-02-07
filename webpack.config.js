@@ -24,7 +24,7 @@ module.exports = {
     },
     externals: [
         // externalize any library used
-        (context, request, callback) => {
+        ({context, request}, callback) => {
             if(!process.env.BUILD_WITH_DEPENDENCIES && !/^[\\.\/]/.test(request)) {
                 return callback(null, {
                     commonjs: request,
