@@ -84,21 +84,22 @@ export default class NeoVis {
 			}
 		}
 		this._config = config;
-		this._encrypted = config.encrypted || defaults.neo4j.encrypted;
-		this._trust = config.trust || defaults.neo4j.trust;
-		this._driver = Neo4j.driver(
-			config.server_url || defaults.neo4j.neo4jUri,
-			Neo4j.auth.basic(config.server_user || defaults.neo4j.neo4jUser, config.server_password || defaults.neo4j.neo4jPassword),
+		this._driver = config.neo4j ?? Neo4j.driver(
+			config.neo4j?.server_url ?? defaults.neo4jUri,
+			Neo4j.auth.basic(
+				config.neo4j?.server_user ?? defaults.neo4j.neo4jUser,
+				config.neo4j?.server_password ?? defaults.neo4j.neo4jPassword
+			),
 			{
-				encrypted: this._encrypted,
-				trust: this._trust,
+				encrypted: config.neo4j?.encrypted ?? defaults.neo4j.encrypted,
+				trust: config.neo4j?.trust ?? defaults.neo4j.trust,
 				maxConnectionPoolSize: 100,
 				connectionAcquisitionTimeout: 10000,
 				disableLosslessIntegers: true,
 			}
 		);
 		this._database = config.server_database;
-		this._query = config.initial_cypher || defaults.neo4j.initialQuery;
+		this._query = config.initial_cypher ?? defaults.neo4j.initialQuery;
 		this._container = document.getElementById(config.container_id);
 	}
 
