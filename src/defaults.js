@@ -24,7 +24,7 @@ const defaults = {
 		},
 		edges: {
 			arrows: {
-				to: { enabled: false } // FIXME: handle default value
+				to: { enabled: false }
 			},
 			length: 200
 		},

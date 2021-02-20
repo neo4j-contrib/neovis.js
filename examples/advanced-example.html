@@ -31,34 +31,42 @@
 		// draw
 
 
-
-
 		var viz;
 
 		function draw() {
 			var config = {
 				container_id: 'viz',
-                neo4j: {
+				neo4j: {
 					server_url: 'bolt://localhost:7687',
 					server_user: 'neo4j',
 					server_password: 'gland-presentation-worry',
+					encrypted: "ENCRYPTION_OFF"
+				},
+				visConfig: {
+					nodes: {
+						shape: 'square'
+					},
+					edges: {
+						arrows: {
+							to: {enabled: true}
+						}
+					},
 				},
 				labels: {
 					//"Character": "name",
 					'Character': {
-						'value': 'pagerank',
+						'label': 'pagerank',
 						'group': 'community',
 						//'label': 'name',
 						//"sizeCypher": "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
 						[NeoVis.NEOVIS_ADVANCED_CONFIG]: {
-							'static': {
-								'shape': 'dot',
-                                'label': '12'
+							cypher: {
+								value: "MATCH (n) WHERE id(n) = $id RETURN n.size"
 							},
 							'function': {
 								'title': (node) => {
 									return viz.nodeToHtml(node, undefined);
-                                }
+								}
 							},
 						}
 					}
@@ -76,7 +84,7 @@
 						}
 					}
 				},
-				initial_cypher: 'MATCH (n)-[r:INTERACTS]->(m) where id(n) < 40 and id(m) < 40 RETURN n,r,m'
+				initial_cypher: 'MATCH (n)-[r]->(m) RETURN n,r,m'
 			};
 
 			viz = new NeoVis.default(config);
