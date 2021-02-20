@@ -1,78 +1,84 @@
-import {Node as VisNode, Edge as VisEdge, Options as visNetworkOptions, DataSet, Network} from "vis-network";
-import { Node as Neo4jNode, Relationship as Neo4jRelationship, Driver as Neo4jDriver } from "neo4j-driver";
+import * as VisNetwork from "vis-network";
+import * as Neo4j from "neo4j-driver";
 
 export const NEOVIS_DEFAULT_CONFIG: unique symbol;
 export const NEOVIS_ADVANCED_CONFIG: unique symbol;
 
-type RecursiveMapTo<T, New> = {
+export type RecursiveMapTo<T, New> = {
     [P in keyof T]: T[P] extends object ? RecursiveMapTo<T[P], New> : New
 };
 
-type RecursiveMapToFunction<T, NEO_TYPE> = {
+export type RecursiveMapToFunction<T, NEO_TYPE> = {
     [P in keyof T]: T[P] extends object ? ((node: NEO_TYPE) => T[P]) | (RecursiveMapToFunction<T[P], NEO_TYPE>) : (node: NEO_TYPE) => T[P]
 };
 
-type Cypher = string;
+export type Cypher = string;
 
-interface INeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> {
+export interface NeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> {
+    /**
+     * Static values that will the same for every node/relationship
+    * */
     static?: VIS_TYPE;
+    /**
+     * Cypher that will be called for every object (will look the same as
+     */
     cypher?: RecursiveMapTo<VIS_TYPE, Cypher>;
     function?: RecursiveMapToFunction<VIS_TYPE, NEO_TYPE>;
 }
 
-export interface ILabelConfig extends RecursiveMapTo<VisNode, string> {
-    [NEOVIS_ADVANCED_CONFIG]?: INeoVisAdvanceConfig<VisNode, Neo4jNode<number>>;
+export interface LabelConfig extends RecursiveMapTo<VisNetwork.Node, string> {
+    [NEOVIS_ADVANCED_CONFIG]?: NeoVisAdvanceConfig<VisNetwork.Node, Neo4j.Node<number>>;
 }
 
-export interface IRelationshipConfig extends RecursiveMapTo<VisEdge, string>{
-    [NEOVIS_ADVANCED_CONFIG]?: INeoVisAdvanceConfig<VisEdge, Neo4jRelationship<number>>;
+export interface RelationshipConfig extends RecursiveMapTo<VisNetwork.Edge, string>{
+    [NEOVIS_ADVANCED_CONFIG]?: NeoVisAdvanceConfig<VisNetwork.Edge, Neo4j.Relationship<number>>;
 }
 
-export interface INeovisConfig {
+export interface NeovisConfig {
     container_id: string;
     server_database: string;
-    neo4j: Neo4jDriver | {
+    neo4j: Neo4j.Driver | {
         server_url: string;
         server_user: string;
         server_password: string;
         encrypted?: "ENCRYPTION_OFF" | "ENCRYPTION_ON";
         trust?: "TRUST_ALL_CERTIFICATES" | "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES";
     };
-    visConfig: visNetworkOptions;
+    visConfig: VisNetwork.Options;
     labels?: {
-        [label: string]: ILabelConfig,
-        [NEOVIS_DEFAULT_CONFIG]?: IRelationshipConfig
+        [label: string]: LabelConfig,
+        [NEOVIS_DEFAULT_CONFIG]?: LabelConfig
     };
     relationships?: {
-        [relationship: string]: IRelationshipConfig,
-        [NEOVIS_DEFAULT_CONFIG]?: IRelationshipConfig
+        [relationship: string]: RelationshipConfig,
+        [NEOVIS_DEFAULT_CONFIG]?: RelationshipConfig
     };
-    initial_cypher?: string;
+    initial_cypher?: Cypher;
     console_debug?: boolean;
 }
 
-export interface INode extends VisNode {
-    raw: Neo4jNode
+export interface Node extends VisNetwork.Node {
+    raw: Neo4j.Node
 }
 
-export interface IEdge extends VisEdge {
-    raw: Neo4jRelationship
+export interface Edge extends VisNetwork.Edge {
+    raw: Neo4j.Relationship
 }
 
 declare class Neovis {
-    constructor(config: INeovisConfig);
-    get nodes(): DataSet<INode>;
-    get edges(): DataSet<IEdge>;
-    get network(): Network;
+    constructor(config: NeovisConfig);
+    get nodes(): VisNetwork.DataSet<Node>;
+    get edges(): VisNetwork.DataSet<Edge>;
+    get network(): VisNetwork.Network | undefined;
     render(): void;
     clearNetwork(): void;
     registerOnEvent(eventType: string, handler: (event: any) => void): void;
-    reinit(config: INeovisConfig): void;
+    reinit(config: NeovisConfig): void;
     reload(): void;
     stabilize(): void;
-    renderWithCypher(query: string): void;
-    updateWithCypher(query: string): void;
-    nodeToHtml(neo4jNode: Neo4jNode, title_properties: [string]): string;
+    renderWithCypher(query: Cypher): void;
+    updateWithCypher(query: Cypher): void;
+    nodeToHtml(neo4jNode: Neo4j.Node, title_properties: [string]): string;
 }
 
 export default Neovis;
