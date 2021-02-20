@@ -12,6 +12,8 @@ globals:
 parserOptions:
   ecmaVersion: 2020
   sourceType: module
+ignorePatterns:
+  - docs/
 plugins:
   - jest
 rules:
