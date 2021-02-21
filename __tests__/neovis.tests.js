@@ -1,7 +1,7 @@
 import Neo4j, * as Neo4jMock from 'neo4j-driver';
 import Neovis from '../src/neovis';
 import { NEOVIS_DEFAULT_CONFIG, NEOVIS_ADVANCED_CONFIG } from '../src/neovis';
-import { CompletionEvent } from '../src/events';
+import { NeoVisEvents } from '../src/events';
 import * as testUtils from './testUtils';
 
 jest.mock('neo4j-driver');
@@ -119,7 +119,7 @@ describe('Neovis', () => {
 		it('should call completed when complete', () => new Promise(done => {
 			testUtils.mockNormalRunSubscribe();
 			neovis.render();
-			neovis.registerOnEvent(CompletionEvent, () => {
+			neovis.registerOnEvent(NeoVisEvents.CompletionEvent, () => {
 				expect(true).toBe(true);
 				done();
 			});

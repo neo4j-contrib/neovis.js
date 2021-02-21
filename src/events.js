@@ -1,16 +1,18 @@
-export const CompletionEvent = 'completed';
-export const ClickNodeEvent = 'clickNode';
-export const ClickEdgeEvent = 'clickEdge';
-export const ErrorEvent = 'error';
+export const NeoVisEvents = Object.freeze({
+	CompletionEvent: 'completed',
+	ClickNodeEvent: 'clickNode',
+	ClickEdgeEvent: 'clickEdge',
+	ErrorEvent: 'error'
+});
 
 export class EventController {
 
 	constructor() {
 		this._handlers = {
-			[CompletionEvent]: [],
-			[ErrorEvent]: [],
-			[ClickNodeEvent]: [],
-			[ClickEdgeEvent]: [],
+			[NeoVisEvents.CompletionEvent]: [],
+			[NeoVisEvents.ErrorEvent]: [],
+			[NeoVisEvents.ClickNodeEvent]: [],
+			[NeoVisEvents.ClickEdgeEvent]: [],
 		};
 	}
 

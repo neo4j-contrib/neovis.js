@@ -39,8 +39,7 @@
 				neo4j: {
 					server_url: 'bolt://localhost:7687',
 					server_user: 'neo4j',
-					server_password: 'gland-presentation-worry',
-					encrypted: "ENCRYPTION_OFF"
+					server_password: 'gland-presentation-worry'
 				},
 				visConfig: {
 					nodes: {
@@ -53,18 +52,15 @@
 					},
 				},
 				labels: {
-					//"Character": "name",
-					'Character': {
-						'label': 'pagerank',
-						'group': 'community',
-						//'label': 'name',
-						//"sizeCypher": "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
+					Character: {
+						label: 'pagerank',
+						group: 'community',
 						[NeoVis.NEOVIS_ADVANCED_CONFIG]: {
 							cypher: {
 								value: "MATCH (n) WHERE id(n) = $id RETURN n.size"
 							},
-							'function': {
-								'title': (node) => {
+							function: {
+								title: (node) => {
 									return viz.nodeToHtml(node, undefined);
 								}
 							},
@@ -72,12 +68,11 @@
 					}
 				},
 				relationships: {
-					'INTERACTS': {
-						'value': 'weight',
-						//"sizeCypher": "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
+					INTERACTS: {
+						value: 'weight',
 						[NeoVis.NEOVIS_ADVANCED_CONFIG]: {
-							'function': {
-								'title': (edge) => {
+							function: {
+								title: (edge) => {
 									return viz.nodeToHtml(edge, undefined);
 								}
 							},

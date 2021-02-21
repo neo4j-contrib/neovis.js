@@ -10,8 +10,13 @@ const defaults = {
 		neo4jUri: 'bolt://localhost:7687',
 		neo4jUser: 'neo4j',
 		neo4jPassword: 'neo4j',
-		encrypted: 'ENCRYPTION_OFF',
-		trust: 'TRUST_ALL_CERTIFICATES'
+		driverConfig: {
+			encrypted: 'ENCRYPTION_OFF',
+			trust: 'TRUST_ALL_CERTIFICATES',
+			maxConnectionPoolSize: 100,
+			connectionAcquisitionTimeout: 10000,
+			disableLosslessIntegers: true,
+		}
 	},
 
 	visJs: {
