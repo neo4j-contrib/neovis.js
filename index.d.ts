@@ -262,7 +262,7 @@ export interface Edge extends VisNetwork.Edge {
     raw: Neo4j.Relationship
 }
 
-export declare class Neovis {
+export declare class NeoVis {
     constructor(config: NeovisConfig);
 
     /**
@@ -337,4 +337,4 @@ export declare class Neovis {
     nodeToHtml(neo4jNode: Neo4j.Node, title_properties: [string]): string;
 }
 
-export default Neovis;
+export default NeoVis;

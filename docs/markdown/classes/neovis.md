@@ -1,6 +1,6 @@
-[neovis.js](../README.md) / Neovis
+[neovis.js](../README.md) / NeoVis
 
-# Class: Neovis
+# Class: NeoVis
 
 ## Table of contents
 
@@ -30,7 +30,7 @@
 
 ### constructor
 
-\+ **new Neovis**(`config`: [*NeovisConfig*](../interfaces/neovisconfig.md)): [*Neovis*](neovis.md)
+\+ **new NeoVis**(`config`: [*NeovisConfig*](../interfaces/neovisconfig.md)): [*NeoVis*](neovis.md)
 
 #### Parameters:
 
@@ -38,9 +38,9 @@ Name | Type |
 :------ | :------ |
 `config` | [*NeovisConfig*](../interfaces/neovisconfig.md) |
 
-**Returns:** [*Neovis*](neovis.md)
+**Returns:** [*NeoVis*](neovis.md)
 
-Defined in: [index.d.ts:265](https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L265)
+Defined in: [index.d.ts:265](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L265)
 
 ## Accessors
 
@@ -54,7 +54,7 @@ All view edges as DataSet
 
 **Returns:** *DataSet*<[*Edge*](../interfaces/edge.md), *id*\>
 
-Defined in: [index.d.ts:278](https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L278)
+Defined in: [index.d.ts:278](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L278)
 
 ___
 
@@ -68,7 +68,7 @@ The vis network object
 
 **Returns:** *Network*
 
-Defined in: [index.d.ts:284](https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L284)
+Defined in: [index.d.ts:284](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L284)
 
 ___
 
@@ -82,7 +82,7 @@ All view nodes as DataSet
 
 **Returns:** *DataSet*<[*Node*](../interfaces/node.md), *id*\>
 
-Defined in: [index.d.ts:272](https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L272)
+Defined in: [index.d.ts:272](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L272)
 
 ## Methods
 
@@ -94,7 +94,7 @@ Clear the data for the visualization
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:294](https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L294)
+Defined in: [index.d.ts:294](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L294)
 
 ___
 
@@ -113,7 +113,7 @@ Name | Type | Description |
 
 **Returns:** *string*
 
-Defined in: [index.d.ts:337](https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L337)
+Defined in: [index.d.ts:337](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L337)
 
 ___
 
@@ -130,7 +130,7 @@ Name | Type | Description |
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:301](https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L301)
+Defined in: [index.d.ts:301](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L301)
 
 ___
 
@@ -148,7 +148,7 @@ Name | Type |
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:307](https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L307)
+Defined in: [index.d.ts:307](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L307)
 
 ___
 
@@ -160,7 +160,7 @@ Clear the network and fetch live data form the server and reload the visualizati
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:312](https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L312)
+Defined in: [index.d.ts:312](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L312)
 
 ___
 
@@ -172,7 +172,7 @@ Renders the network
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:289](https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L289)
+Defined in: [index.d.ts:289](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L289)
 
 ___
 
@@ -190,7 +190,7 @@ Name | Type |
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:323](https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L323)
+Defined in: [index.d.ts:323](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L323)
 
 ___
 
@@ -202,7 +202,7 @@ Stabilize the visualization
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:317](https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L317)
+Defined in: [index.d.ts:317](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L317)
 
 ___
 
@@ -221,4 +221,4 @@ Name | Type |
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:330](https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L330)
+Defined in: [index.d.ts:330](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L330)

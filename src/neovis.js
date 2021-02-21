@@ -11,7 +11,7 @@ export const NEOVIS_ADVANCED_CONFIG = Symbol();
 
 export { NeoVisEvents } from './events';
 
-export default class NeoVis {
+export class NeoVis {
 	_data = {
 		nodes: new vis.DataSet(),
 		edges: new vis.DataSet()
@@ -487,3 +487,5 @@ export default class NeoVis {
 		return title;
 	}
 }
+
+export default NeoVis;
