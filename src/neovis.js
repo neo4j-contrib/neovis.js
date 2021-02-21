@@ -395,13 +395,13 @@ export default class NeoVis {
 							let nodeId = this.getNodeAt(params.pointer.DOM);
 							neoVis.#events.generateEvent(ClickNodeEvent, {
 								nodeId: nodeId,
-								node: neoVis._nodes[nodeId]
+								node: neoVis._data.nodes.get(nodeId)
 							});
 						} else if (params.edges.length > 0) {
 							let edgeId = this.getEdgeAt(params.pointer.DOM);
 							neoVis.#events.generateEvent(ClickEdgeEvent, {
 								edgeId: edgeId,
-								edge: neoVis._edges[edgeId]
+								edge: neoVis._data.edges.get(edgeId)
 							});
 						}
 					});
@@ -417,11 +417,8 @@ export default class NeoVis {
 	 * Clear the data for the visualization
 	 */
 	clearNetwork() {
-		this._neo4jNodes = {};
-		this._neo4jEdges = {};
-		this._nodes = {};
-		this._edges = {};
-		this.#network.setData([]);
+		this._data.nodes.clear();
+		this._data.edges.clear();
 	}
 
 
