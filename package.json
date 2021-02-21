@@ -23,7 +23,9 @@
     "build:dev": "run-p build:dev:*",
     "build:dev:with-dependencies": "cross-env BUILD_WITH_DEPENDENCIES=true webpack --mode=development",
     "build:dev:without-dependencies": "webpack --mode=development",
-    "typedoc": "typedoc index.d.ts"
+    "typedoc": "run-p typedoc:*",
+    "typedoc:html": "typedoc index.d.ts --out docs/html --plugin none",
+    "typedoc:markdown": "typedoc index.d.ts --out docs/markdown --plugin typedoc-plugin-markdown --readme none"
   },
   "repository": {
     "type": "git",
@@ -58,6 +60,7 @@
     "rimraf": "^3.0.2",
     "style-loader": "^2.0.0",
     "typedoc": "^0.20.27",
+    "typedoc-plugin-markdown": "^3.5.0",
     "typescript": "^4.1.5",
     "url-loader": "^4.1.1",
     "vis-data": "^7.1.2",

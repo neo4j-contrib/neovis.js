@@ -62,9 +62,21 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
+							<h3>References</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-reference"><a href="modules.html#default" class="tsd-kind-icon">default</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Enumerations</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-enum"><a href="enums/neovisevents.html" class="tsd-kind-icon">Neo<wbr>Vis<wbr>Events</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Classes</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-class"><a href="classes/default.html" class="tsd-kind-icon">default</a></li>
+								<li class="tsd-kind-class"><a href="classes/neovis.html" class="tsd-kind-icon">Neovis</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -72,6 +84,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-interface"><a href="interfaces/edge.html" class="tsd-kind-icon">Edge</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/labelconfig.html" class="tsd-kind-icon">Label<wbr>Config</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/neo4jconfig.html" class="tsd-kind-icon">Neo4j<wbr>Config</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/neovisadvanceconfig.html" class="tsd-kind-icon">Neo<wbr>Vis<wbr>Advance<wbr>Config</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/neovisconfig.html" class="tsd-kind-icon">Neovis<wbr>Config</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/node.html" class="tsd-kind-icon">Node</a></li>
@@ -97,6 +110,14 @@
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
+				<h2>References</h2>
+				<section class="tsd-panel tsd-member tsd-kind-reference">
+					<a name="default" class="tsd-anchor"></a>
+					<h3>default</h3>
+					Renames and exports <a href="classes/neovis.html">Neovis</a>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Type aliases</h2>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias">
 					<a name="cypher" class="tsd-anchor"></a>
@@ -104,9 +125,14 @@
 					<div class="tsd-signature tsd-kind-icon">Cypher<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/thebestnom/neovis.js/blob/3d37831/index.d.ts#L15">index.d.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L39">index.d.ts:39</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Cypher quarry</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
 					<a name="recursivemapto" class="tsd-anchor"></a>
@@ -114,35 +140,66 @@
 					<div class="tsd-signature tsd-kind-icon">Recursive<wbr>Map<wbr>To&lt;T, New&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span><span class="tsd-signature-symbol">[ </span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol"> in </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> ? </span><a href="modules.html#recursivemapto" class="tsd-signature-type" data-tsd-kind="Type alias">RecursiveMapTo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">New</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">New</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/thebestnom/neovis.js/blob/3d37831/index.d.ts#L7">index.d.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L22">index.d.ts:22</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Maps a type recursively and replace each non object type with the new type</p>
+						</div>
+					</div>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
 					<ul class="tsd-type-parameters">
 						<li>
 							<h4>T</h4>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>type to map</p>
+								</div>
+							</div>
 						</li>
 						<li>
 							<h4>New</h4>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>type to map to for each non object type</p>
+								</div>
+							</div>
 						</li>
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
 					<a name="recursivemaptofunction" class="tsd-anchor"></a>
 					<h3>Recursive<wbr>Map<wbr>ToFunction</h3>
-					<div class="tsd-signature tsd-kind-icon">Recursive<wbr>Map<wbr>ToFunction&lt;T, NEO_TYPE&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span><span class="tsd-signature-symbol">[ </span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol"> in </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">NEO_TYPE</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> | </span><a href="modules.html#recursivemaptofunction" class="tsd-signature-type" data-tsd-kind="Type alias">RecursiveMapToFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">NEO_TYPE</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">NEO_TYPE</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> }</span></div>
+					<div class="tsd-signature tsd-kind-icon">Recursive<wbr>Map<wbr>ToFunction&lt;T, PARAM_TYPE&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span><span class="tsd-signature-symbol">[ </span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol"> in </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>param<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PARAM_TYPE</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> | </span><a href="modules.html#recursivemaptofunction" class="tsd-signature-type" data-tsd-kind="Type alias">RecursiveMapToFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">PARAM_TYPE</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-symbol">(</span>param<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PARAM_TYPE</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/thebestnom/neovis.js/blob/3d37831/index.d.ts#L11">index.d.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L32">index.d.ts:32</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Maps a type recursively and adds the ability for each object property to be a function that returns the same type
+							but replace each non object type with a function that returns the same type</p>
+						</div>
+					</div>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
 					<ul class="tsd-type-parameters">
 						<li>
 							<h4>T</h4>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>type to map</p>
+								</div>
+							</div>
 						</li>
 						<li>
-							<h4>NEO_TYPE</h4>
+							<h4>PARAM_TYPE</h4>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>type of parameter the functions get</p>
+								</div>
+							</div>
 						</li>
 					</ul>
 				</section>
@@ -155,7 +212,7 @@
 					<div class="tsd-signature tsd-kind-icon">NEOVIS_<wbr>ADVANCED_<wbr>CONFIG<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">unique </span><span class="tsd-signature-type">symbol</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/thebestnom/neovis.js/blob/3d37831/index.d.ts#L5">index.d.ts:5</a></li>
+							<li>Defined in <a href="https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L5">index.d.ts:5</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -165,7 +222,7 @@
 					<div class="tsd-signature tsd-kind-icon">NEOVIS_<wbr>DEFAULT_<wbr>CONFIG<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">unique </span><span class="tsd-signature-type">symbol</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/thebestnom/neovis.js/blob/3d37831/index.d.ts#L4">index.d.ts:4</a></li>
+							<li>Defined in <a href="https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L4">index.d.ts:4</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -181,14 +238,23 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-reference">
+						<a href="modules.html#default" class="tsd-kind-icon">default</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/neovisevents.html" class="tsd-kind-icon">Neo<wbr>Vis<wbr>Events</a>
+					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/default.html" class="tsd-kind-icon">default</a>
+						<a href="classes/neovis.html" class="tsd-kind-icon">Neovis</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/edge.html" class="tsd-kind-icon">Edge</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/labelconfig.html" class="tsd-kind-icon">Label<wbr>Config</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/neo4jconfig.html" class="tsd-kind-icon">Neo4j<wbr>Config</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/neovisadvanceconfig.html" class="tsd-kind-icon">Neo<wbr>Vis<wbr>Advance<wbr>Config</a>

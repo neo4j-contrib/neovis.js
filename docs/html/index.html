@@ -1,0 +1,330 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>neovis.js</title>
+	<meta name="description" content="Documentation for neovis.js">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+	<script async src="assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">neovis.js</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<h1>neovis.js</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#neovisjs" id="neovisjs" style="color: inherit; text-decoration: none;">
+					<h1>neovis.js</h1>
+				</a>
+				<p><a href=""><img src="https://github.com/neo4j-contrib/neovis.js/workflows/CI/badge.svg?branch=master" alt="Actions Build Status"></a><a href="https://badge.fury.io/js/neovis.js"><img src="https://badge.fury.io/js/neovis.js.svg" alt="npm version"></a></p>
+				<p>Graph visualizations powered by vis.js with data from Neo4j.</p>
+				<p><img src="img/example-viz.png" alt=""></p>
+				<a href="#features" id="features" style="color: inherit; text-decoration: none;">
+					<h2>Features</h2>
+				</a>
+				<ul>
+					<li><input checked="" disabled="" type="checkbox"> Connect to Neo4j instance to get live data</li>
+					<li><input checked="" disabled="" type="checkbox"> User specified labels and property to be displayed</li>
+					<li><input checked="" disabled="" type="checkbox"> User specified Cypher query to populate</li>
+					<li><input checked="" disabled="" type="checkbox"> Specify node property for url of image for node</li>
+					<li><input checked="" disabled="" type="checkbox"> Specify edge property for edge thickness</li>
+					<li><input checked="" disabled="" type="checkbox"> Specify node property for community / clustering</li>
+					<li><input checked="" disabled="" type="checkbox"> Specify node property for node size</li>
+					<li><input checked="" disabled="" type="checkbox"> Configure popover</li>
+				</ul>
+				<a href="#install" id="install" style="color: inherit; text-decoration: none;">
+					<h2>Install</h2>
+				</a>
+				<p>Neovis.js can be installed via npm:</p>
+				<pre><code class="language-bash"><span style="color: #000000">npm install --save neovis.js</span>
+</code></pre>
+				<p>you can also obtain neovis.js via CDN:</p>
+				<a href="#cdn" id="cdn" style="color: inherit; text-decoration: none;">
+					<h2>CDN</h2>
+				</a>
+				<p>For ease of use Neovis.js can be obtained from Neo4jLabs CDN:</p>
+				<p><em>Most recent release</em></p>
+				<pre><code class="language-html">
+<span style="color: #800000">&lt;script</span><span style="color: #000000FF"> </span><span style="color: #FF0000">src</span><span style="color: #000000FF">=</span><span style="color: #0000FF">&quot;https://cdn.neo4jlabs.com/neovis.js/v1.5.0/neovis.js&quot;</span><span style="color: #800000">&gt;&lt;/script&gt;</span>
+</code></pre>
+				<p><em>Version without neo4j-driver dependency</em></p>
+				<pre><code class="language-html">
+<span style="color: #800000">&lt;script</span><span style="color: #000000FF"> </span><span style="color: #FF0000">src</span><span style="color: #000000FF">=</span><span style="color: #0000FF">&quot;https://cdn.neo4jlabs.com/neovis.js/v1.5.0/neovis-without-dependencies.js&quot;</span><span style="color: #800000">&gt;&lt;/script&gt;</span>
+</code></pre>
+				<a href="#quickstart-example" id="quickstart-example" style="color: inherit; text-decoration: none;">
+					<h2>Quickstart Example</h2>
+				</a>
+				<p>Let&#39;s go through the steps to reproduce this visualization:</p>
+				<p><img src="img/example-viz.png" alt=""></p>
+				<a href="#prepare-neo4j" id="prepare-neo4j" style="color: inherit; text-decoration: none;">
+					<h3>Prepare Neo4j</h3>
+				</a>
+				<p>Start with a blank Neo4j instance, or spin up a blank <a href="https://neo4jsandbox.com">Neo4j Sandbox</a>. We&#39;ll load the Game of
+				Thrones dataset, run:</p>
+				<pre><code class="language-cypher">
+LOAD CSV WITH HEADERS FROM &#39;https://raw.githubusercontent.com/mathbeveridge/asoiaf/master/data/asoiaf-all-edges.csv&#39;
+AS row
+MERGE (src:Character {name: row.Source})
+MERGE (tgt:Character {name: row.Target})
+MERGE (src)-[r:INTERACTS]-&gt;(tgt)
+  ON CREATE SET r.weight = toInteger(row.weight)
+</code></pre>
+				<p>We&#39;ve pre-calculated PageRank and ran a community detection algorithm to assign community ids for each Character. Let&#39;s
+				load those next:</p>
+				<pre><code class="language-cypher">
+LOAD CSV WITH HEADERS FROM &#39;https://raw.githubusercontent.com/johnymontana/neovis.js/master/examples/data/got-centralities.csv&#39;
+AS row
+MATCH (c:Character {name: row.name})
+SET c.community = toInteger(row.community),
+c.pagerank = toFloat(row.pagerank)
+</code></pre>
+				<p>Our graph now consists of <code>Character</code> nodes that are connected by an <code>INTERACTS</code> relationships. We can visualize the
+				whole graph in Neo4j Browser by running:</p>
+				<pre><code class="language-cypher">
+MATCH p = (:Character)-[:INTERACTS]-&gt;(:Character)
+RETURN p
+</code></pre>
+				<p><img src="/img/got-neo4j-browser.png" alt=""></p>
+				<p>We can see characters that are connected and with the help of the force directed layout we can begin to see clusters in
+					the graph. However, we want to visualize the centralities (PageRank) and community detection results that we also
+				imported.</p>
+				<p>Specifically we would like:</p>
+				<ul>
+					<li>Node size to be proportional to the Character&#39;s <code>pagerank</code> score. This will allow us to quickly identify important
+					nodes in the network.</li>
+					<li>Node color to determined by the <code>community</code> property. This will allow us to visualize clusters.</li>
+					<li>Relationship thickeness should be proportional to the <code>weight</code> property on the <code>INTERACTS</code> relationship.</li>
+				</ul>
+				<p>Neovis.js, by combining the JavaScript driver for Neo4j and the vis.js visualization library will allow us to build this
+				visualization.</p>
+				<a href="#indexhtml" id="indexhtml" style="color: inherit; text-decoration: none;">
+					<h3>index.html</h3>
+				</a>
+				<p>Create a new html file:</p>
+				<pre><code class="language-html"><span style="color: #800000">&lt;!doctype</span><span style="color: #000000"> </span><span style="color: #FF0000">html</span><span style="color: #800000">&gt;</span>
+<span style="color: #800000">&lt;html&gt;</span>
+<span style="color: #800000">&lt;head&gt;</span>
+<span style="color: #000000">    </span><span style="color: #800000">&lt;title&gt;</span><span style="color: #000000">Neovis.js Simple Example</span><span style="color: #800000">&lt;/title&gt;</span>
+<span style="color: #000000">    </span><span style="color: #800000">&lt;style</span><span style="color: #000000FF"> </span><span style="color: #FF0000">type</span><span style="color: #000000FF">=</span><span style="color: #0000FF">&quot;text/css&quot;</span><span style="color: #800000">&gt;</span>
+<span style="color: #000000FF">        </span><span style="color: #800000">html</span><span style="color: #000000FF">, </span><span style="color: #800000">body</span><span style="color: #000000FF"> {</span>
+<span style="color: #000000FF">            </span><span style="color: #FF0000">font</span><span style="color: #000000FF">: </span><span style="color: #098658">16pt</span><span style="color: #000000FF"> </span><span style="color: #0451A5">arial</span><span style="color: #000000FF">;</span>
+<span style="color: #000000FF">        }</span>
+
+<span style="color: #000000FF">        </span><span style="color: #800000">#viz</span><span style="color: #000000FF"> {</span>
+<span style="color: #000000FF">            </span><span style="color: #FF0000">width</span><span style="color: #000000FF">: </span><span style="color: #098658">900px</span><span style="color: #000000FF">;</span>
+<span style="color: #000000FF">            </span><span style="color: #FF0000">height</span><span style="color: #000000FF">: </span><span style="color: #098658">700px</span><span style="color: #000000FF">;</span>
+<span style="color: #000000FF">            </span><span style="color: #FF0000">border</span><span style="color: #000000FF">: </span><span style="color: #098658">1px</span><span style="color: #000000FF"> </span><span style="color: #0451A5">solid</span><span style="color: #000000FF"> </span><span style="color: #0451A5">lightgray</span><span style="color: #000000FF">;</span>
+<span style="color: #000000FF">            </span><span style="color: #FF0000">font</span><span style="color: #000000FF">: </span><span style="color: #098658">22pt</span><span style="color: #000000FF"> </span><span style="color: #0451A5">arial</span><span style="color: #000000FF">;</span>
+<span style="color: #000000FF">        }</span>
+<span style="color: #000000FF">    </span><span style="color: #800000">&lt;/style&gt;</span>
+<span style="color: #800000">&lt;/head&gt;</span>
+<span style="color: #800000">&lt;body</span><span style="color: #000000"> </span><span style="color: #FF0000">onload</span><span style="color: #000000">=</span><span style="color: #0000FF">&quot;</span><span style="color: #795E26">draw</span><span style="color: #0000FF">()&quot;</span><span style="color: #800000">&gt;</span>
+<span style="color: #800000">&lt;div</span><span style="color: #000000"> </span><span style="color: #FF0000">id</span><span style="color: #000000">=</span><span style="color: #0000FF">&quot;viz&quot;</span><span style="color: #800000">&gt;&lt;/div&gt;</span>
+<span style="color: #800000">&lt;/body&gt;</span>
+<span style="color: #800000">&lt;/html&gt;</span>
+
+</code></pre>
+				<p>We define some basic CSS to specify the boundaries of a <code>div</code> and then create a single <code>div</code> in the body. We also
+				specify <code>onload=&quot;draw()&quot;</code> so that the <code>draw()</code> function is called as soon as the body is loaded.</p>
+				<p>We need to pull in <code>neovis.js</code>:</p>
+				<pre><code class="language-html">
+<span style="color: #800000">&lt;script</span><span style="color: #000000FF"> </span><span style="color: #FF0000">src</span><span style="color: #000000FF">=</span><span style="color: #0000FF">&quot;https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js&quot;</span><span style="color: #800000">&gt;&lt;/script&gt;</span>
+</code></pre>
+				<p>And define our draw() function:</p>
+				<pre><code class="language-html">
+<span style="color: #800000">&lt;script</span><span style="color: #000000FF"> </span><span style="color: #FF0000">type</span><span style="color: #000000FF">=</span><span style="color: #0000FF">&quot;text/javascript&quot;</span><span style="color: #800000">&gt;</span>
+
+<span style="color: #000000FF">    </span><span style="color: #0000FF">let</span><span style="color: #000000FF"> </span><span style="color: #001080">neoViz</span><span style="color: #000000FF">;</span>
+
+<span style="color: #000000FF">    </span><span style="color: #0000FF">function</span><span style="color: #000000FF"> </span><span style="color: #795E26">draw</span><span style="color: #000000FF">() {</span>
+<span style="color: #000000FF">        </span><span style="color: #0000FF">const</span><span style="color: #000000FF"> </span><span style="color: #0070C1">config</span><span style="color: #000000FF"> </span><span style="color: #000000">=</span><span style="color: #000000FF"> {</span>
+<span style="color: #000000FF">            </span><span style="color: #001080">container_id:</span><span style="color: #000000FF"> </span><span style="color: #A31515">&quot;viz&quot;</span><span style="color: #000000FF">,</span>
+<span style="color: #000000FF">            </span><span style="color: #001080">neo4j:</span><span style="color: #000000FF"> {</span>
+<span style="color: #000000FF">                </span><span style="color: #001080">server_url:</span><span style="color: #000000FF"> </span><span style="color: #A31515">&quot;bolt://localhost:7687&quot;</span><span style="color: #000000FF">,</span>
+<span style="color: #000000FF">                </span><span style="color: #001080">server_user:</span><span style="color: #000000FF"> </span><span style="color: #A31515">&quot;neo4j&quot;</span><span style="color: #000000FF">,</span>
+<span style="color: #000000FF">                </span><span style="color: #001080">server_password:</span><span style="color: #000000FF"> </span><span style="color: #A31515">&quot;sorts-swims-burglaries&quot;</span><span style="color: #000000FF">,</span>
+<span style="color: #000000FF">            }</span>
+<span style="color: #000000FF">            </span><span style="color: #001080">labels</span><span style="color: #000000FF">: {</span>
+<span style="color: #000000FF">                </span><span style="color: #001080">Character:</span><span style="color: #000000FF"> {</span>
+<span style="color: #000000FF">                    </span><span style="color: #001080">label:</span><span style="color: #000000FF"> </span><span style="color: #A31515">&quot;name&quot;</span><span style="color: #000000FF">,</span>
+<span style="color: #000000FF">                    </span><span style="color: #001080">value:</span><span style="color: #000000FF"> </span><span style="color: #A31515">&quot;pagerank&quot;</span><span style="color: #000000FF">,</span>
+<span style="color: #000000FF">                    </span><span style="color: #001080">group:</span><span style="color: #000000FF"> </span><span style="color: #A31515">&quot;community&quot;</span><span style="color: #000000FF">,</span>
+<span style="color: #000000FF">                    </span><span style="color: #001080">[NeoVis.</span><span style="color: #0070C1">NEOVIS_ADVANCED_CONFIG</span><span style="color: #001080">]:</span><span style="color: #000000FF"> {</span>
+<span style="color: #000000FF">                        </span><span style="color: #001080">function:</span><span style="color: #000000FF"> {</span>
+<span style="color: #000000FF">                            </span><span style="color: #795E26">title</span><span style="color: #001080">:</span><span style="color: #000000FF"> (</span><span style="color: #001080">node</span><span style="color: #000000FF">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000FF"> </span><span style="color: #001080">viz</span><span style="color: #000000FF">.</span><span style="color: #795E26">nodeToHtml</span><span style="color: #000000FF">(</span><span style="color: #001080">node</span><span style="color: #000000FF">, [</span>
+<span style="color: #000000FF">                                </span><span style="color: #A31515">&quot;name&quot;</span><span style="color: #000000FF">,</span>
+<span style="color: #000000FF">                                </span><span style="color: #A31515">&quot;pagerank&quot;</span>
+<span style="color: #000000FF">                            ])</span>
+<span style="color: #000000FF">                        }</span>
+<span style="color: #000000FF">                    }</span>
+<span style="color: #000000FF">                }</span>
+<span style="color: #000000FF">            },</span>
+<span style="color: #000000FF">            </span><span style="color: #001080">relationships:</span><span style="color: #000000FF"> {</span>
+<span style="color: #000000FF">                </span><span style="color: #001080">INTERACTS:</span><span style="color: #000000FF"> {</span>
+<span style="color: #000000FF">                    </span><span style="color: #001080">value:</span><span style="color: #000000FF"> </span><span style="color: #A31515">&quot;weight&quot;</span>
+<span style="color: #000000FF">                }</span>
+<span style="color: #000000FF">            },</span>
+<span style="color: #000000FF">            </span><span style="color: #001080">initial_cypher:</span><span style="color: #000000FF"> </span><span style="color: #A31515">&quot;MATCH (n)-[r:INTERACTS]-&gt;(m) RETURN *&quot;</span>
+<span style="color: #000000FF">        };</span>
+
+<span style="color: #000000FF">        </span><span style="color: #001080">neoViz</span><span style="color: #000000FF"> </span><span style="color: #000000">=</span><span style="color: #000000FF"> </span><span style="color: #0000FF">new</span><span style="color: #000000FF"> </span><span style="color: #001080">NeoVis</span><span style="color: #000000FF">.</span><span style="color: #795E26">default</span><span style="color: #000000FF">(</span><span style="color: #001080">config</span><span style="color: #000000FF">);</span>
+<span style="color: #000000FF">        </span><span style="color: #001080">neoViz</span><span style="color: #000000FF">.</span><span style="color: #795E26">render</span><span style="color: #000000FF">();</span>
+<span style="color: #000000FF">    }</span>
+<span style="color: #800000">&lt;/script&gt;</span>
+</code></pre>
+				<p>This function creates a <code>config</code> object that specifies how to connect to Neo4j, what data to fetch, and how to configure
+				the visualization.</p>
+				<p><img src="/img/example-viz.png" alt=""></p>
+				<p>See <a href="/examples/simple-example.html">simple-example.html</a> for the full code.</p>
+				<a href="#module-usage" id="module-usage" style="color: inherit; text-decoration: none;">
+					<h3>module usage</h3>
+				</a>
+				<p>you can also use it as module, but it would require you have a way to import css files</p>
+				<pre><code class="language-javascript"><span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #001080">NeoVis</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;neovis.js&#039;</span><span style="color: #000000">;</span>
+</code></pre>
+				<p>or you can import the version with bundled dependency</p>
+				<pre><code class="language-javascript"><span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #001080">NeoVis</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;neovis.js/dist/neovis.js&#039;</span><span style="color: #000000">;</span>
+</code></pre>
+				<a href="#api-reference" id="api-reference" style="color: inherit; text-decoration: none;">
+					<h2>Api Reference</h2>
+				</a>
+				<p><a href="docs/markdown">Api Reference</a></p>
+				<a href="#build" id="build" style="color: inherit; text-decoration: none;">
+					<h2>Build</h2>
+				</a>
+				<p>This project uses git submodules to include the dependencies for neo4j-driver and vis.js. This project uses webpack to
+					build a bundle that includes all project dependencies. <code>webpack.config.js</code> contains the configuration for webpack. After
+				cloning the repo:</p>
+				<pre><code class="language-bash"><span style="color: #000000">npm install</span>
+<span style="color: #000000">npm run build</span>
+<span style="color: #000000">npm run typedoc</span>
+</code></pre>
+				<p>will build <code>dist/neovis.js</code> and <code>dist/neovis-without-dependencies.js</code> </p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="modules.html">Exports</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-reference">
+						<a href="modules.html#default" class="tsd-kind-icon">default</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/neovisevents.html" class="tsd-kind-icon">Neo<wbr>Vis<wbr>Events</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/neovis.html" class="tsd-kind-icon">Neovis</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/edge.html" class="tsd-kind-icon">Edge</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/labelconfig.html" class="tsd-kind-icon">Label<wbr>Config</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/neo4jconfig.html" class="tsd-kind-icon">Neo4j<wbr>Config</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/neovisadvanceconfig.html" class="tsd-kind-icon">Neo<wbr>Vis<wbr>Advance<wbr>Config</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/neovisconfig.html" class="tsd-kind-icon">Neovis<wbr>Config</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/node.html" class="tsd-kind-icon">Node</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/relationshipconfig.html" class="tsd-kind-icon">Relationship<wbr>Config</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#cypher" class="tsd-kind-icon">Cypher</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#recursivemapto" class="tsd-kind-icon">Recursive<wbr>Map<wbr>To</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#recursivemaptofunction" class="tsd-kind-icon">Recursive<wbr>Map<wbr>ToFunction</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#neovis_advanced_config" class="tsd-kind-icon">NEOVIS_<wbr>ADVANCED_<wbr>CONFIG</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#neovis_default_config" class="tsd-kind-icon">NEOVIS_<wbr>DEFAULT_<wbr>CONFIG</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

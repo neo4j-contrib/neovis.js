@@ -1,5 +1,5 @@
 import Neo4j, * as Neo4jMock from 'neo4j-driver';
-import { CompletionEvent } from '../src/events';
+import { NeoVisEvents } from '../src/events';
 
 jest.mock('neo4j-driver');
 
@@ -79,5 +79,5 @@ export function mockFullRunSubscribe(cypherIdsAndAnswers) {
 
 
 export function neovisRenderDonePromise(neovis) {
-	return new Promise(res => neovis.registerOnEvent(CompletionEvent, res));
+	return new Promise(res => neovis.registerOnEvent(NeoVisEvents.CompletionEvent, res));
 }
