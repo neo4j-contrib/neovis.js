@@ -14,7 +14,7 @@ neovis.js
 
 ### Classes
 
-- [Neovis](classes/neovis.md)
+- [NeoVis](classes/neovis.md)
 
 ### Interfaces
 
@@ -41,7 +41,7 @@ neovis.js
 
 ### default
 
-Renames and exports: [Neovis](classes/neovis.md)
+Renames and exports: [NeoVis](classes/neovis.md)
 
 ## Type aliases
 
@@ -51,7 +51,7 @@ Renames and exports: [Neovis](classes/neovis.md)
 
 Cypher quarry
 
-Defined in: [index.d.ts:39](https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L39)
+Defined in: [index.d.ts:39](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L39)
 
 ___
 
@@ -68,7 +68,7 @@ Name | Description |
 `T` | type to map   |
 `New` | type to map to for each non object type    |
 
-Defined in: [index.d.ts:22](https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L22)
+Defined in: [index.d.ts:22](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L22)
 
 ___
 
@@ -86,7 +86,7 @@ Name | Description |
 `T` | type to map   |
 `PARAM_TYPE` | type of parameter the functions get    |
 
-Defined in: [index.d.ts:32](https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L32)
+Defined in: [index.d.ts:32](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L32)
 
 ## Variables
 
@@ -94,7 +94,7 @@ Defined in: [index.d.ts:32](https://github.com/thebestnom/neovis.js/blob/d41808e
 
 • `Const` **NEOVIS\_ADVANCED\_CONFIG**: unique *symbol*
 
-Defined in: [index.d.ts:5](https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L5)
+Defined in: [index.d.ts:5](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L5)
 
 ___
 
@@ -102,4 +102,4 @@ ___
 
 • `Const` **NEOVIS\_DEFAULT\_CONFIG**: unique *symbol*
 
-Defined in: [index.d.ts:4](https://github.com/thebestnom/neovis.js/blob/d41808e/index.d.ts#L4)
+Defined in: [index.d.ts:4](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L4)
