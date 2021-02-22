@@ -35,14 +35,14 @@ For ease of use Neovis.js can be obtained from Neo4jLabs CDN:
 
 ```html
 
-<script src="https://cdn.neo4jlabs.com/neovis.js/v1.5.0/neovis.js"></script>
+<script src="https://unpkg.com/neovis.js@2.0.0-alpha.3"></script>
 ```
 
 *Version without neo4j-driver dependency*
 
 ```html
 
-<script src="https://cdn.neo4jlabs.com/neovis.js/v1.5.0/neovis-without-dependencies.js"></script>
+<script src="https://unpkg.com/neovis.js@2.0.0-alpha.3/dist/neovis-without-dependencies.js"></script>
 ```
 
 ## Quickstart Example
@@ -139,7 +139,7 @@ We need to pull in `neovis.js`:
 
 ```html
 
-<script src="https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
+<script src="https://unpkg.com/neovis.js@2.0.0-alpha.3"></script>
 ```
 
 And define our draw() function:
