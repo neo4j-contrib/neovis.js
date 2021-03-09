@@ -3,29 +3,23 @@
 import Neo4j from 'neo4j-driver';
 import * as vis from 'vis-network/standalone';
 import { defaults } from './defaults';
-import { EventController, CompletionEvent, ClickEdgeEvent, ClickNodeEvent, ErrorEvent } from './events';
-
-export const NEOVIS_DEFAULT_CONFIG = Symbol();
+import { EventController, CompletionEvent } from './events';
+import { NeoVisRest } from './neovis_rest';
 
 export default class NeoVis {
 	_nodes = {};
 	_edges = {};
+	_nodes_data_set = null;
+	_edges_data_set = null;
 	_data = {};
 	_network = null;
 	_events = new EventController();
 
-	/**
-	 * Get current vis nodes from the graph
-	 */
-	get nodes() {
-		return this._data.nodes;
-	}
-
-	/**
-	 * Get current vis edges from the graph
-	 */
-	get edges() {
-		return this._data.edges;
+	static getInstance(config, restApi = false) {
+		if (restApi) {
+			return new NeoVisRest(config);
+		}
+		return new NeoVis(config);
 	}
 
 	/**
@@ -37,7 +31,6 @@ export default class NeoVis {
 	 *    server_url:
 	 *    server_password?:
 	 *    server_username?:
-	 *    server_database?:
 	 *    labels:
 	 *
 	 *  }
@@ -51,37 +44,13 @@ export default class NeoVis {
 	}
 
 	_consoleLog(message, level = 'log') {
-		if (level !== 'log' || this._config.console_debug) {
+		if(level !== 'log' || this._config.console_debug) {
 			// eslint-disable-next-line no-console
 			console[level](message);
 		}
 	}
 
 	_init(config) {
-		if (config.labels && config.labels[NEOVIS_DEFAULT_CONFIG]) {
-			for (let key of Object.keys(config.labels)) {
-				// getting out of my for not changing the original config object
-				config = {
-					...config,
-					labels: {
-						...config.labels,
-						[key]: { ...config.labels[NEOVIS_DEFAULT_CONFIG], ...config.labels[key] }
-					}
-				};
-			}
-		}
-		if (config.relationships && config.relationships[NEOVIS_DEFAULT_CONFIG]) {
-			// getting out of my for not changing the original config object
-			for (let key of Object.keys(config.relationships)) {
-				config = {
-					...config,
-					relationships: {
-						...config.relationships,
-						[key]: { ...config.relationships[NEOVIS_DEFAULT_CONFIG], ...config.relationships[key] }
-					}
-				};
-			}
-		}
 		this._config = config;
 		this._encrypted = config.encrypted || defaults.neo4j.encrypted;
 		this._trust = config.trust || defaults.neo4j.trust;
@@ -90,12 +59,9 @@ export default class NeoVis {
 			Neo4j.auth.basic(config.server_user || defaults.neo4j.neo4jUser, config.server_password || defaults.neo4j.neo4jPassword),
 			{
 				encrypted: this._encrypted,
-				trust: this._trust,
-				maxConnectionPoolSize: 100,
-				connectionAcquisitionTimeout: 10000,
+				trust: this._trust
 			}
 		);
-		this._database = config.server_database;
 		this._query = config.initial_cypher || defaults.neo4j.initialQuery;
 		this._container = document.getElementById(config.container_id);
 	}
@@ -119,21 +85,14 @@ export default class NeoVis {
 		let node = {};
 		let label = neo4jNode.labels[0];
 
-		let labelConfig = this._config && this._config.labels && (this._config.labels[label] || this._config.labels[NEOVIS_DEFAULT_CONFIG]);
+		let labelConfig = this._config && this._config.labels && this._config.labels[label];
 
 		const captionKey = labelConfig && labelConfig['caption'];
 		const sizeKey = labelConfig && labelConfig['size'];
 		const sizeCypher = labelConfig && labelConfig['sizeCypher'];
 		const communityKey = labelConfig && labelConfig['community'];
-		const imageUrl = labelConfig && labelConfig['image'];
-		const font = labelConfig && labelConfig['font'];
-
-		const title_properties = (
-			labelConfig && labelConfig.title_properties
-		) || Object.keys(neo4jNode.properties);
 
 		node.id = neo4jNode.identity.toInt();
-		node.raw = neo4jNode;
 
 		// node size
 
@@ -141,22 +100,17 @@ export default class NeoVis {
 			// use a cypher statement to determine the size of the node
 			// the cypher statement will be passed a parameter {id} with the value
 			// of the internal node id
-			// TODO: refactor and put all size cypher in one transaction to commit to improve efficiency
-			node.value = 1.0;
-			const session = this._driver.session(this._database && { database: this._database });
-			try {
-				const result = await session.readTransaction(tx => tx.run(sizeCypher, { id: Neo4j.int(node.id) }));
-				for (let record of result.records) {
-					record.forEach((v) => {
-						if (typeof v === 'number') {
-							node.value = v;
-						} else if (Neo4j.isInt(v)) {
-							node.value = v.toNumber();
-						}
-					});
-				}
-			} finally {
-				session.close();
+
+			let session = this._driver.session();
+			const result = await session.run(sizeCypher, {id: Neo4j.int(node.id)});
+			for (let record of result.records) {
+				record.forEach((v) => {
+					if (typeof v === 'number') {
+						node.value = v;
+					} else if (Neo4j.isInt(v)) {
+						node.value = v.toNumber();
+					}
+				});
 			}
 		} else if (typeof sizeKey === 'number') {
 			node.value = sizeKey;
@@ -182,8 +136,6 @@ export default class NeoVis {
 		// node caption
 		if (typeof captionKey === 'function') {
 			node.label = captionKey(neo4jNode);
-		} else if (captionKey && (typeof neo4jNode.properties[captionKey] === 'number' || Neo4j.isInt(neo4jNode.properties[captionKey]))) {
-			node.label = neo4jNode.properties[captionKey].toString() || '';
 		} else {
 			node.label = neo4jNode.properties[captionKey] || label || '';
 		}
@@ -205,27 +157,13 @@ export default class NeoVis {
 				node.group = 0;
 			}
 		}
-		// set configured/all properties as tooltip
+		// set all properties as tooltip
 		node.title = '';
-		for (const key of title_properties) {
+		for (let key in neo4jNode.properties) {
 			if (neo4jNode.properties.hasOwnProperty(key)) {
-				node.title += this.propertyToString(key, neo4jNode.properties[key]);
+				node.title += `<strong>${key}:</strong> ${neo4jNode.properties[key]}<br>`;
 			}
 		}
-
-		// set node shape and image url if a image url is provided in config
-		if (imageUrl) {
-			node.shape = 'image';
-			node.image = imageUrl;
-		} else {
-			node.shape = 'dot';
-		}
-
-		// set node caption font if font setting is provided in config
-		if (font) {
-			node.font = font;
-		}
-
 		return node;
 	}
 
@@ -235,8 +173,7 @@ export default class NeoVis {
 	 * @returns {{}}
 	 */
 	buildEdgeVisObject(r) {
-		const nodeTypeConfig = this._config && this._config.relationships &&
-			(this._config.relationships[r.type] || this._config.relationships[NEOVIS_DEFAULT_CONFIG]);
+		const nodeTypeConfig = this._config && this._config.relationships && this._config.relationships[r.type];
 		let weightKey = nodeTypeConfig && nodeTypeConfig.thickness,
 			captionKey = nodeTypeConfig && nodeTypeConfig.caption;
 
@@ -244,24 +181,23 @@ export default class NeoVis {
 		edge.id = r.identity.toInt();
 		edge.from = r.start.toInt();
 		edge.to = r.end.toInt();
-		edge.raw = r;
 
 		// hover tooltip. show all properties in the format <strong>key:</strong> value
 		edge.title = '';
 		for (let key in r.properties) {
 			if (r.properties.hasOwnProperty(key)) {
-				edge['title'] += this.propertyToString(key, r.properties[key]);
+				edge['title'] += `<strong>${key}:</strong> ${r.properties[key]}<br>`;
 			}
 		}
 
 		// set relationship thickness
-		if (weightKey && typeof weightKey === 'string') {
-			edge.value = r.properties[weightKey];
-		} else if (weightKey && typeof weightKey === 'number') {
-			edge.value = weightKey;
-		} else {
-			edge.value = 1.0;
-		}
+		// if (weightKey && typeof weightKey === 'string') {
+		// 	edge.value = r.properties[weightKey];
+		// } else if (weightKey && typeof weightKey === 'number') {
+		// 	edge.value = weightKey;
+		// } else {
+		// 	edge.value = 1.0;
+		// }
 
 		// set caption
 
@@ -273,40 +209,26 @@ export default class NeoVis {
 				edge.label = r.type;
 			}
 		} else if (captionKey && typeof captionKey === 'string') {
-			if (typeof r.properties[captionKey] === 'number' || Neo4j.isInt(r.properties[captionKey])) {
-				edge.label = r.properties[captionKey].toString() || '';
-			} else {
-				edge.label = r.properties[captionKey] || '';
-			}
+			edge.label = r.properties[captionKey] || '';
 		} else {
 			edge.label = r.type;
 		}
-		return edge;
-	}
 
-	propertyToString(key, value) {
-		if (Array.isArray(value) && value.length > 1) {
-			let out = `<strong>${key}:</strong><br /><ul>`;
-			for (let val of value) {
-				out += `<li>${val}</li>`;
-			}
-			return out + '</ul>';
-		}
-		return `<strong>${key}:</strong> ${value}<br>`;
+		return edge;
 	}
 
 	// public API
 
-	render(query) {
+	render() {
 
 		// connect to Neo4j instance
 		// run query
 		let recordCount = 0;
-		const _query = query || this._query;
-		let session = this._driver.session(this._database && { database: this._database });
+
+		let session = this._driver.session();
 		const dataBuildPromises = [];
 		session
-			.run(_query, { limit: 30 })
+			.run(this._query, {limit: 30})
 			.subscribe({
 				onNext: (record) => {
 					recordCount++;
@@ -366,79 +288,88 @@ export default class NeoVis {
 				onCompleted: async () => {
 					await Promise.all(dataBuildPromises);
 					session.close();
-
-					if (this._network && this._network.body.data.nodes.length > 0) {
-						this._data.nodes.update(Object.values(this._nodes));
-						this._data.edges.update(Object.values(this._edges));
-					} else {
-						let options = {
-							nodes: {
-								//shape: 'dot',
-								font: {
-									size: 26,
-									strokeWidth: 7
-								},
-								scaling: {
-								}
+					let options = {
+						nodes: {
+							shape: 'dot',
+							font: {
+								size: 14,
+								strokeWidth: 5
 							},
-							edges: {
-								arrows: {
-									to: { enabled: this._config.arrows || false } // FIXME: handle default value
-								},
-								length: 200
-							},
-							layout: {
-								improvedLayout: false,
-								hierarchical: {
-									enabled: this._config.hierarchical || false,
-									sortMethod: this._config.hierarchical_sort_method || 'hubsize'
-								}
-							},
-							physics: { // TODO: adaptive physics settings based on size of graph rendered
-								// enabled: true,
-								// timestep: 0.5,
-								// stabilization: {
-								//     iterations: 10
-								// }
-
-								adaptiveTimestep: true,
-								// barnesHut: {
-								//     gravitationalConstant: -8000,
-								//     springConstant: 0.04,
-								//     springLength: 95
-								// },
-								stabilization: {
-									iterations: 200,
-									fit: true
+							scaling: {
+								label: {
+									enabled: false
 								}
 							}
-						};
+						},
+						edges: {
+							arrows: {
+								to: {enabled: this._config.arrows || false} // FIXME: handle default value
+							},
+							color: {
+								color: '#ABABAB',
+								opacity: 0.75
+							},
+							width: 0.25,
+							// widthConstraint: {
+							// 	maximum: 1
+							// },
+							label: false
+						},
+						layout: {
+							improvedLayout: true,
+							hierarchical: {
+								enabled: this._config.hierarchical || false,
+								sortMethod: this._config.hierarchical_sort_method || 'hubsize'
+							}
+						},
+						physics: {
+				        // forceAtlas2Based: {
+				        //     gravitationalConstant: -26,
+				        //     centralGravity: 0.005,
+				        //     springLength: 230,
+				        //     springConstant: 0.18,
+				        //     avoidOverlap: 1.5
+				        // },
+								// // hierarchicalRepulsion: {
+								// // 	nodeDistance: 200
+								// // },
+				        // maxVelocity: 146,
+				        // solver: 'forceAtlas2Based',
+				        // timestep: 0.35,
+				        stabilization: {
+				            enabled: true,
+				            iterations: 100,
+				            updateInterval: 2
+				        }
+				    }
+					};
 
-						const container = this._container;
-						this._data = {
-							nodes: new vis.DataSet(Object.values(this._nodes)),
-							edges: new vis.DataSet(Object.values(this._edges))
-						};
+					const container = this._container;
+					this._nodes_data_set = new vis.DataSet(Object.values(this._nodes))
+					this._edges_data_set = new vis.DataSet(Object.values(this._edges));
+					this._data = {
+						nodes: this._nodes_data_set,
+						edges: this._edges_data_set
+					};
 
-						this._consoleLog(this._data.nodes);
-						this._consoleLog(this._data.edges);
+					this._consoleLog(this._data.nodes);
+					this._consoleLog(this._data.edges);
 
-						// Create duplicate node for any this reference relationships
-						// NOTE: Is this only useful for data model type data
-						// this._data.edges = this._data.edges.map(
-						//     function (item) {
-						//          if (item.from == item.to) {
-						//             const newNode = this._data.nodes.get(item.from)
-						//             delete newNode.id;
-						//             const newNodeIds = this._data.nodes.add(newNode);
-						//             this._consoleLog("Adding new node and changing this-ref to node: " + item.to);
-						//             item.to = newNodeIds[0];
-						//          }
-						//          return item;
-						//     }
-						// );
-						this._network = new vis.Network(container, this._data, options);
-					}
+					// Create duplicate node for any this reference relationships
+					// NOTE: Is this only useful for data model type data
+					// this._data.edges = this._data.edges.map(
+					//     function (item) {
+					//          if (item.from == item.to) {
+					//             const newNode = this._data.nodes.get(item.from)
+					//             delete newNode.id;
+					//             const newNodeIds = this._data.nodes.add(newNode);
+					//             this._consoleLog("Adding new node and changing this-ref to node: " + item.to);
+					//             item.to = newNodeIds[0];
+					//          }
+					//          return item;
+					//     }
+					// );
+					this._network = new vis.Network(container, this._data, options);
 					this._consoleLog('completed');
 					setTimeout(
 						() => {
@@ -446,22 +377,10 @@ export default class NeoVis {
 						},
 						10000
 					);
-					this._events.generateEvent(CompletionEvent, { record_count: recordCount });
-
-					let neoVis = this;
-					this._network.on('click', function (params) {
-						if (params.nodes.length > 0) {
-							let nodeId = this.getNodeAt(params.pointer.DOM);
-							neoVis._events.generateEvent(ClickNodeEvent, { nodeId: nodeId, node: neoVis._nodes[nodeId] });
-						} else if (params.edges.length > 0) {
-							let edgeId = this.getEdgeAt(params.pointer.DOM);
-							neoVis._events.generateEvent(ClickEdgeEvent, { edgeId: edgeId, edge: neoVis._edges[edgeId] });
-						}
-					});
+					this._events.generateEvent(CompletionEvent, {record_count: recordCount});
 				},
 				onError: (error) => {
 					this._consoleLog(error, 'error');
-					this._events.generateEvent(ErrorEvent, { error_msg: error });
 				}
 			});
 	}
@@ -470,8 +389,6 @@ export default class NeoVis {
 	 * Clear the data for the visualization
 	 */
 	clearNetwork() {
-		this._neo4jNodes = {};
-		this._neo4jEdges = {};
 		this._nodes = {};
 		this._edges = {};
 		this._network.setData([]);
@@ -524,19 +441,10 @@ export default class NeoVis {
 		this.render();
 	}
 
-	/**
-	 * Execute an arbitrary Cypher query and update the current visualization, retaning current nodes
-	 * This function will not change the original query given by renderWithCypher or the inital cypher.
-	 * @param query 
-	 */
-	updateWithCypher(query) {
-		this.render(query);
-	}
-
-	// configure exports based on environment (ie Node.js or browser)
-	//if (typeof exports === 'object') {
-	//    module.exports = NeoVis;
-	//} else {
-	//    define (function () {return NeoVis;})
-	//}
+// configure exports based on environment (ie Node.js or browser)
+//if (typeof exports === 'object') {
+//    module.exports = NeoVis;
+//} else {
+//    define (function () {return NeoVis;})
+//}
 }
