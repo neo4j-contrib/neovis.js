@@ -3,13 +3,15 @@
 import Neo4j from 'neo4j-driver';
 import * as vis from 'vis-network/standalone';
 import { defaults } from './defaults';
-import { ClickEdgeEvent, ClickNodeEvent, CompletionEvent, ErrorEvent, EventController } from './events';
+import { NeoVisEvents, EventController } from './events';
 import deepmerge from 'deepmerge';
 
 export const NEOVIS_DEFAULT_CONFIG = Symbol();
 export const NEOVIS_ADVANCED_CONFIG = Symbol();
 
-export default class NeoVis {
+export { NeoVisEvents } from './events';
+
+export class NeoVis {
 	_data = {
 		nodes: new vis.DataSet(),
 		edges: new vis.DataSet()
@@ -100,13 +102,7 @@ export default class NeoVis {
 				config.neo4j?.server_user ?? defaults.neo4j.neo4jUser,
 				config.neo4j?.server_password ?? defaults.neo4j.neo4jPassword
 			),
-			{
-				encrypted: config.neo4j?.encrypted ?? defaults.neo4j.encrypted,
-				trust: config.neo4j?.trust ?? defaults.neo4j.trust,
-				maxConnectionPoolSize: 100,
-				connectionAcquisitionTimeout: 10000,
-				disableLosslessIntegers: true,
-			}
+			deepmerge(defaults.neo4j.driverConfig, config.neo4j?.driverConfig ?? {})
 		);
 		this._database = config.server_database;
 		this._query = config.initial_cypher ?? defaults.neo4j.initialQuery;
@@ -387,19 +383,19 @@ export default class NeoVis {
 						},
 						10000
 					);
-					this.#events.generateEvent(CompletionEvent, { record_count: recordCount });
+					this.#events.generateEvent(NeoVisEvents.CompletionEvent, { record_count: recordCount });
 
 					let neoVis = this;
 					this.#network.on('click', function (params) {
 						if (params.nodes.length > 0) {
 							let nodeId = this.getNodeAt(params.pointer.DOM);
-							neoVis.#events.generateEvent(ClickNodeEvent, {
+							neoVis.#events.generateEvent(NeoVisEvents.ClickNodeEvent, {
 								nodeId: nodeId,
 								node: neoVis._data.nodes.get(nodeId)
 							});
 						} else if (params.edges.length > 0) {
 							let edgeId = this.getEdgeAt(params.pointer.DOM);
-							neoVis.#events.generateEvent(ClickEdgeEvent, {
+							neoVis.#events.generateEvent(NeoVisEvents.ClickEdgeEvent, {
 								edgeId: edgeId,
 								edge: neoVis._data.edges.get(edgeId)
 							});
@@ -408,7 +404,7 @@ export default class NeoVis {
 				},
 				onError: (error) => {
 					this._consoleLog(error, 'error');
-					this.#events.generateEvent(ErrorEvent, { error_msg: error });
+					this.#events.generateEvent(NeoVisEvents.ErrorEvent, { error_msg: error });
 				}
 			});
 	}
@@ -425,7 +421,7 @@ export default class NeoVis {
 	/**
 	 *
 	 * @param {string} eventType Event type to be handled
-	 * @param {callback} handler Handler to manage the event
+	 * @param {handler} handler Handler to manage the event
 	 */
 	registerOnEvent(eventType, handler) {
 		this.#events.register(eventType, handler);
@@ -442,7 +438,7 @@ export default class NeoVis {
 	}
 
 	/**
-	 * Fetch live data form the server and reload the visualization
+	 * Clear the network and fetch live data form the server and reload the visualization
 	 */
 	reload() {
 		this.clearNetwork();
@@ -491,3 +487,5 @@ export default class NeoVis {
 		return title;
 	}
 }
+
+export default NeoVis;
