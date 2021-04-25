@@ -395,6 +395,12 @@ export default class NeoVis {
 								}
 							},
 							physics: { // TODO: adaptive physics settings based on size of graph rendered
+								// enabled: true,
+								// timestep: 0.5,
+								// stabilization: {
+								//     iterations: 10
+								// }
+
 								adaptiveTimestep: true,
 								// barnesHut: {
 								//     gravitationalConstant: -8000,
