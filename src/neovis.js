@@ -3,7 +3,7 @@
 import Neo4j from 'neo4j-driver';
 import * as vis from 'vis-network/standalone';
 import { defaults } from './defaults';
-import { EventController, CompletionEvent, ClickEdgeEvent, ClickNodeEvent, ErrorEvent } from './events';
+import { EventController, CompletionEvent, ClickEdgeEvent, HoldNodeEvent, DoubleClickEdgeEvent, ClickNodeEvent, DoubleClickNodeEvent, ErrorEvent, StabilizationIterationsDoneEvent } from './events';
 
 export const NEOVIS_DEFAULT_CONFIG = Symbol();
 
@@ -395,20 +395,15 @@ export default class NeoVis {
 								}
 							},
 							physics: { // TODO: adaptive physics settings based on size of graph rendered
-								// enabled: true,
-								// timestep: 0.5,
-								// stabilization: {
-								//     iterations: 10
-								// }
-
+								timestep: 0.1,
 								adaptiveTimestep: true,
-								// barnesHut: {
-								//     gravitationalConstant: -8000,
-								//     springConstant: 0.04,
-								//     springLength: 95
-								// },
-								stabilization: {
-									iterations: 200,
+/*								barnesHut: {
+								     gravitationalConstant: -8000,
+								     springConstant: 0.04,
+								     springLength: 95
+								 },
+*/								stabilization: {
+									iterations: 1000,
 									fit: true
 								}
 							}
@@ -458,6 +453,28 @@ export default class NeoVis {
 							neoVis._events.generateEvent(ClickEdgeEvent, { edgeId: edgeId, edge: neoVis._edges[edgeId] });
 						}
 					});
+
+					this._network.on('doubleClick', function (params) {
+						if (params.nodes.length > 0) {
+							let nodeId = this.getNodeAt(params.pointer.DOM);
+							neoVis._events.generateEvent(DoubleClickNodeEvent, { nodeId: nodeId, node: neoVis._nodes[nodeId] });
+						} else if (params.edges.length > 0) {
+							let edgeId = this.getEdgeAt(params.pointer.DOM);
+							neoVis._events.generateEvent(DoubleClickEdgeEvent, { edgeId: edgeId, edge: neoVis._edges[edgeId] });
+						}
+					});
+
+					this._network.on('hold', function (params) {
+						if (params.nodes.length > 0) {
+							let nodeId = this.getNodeAt(params.pointer.DOM);
+							neoVis._events.generateEvent(HoldNodeEvent, { nodeId: nodeId, node: neoVis._nodes[nodeId] });
+						}
+					});
+
+					this._network.on("stabilizationIterationsDone", function () {
+					    neoVis._events.generateEvent(StabilizationIterationsDoneEvent, {});
+					});
+
 				},
 				onError: (error) => {
 					this._consoleLog(error, 'error');
@@ -539,4 +556,8 @@ export default class NeoVis {
 	//} else {
 	//    define (function () {return NeoVis;})
 	//}
+
+	amendPhysics(physicsEnabled) {
+		this._network.setOptions( { physics: physicsEnabled } );
+	}
 }
