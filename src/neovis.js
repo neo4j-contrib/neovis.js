@@ -396,11 +396,11 @@ export default class NeoVis {
 							},
 							physics: { // TODO: adaptive physics settings based on size of graph rendered
 								adaptiveTimestep: true,
-								//barnesHut: {
+								// barnesHut: {
 								//     gravitationalConstant: -8000,
 								//     springConstant: 0.04,
-								//    springLength: 95
-								 //},
+								//     springLength: 95
+								// },
 								stabilization: {
 									iterations: 200,
 									fit: true
