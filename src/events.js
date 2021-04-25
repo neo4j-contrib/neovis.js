@@ -1,6 +1,10 @@
 export const CompletionEvent = 'completed';
 export const ClickNodeEvent = 'clickNode';
+export const DoubleClickNodeEvent = 'doubleClickNode';
 export const ClickEdgeEvent = 'clickEdge';
+export const DoubleClickEdgeEvent = 'doubleClickEdge';
+export const HoldNodeEvent = 'holdNode';
+export const StabilizationIterationsDoneEvent = 'stabilizationIterationsDone';
 export const ErrorEvent = 'error';
 
 export class EventController {
@@ -10,7 +14,11 @@ export class EventController {
 			[CompletionEvent]: [],
 			[ErrorEvent]: [],
 			[ClickNodeEvent]: [],
+			[DoubleClickNodeEvent]: [],
 			[ClickEdgeEvent]: [],
+			[HoldNodeEvent]: [],
+			[DoubleClickEdgeEvent]: [],
+			[StabilizationIterationsDoneEvent]: [],
 		};
 	}
 
