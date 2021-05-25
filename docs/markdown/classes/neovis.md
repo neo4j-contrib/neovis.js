@@ -17,8 +17,6 @@
 ### Methods
 
 - [clearNetwork](neovis.md#clearnetwork)
-- [nodeToHtml](neovis.md#nodetohtml)
-- [nodeToString](neovis.md#nodetostring)
 - [registerOnEvent](neovis.md#registeronevent)
 - [reinit](neovis.md#reinit)
 - [reload](neovis.md#reload)
@@ -41,7 +39,7 @@
 
 **Returns:** [*NeoVis*](neovis.md)
 
-Defined in: [index.d.ts:265](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L265)
+Defined in: [index.d.ts:265](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L265)
 
 ## Accessors
 
@@ -55,7 +53,7 @@ All view edges as DataSet
 
 **Returns:** *DataSet*<[*Edge*](../interfaces/edge.md), ``"id"``\>
 
-Defined in: [index.d.ts:278](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L278)
+Defined in: [index.d.ts:278](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L278)
 
 ___
 
@@ -69,7 +67,7 @@ The vis network object
 
 **Returns:** *Network*
 
-Defined in: [index.d.ts:284](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L284)
+Defined in: [index.d.ts:284](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L284)
 
 ___
 
@@ -83,7 +81,7 @@ All view nodes as DataSet
 
 **Returns:** *DataSet*<[*Node*](../interfaces/node.md), ``"id"``\>
 
-Defined in: [index.d.ts:272](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L272)
+Defined in: [index.d.ts:272](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L272)
 
 ## Methods
 
@@ -95,45 +93,7 @@ Clear the data for the visualization
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:294](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L294)
-
-___
-
-### nodeToHtml
-
-▸ **nodeToHtml**(`neo4jNode`: *Node*<Integer\>, `title_properties`: [*string*]): HTMLDivElement
-
-create html display of the node
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `neo4jNode` | *Node*<Integer\> | node to create html from |
-| `title_properties` | [*string*] | which properties to map |
-
-**Returns:** HTMLDivElement
-
-Defined in: [index.d.ts:337](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L337)
-
-___
-
-### nodeToString
-
-▸ **nodeToString**(`neo4jNode`: *Node*<Integer\>, `title_properties`: [*string*]): *string*
-
-create string display of the node
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `neo4jNode` | *Node*<Integer\> | node to create title string from |
-| `title_properties` | [*string*] | which properties to map |
-
-**Returns:** *string*
-
-Defined in: [index.d.ts:344](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L344)
+Defined in: [index.d.ts:294](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L294)
 
 ___
 
@@ -150,7 +110,7 @@ ___
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:301](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L301)
+Defined in: [index.d.ts:301](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L301)
 
 ___
 
@@ -168,7 +128,7 @@ Reset the config object and reload data
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:307](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L307)
+Defined in: [index.d.ts:307](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L307)
 
 ___
 
@@ -180,7 +140,7 @@ Clear the network and fetch live data form the server and reload the visualizati
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:312](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L312)
+Defined in: [index.d.ts:312](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L312)
 
 ___
 
@@ -192,7 +152,7 @@ Renders the network
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:289](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L289)
+Defined in: [index.d.ts:289](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L289)
 
 ___
 
@@ -210,7 +170,7 @@ Execute an arbitrary Cypher query and re-render the visualization
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:323](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L323)
+Defined in: [index.d.ts:323](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L323)
 
 ___
 
@@ -222,7 +182,7 @@ Stabilize the visualization
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:317](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L317)
+Defined in: [index.d.ts:317](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L317)
 
 ___
 
@@ -241,4 +201,4 @@ This function will not change the original query given by renderWithCypher or th
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:330](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L330)
+Defined in: [index.d.ts:330](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L330)

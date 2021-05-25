@@ -37,6 +37,11 @@ neovis.js
 - [NEOVIS\_ADVANCED\_CONFIG](README.md#neovis_advanced_config)
 - [NEOVIS\_DEFAULT\_CONFIG](README.md#neovis_default_config)
 
+### Functions
+
+- [objectToTitleHtml](README.md#objecttotitlehtml)
+- [objectToTitleString](README.md#objecttotitlestring)
+
 ## References
 
 ### default
@@ -51,7 +56,7 @@ Renames and exports: [NeoVis](classes/neovis.md)
 
 Cypher quarry
 
-Defined in: [index.d.ts:39](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L39)
+Defined in: [index.d.ts:39](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L39)
 
 ___
 
@@ -68,7 +73,7 @@ Maps a type recursively and replace each non object type with the new type
 | `T` | type to map |
 | `New` | type to map to for each non object type |
 
-Defined in: [index.d.ts:22](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L22)
+Defined in: [index.d.ts:22](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L22)
 
 ___
 
@@ -86,7 +91,7 @@ but replace each non object type with a function that returns the same type
 | `T` | type to map |
 | `PARAM_TYPE` | type of parameter the functions get |
 
-Defined in: [index.d.ts:32](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L32)
+Defined in: [index.d.ts:32](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L32)
 
 ## Variables
 
@@ -94,7 +99,7 @@ Defined in: [index.d.ts:32](https://github.com/thebestnom/neovis.js/blob/689e3a9
 
 • `Const` **NEOVIS\_ADVANCED\_CONFIG**: unique *symbol*
 
-Defined in: [index.d.ts:5](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L5)
+Defined in: [index.d.ts:5](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L5)
 
 ___
 
@@ -102,4 +107,42 @@ ___
 
 • `Const` **NEOVIS\_DEFAULT\_CONFIG**: unique *symbol*
 
-Defined in: [index.d.ts:4](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L4)
+Defined in: [index.d.ts:4](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L4)
+
+## Functions
+
+### objectToTitleHtml
+
+▸ **objectToTitleHtml**(`neo4jNode`: Neo4j.Node, `title_properties`: [*string*]): HTMLDivElement
+
+create html display of the node
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `neo4jNode` | Neo4j.Node | node to create html from |
+| `title_properties` | [*string*] | which properties to map |
+
+**Returns:** HTMLDivElement
+
+Defined in: [index.d.ts:340](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L340)
+
+___
+
+### objectToTitleString
+
+▸ **objectToTitleString**(`neo4jNode`: Neo4j.Node, `title_properties`: [*string*]): *string*
+
+create string display of the node
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `neo4jNode` | Neo4j.Node | node to create title string from |
+| `title_properties` | [*string*] | which properties to map |
+
+**Returns:** *string*
+
+Defined in: [index.d.ts:347](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L347)
