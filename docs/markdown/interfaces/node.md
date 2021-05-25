@@ -273,7 +273,7 @@ ___
 
 **`link`** https://neo4j.com/docs/api/javascript-driver/current/class/src/graph-types.js~Node.html
 
-Defined in: [index.d.ts:252](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L252)
+Defined in: [index.d.ts:252](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L252)
 
 ___
 

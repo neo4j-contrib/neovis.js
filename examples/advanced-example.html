@@ -60,9 +60,7 @@
 								value: "MATCH (n) WHERE id(n) = $id RETURN n.size"
 							},
 							function: {
-								title: (node) => {
-									return viz.nodeToHtml(node, undefined);
-								}
+								title: NeoVis.objectToTitleHtml
 							},
 						}
 					}
@@ -72,9 +70,7 @@
 						value: 'weight',
 						[NeoVis.NEOVIS_ADVANCED_CONFIG]: {
 							function: {
-								title: (edge) => {
-									return viz.nodeToHtml(edge, undefined);
-								}
+								title: NeoVis.objectToTitleHtml
 							},
 						}
 					}
