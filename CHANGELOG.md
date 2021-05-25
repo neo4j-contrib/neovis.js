@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0
+
+- Completely rewrite the configuration to be vis-network extension instead of wrapper
+
+  for migrating please check [guide](./MIGRATING.md)
+
 ## 1.4.0
 
 - [Add configurable title properties](https://github.com/neo4j-contrib/neovis.js/pull/74)
@@ -30,7 +36,6 @@
 - [Add tests](https://github.com/neo4j-contrib/neovis.js/pull/63)
 - [Allow defining a node caption with a function](https://github.com/neo4j-contrib/neovis.js/pull/48)
 - [Add rendering completed event](https://github.com/neo4j-contrib/neovis.js/pull/47)
-
 
 ## 1.0.0
 

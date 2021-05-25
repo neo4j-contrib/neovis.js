@@ -99,7 +99,7 @@ Should output debug messages to console
 
 **`default`** false
 
-Defined in: [index.d.ts:242](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L242)
+Defined in: [index.d.ts:242](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L242)
 
 ___
 
@@ -109,7 +109,7 @@ ___
 
 Html id of the element you want NeoVis to render on
 
-Defined in: [index.d.ts:174](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L174)
+Defined in: [index.d.ts:174](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L174)
 
 ___
 
@@ -119,7 +119,7 @@ ___
 
 The Cypher query that will get the data
 
-Defined in: [index.d.ts:237](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L237)
+Defined in: [index.d.ts:237](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L237)
 
 ___
 
@@ -152,7 +152,7 @@ ___
 | :------ | :------ |
 | `[NEOVIS_DEFAULT_CONFIG]?` | [*LabelConfig*](labelconfig.md) |
 
-Defined in: [index.d.ts:209](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L209)
+Defined in: [index.d.ts:209](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L209)
 
 ___
 
@@ -162,7 +162,7 @@ ___
 
 Neo4j Driver instance or configuration to make one
 
-Defined in: [index.d.ts:183](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L183)
+Defined in: [index.d.ts:183](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L183)
 
 ___
 
@@ -192,7 +192,7 @@ ___
 | :------ | :------ |
 | `[NEOVIS_DEFAULT_CONFIG]?` | [*RelationshipConfig*](relationshipconfig.md) |
 
-Defined in: [index.d.ts:230](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L230)
+Defined in: [index.d.ts:230](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L230)
 
 ___
 
@@ -204,7 +204,7 @@ database name you want to connect to
 
 **`default`** neo4j
 
-Defined in: [index.d.ts:179](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L179)
+Defined in: [index.d.ts:179](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L179)
 
 ___
 
@@ -216,4 +216,4 @@ Vis network config to override neovis defaults
 
 **`link`** https://visjs.github.io/vis-network/docs/network/#options
 
-Defined in: [index.d.ts:188](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L188)
+Defined in: [index.d.ts:188](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L188)

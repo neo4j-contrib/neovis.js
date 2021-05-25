@@ -54,7 +54,7 @@ mapping static options to each edge
 mapping cypher to run for each relationship to determine vis-network edge option
 mapping function that gets the neo4j relationship and returns vis-network edge option
 
-Defined in: [index.d.ts:78](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L78)
+Defined in: [index.d.ts:78](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L78)
 
 ___
 

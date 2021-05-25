@@ -87,7 +87,7 @@ export interface Neo4jConfig {
     server_user: string;
     server_password: string;
     /**
-     * @link https://neo4j.com/docs/api/javascript-driver/current/function/index.html#static-function-driver
+     * @link https://neo4j.com/docs/api/javascript-driver/current/function/index.html#configuration
      */
     driverConfig: Neo4j.Config;
 }
@@ -328,20 +328,20 @@ export declare class NeoVis {
      * @param query
      */
     updateWithCypher(query: Cypher): void;
-
-    /**
-     * create html display of the node
-     * @param neo4jNode node to create html from
-     * @param title_properties which properties to map
-     */
-    nodeToHtml(neo4jNode: Neo4j.Node, title_properties: [string]): HTMLDivElement;
-
-    /**
-     * create string display of the node
-     * @param neo4jNode node to create title string from
-     * @param title_properties which properties to map
-     */
-    nodeToString(neo4jNode: Neo4j.Node, title_properties: [string]): string;
 }
 
 export default NeoVis;
+
+/**
+ * create html display of the node
+ * @param neo4jNode node to create html from
+ * @param title_properties which properties to map
+ */
+export function objectToTitleHtml(neo4jNode: Neo4j.Node, title_properties: [string]): HTMLDivElement;
+
+/**
+ * create string display of the node
+ * @param neo4jNode node to create title string from
+ * @param title_properties which properties to map
+ */
+export function objectToTitleString(neo4jNode: Neo4j.Node, title_properties: [string]): string;
