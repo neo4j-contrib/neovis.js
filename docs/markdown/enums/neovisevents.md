@@ -19,7 +19,7 @@ events
 
 • **ClickEdgeEvent**: = "clickEdge"
 
-Defined in: [index.d.ts:13](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L13)
+Defined in: [index.d.ts:13](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L13)
 
 ___
 
@@ -27,7 +27,7 @@ ___
 
 • **ClickNodeEvent**: = "clickNode"
 
-Defined in: [index.d.ts:12](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L12)
+Defined in: [index.d.ts:12](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L12)
 
 ___
 
@@ -35,7 +35,7 @@ ___
 
 • **CompletionEvent**: = "completed"
 
-Defined in: [index.d.ts:11](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L11)
+Defined in: [index.d.ts:11](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L11)
 
 ___
 
@@ -43,4 +43,4 @@ ___
 
 • **ErrorEvent**: = "error"
 
-Defined in: [index.d.ts:14](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L14)
+Defined in: [index.d.ts:14](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L14)

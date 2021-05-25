@@ -334,7 +334,14 @@ export declare class NeoVis {
      * @param neo4jNode node to create html from
      * @param title_properties which properties to map
      */
-    nodeToHtml(neo4jNode: Neo4j.Node, title_properties: [string]): string;
+    nodeToHtml(neo4jNode: Neo4j.Node, title_properties: [string]): HTMLDivElement;
+
+    /**
+     * create string display of the node
+     * @param neo4jNode node to create title string from
+     * @param title_properties which properties to map
+     */
+    nodeToString(neo4jNode: Neo4j.Node, title_properties: [string]): string;
 }
 
 export default NeoVis;
