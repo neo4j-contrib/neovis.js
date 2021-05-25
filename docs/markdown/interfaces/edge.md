@@ -6,7 +6,7 @@ A network edge with raw neo4j relationship
 
 ## Hierarchy
 
-* *Edge*
+- *Edge*
 
   ↳ **Edge**
 
@@ -47,6 +47,8 @@ A network edge with raw neo4j relationship
 
 • `Optional` **arrowStrikethrough**: *boolean*
 
+Inherited from: VisNetwork.Edge.arrowStrikethrough
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:989
 
 ___
@@ -54,6 +56,8 @@ ___
 ### arrows
 
 • `Optional` **arrows**: *string* \| { `from?`: *boolean* \| ArrowHead ; `middle?`: *boolean* \| ArrowHead ; `to?`: *boolean* \| ArrowHead  }
+
+Inherited from: VisNetwork.Edge.arrows
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:983
 
@@ -63,6 +67,8 @@ ___
 
 • `Optional` **chosen**: *boolean* \| { `edge?`: *boolean* ; `label?`: *boolean*  }
 
+Inherited from: VisNetwork.Edge.chosen
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:991
 
 ___
@@ -70,6 +76,8 @@ ___
 ### color
 
 • `Optional` **color**: *string* \| { `color?`: *string* ; `highlight?`: *string* ; `hover?`: *string* ; `inherit?`: *string* \| *boolean* ; `opacity?`: *number*  }
+
+Inherited from: VisNetwork.Edge.color
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:996
 
@@ -79,6 +87,8 @@ ___
 
 • `Optional` **dashes**: *boolean* \| *number*[]
 
+Inherited from: VisNetwork.Edge.dashes
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:1004
 
 ___
@@ -86,6 +96,8 @@ ___
 ### font
 
 • `Optional` **font**: *string* \| Font
+
+Inherited from: VisNetwork.Edge.font
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:1006
 
@@ -95,6 +107,8 @@ ___
 
 • `Optional` **from**: IdType
 
+Inherited from: VisNetwork.Edge.from
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:764
 
 ___
@@ -102,6 +116,8 @@ ___
 ### hidden
 
 • `Optional` **hidden**: *boolean*
+
+Inherited from: VisNetwork.Edge.hidden
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:1008
 
@@ -111,6 +127,8 @@ ___
 
 • `Optional` **hoverWidth**: *number*
 
+Inherited from: VisNetwork.Edge.hoverWidth
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:1010
 
 ___
@@ -118,6 +136,8 @@ ___
 ### id
 
 • `Optional` **id**: IdType
+
+Inherited from: VisNetwork.Edge.id
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:766
 
@@ -127,6 +147,8 @@ ___
 
 • `Optional` **label**: *string*
 
+Inherited from: VisNetwork.Edge.label
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:1012
 
 ___
@@ -134,6 +156,8 @@ ___
 ### labelHighlightBold
 
 • `Optional` **labelHighlightBold**: *boolean*
+
+Inherited from: VisNetwork.Edge.labelHighlightBold
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:1014
 
@@ -143,6 +167,8 @@ ___
 
 • `Optional` **length**: *number*
 
+Inherited from: VisNetwork.Edge.length
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:1016
 
 ___
@@ -150,6 +176,8 @@ ___
 ### physics
 
 • `Optional` **physics**: *boolean*
+
+Inherited from: VisNetwork.Edge.physics
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:1018
 
@@ -161,13 +189,15 @@ ___
 
 https://neo4j.com/docs/api/javascript-driver/current/class/src/graph-types.js~Relationship.html
 
-Defined in: [index.d.ts:262](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L262)
+Defined in: [index.d.ts:262](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L262)
 
 ___
 
 ### scaling
 
 • `Optional` **scaling**: OptionsScaling
+
+Inherited from: VisNetwork.Edge.scaling
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:1020
 
@@ -177,6 +207,8 @@ ___
 
 • `Optional` **selectionWidth**: *number*
 
+Inherited from: VisNetwork.Edge.selectionWidth
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:1022
 
 ___
@@ -185,13 +217,15 @@ ___
 
 • `Optional` **selfReference**: *object*
 
-#### Type declaration:
+#### Type declaration
 
-Name | Type |
-:------ | :------ |
-`angle`? | *number* |
-`renderBehindTheNode`? | *boolean* |
-`size`? | *number* |
+| Name | Type |
+| :------ | :------ |
+| `angle?` | *number* |
+| `renderBehindTheNode?` | *boolean* |
+| `size?` | *number* |
+
+Inherited from: VisNetwork.Edge.selfReference
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:1026
 
@@ -201,6 +235,8 @@ ___
 
 • `Optional` **selfReferenceSize**: *number*
 
+Inherited from: VisNetwork.Edge.selfReferenceSize
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:1024
 
 ___
@@ -208,6 +244,8 @@ ___
 ### shadow
 
 • `Optional` **shadow**: *boolean* \| OptionsShadow
+
+Inherited from: VisNetwork.Edge.shadow
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:1032
 
@@ -217,13 +255,17 @@ ___
 
 • `Optional` **smooth**: *boolean* \| { `enabled`: *boolean* ; `forceDirection?`: *string* \| *boolean* ; `roundness`: *number* ; `type`: *string*  }
 
+Inherited from: VisNetwork.Edge.smooth
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:1034
 
 ___
 
 ### title
 
-• `Optional` **title**: *string*
+• `Optional` **title**: *string* \| HTMLElement
+
+Inherited from: VisNetwork.Edge.title
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:1041
 
@@ -233,6 +275,8 @@ ___
 
 • `Optional` **to**: IdType
 
+Inherited from: VisNetwork.Edge.to
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:765
 
 ___
@@ -240,6 +284,8 @@ ___
 ### value
 
 • `Optional` **value**: *number*
+
+Inherited from: VisNetwork.Edge.value
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:1043
 
@@ -249,6 +295,8 @@ ___
 
 • `Optional` **width**: *number*
 
+Inherited from: VisNetwork.Edge.width
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:1045
 
 ___
@@ -256,5 +304,7 @@ ___
 ### widthConstraint
 
 • `Optional` **widthConstraint**: *number* \| *boolean* \| { `maximum?`: *number*  }
+
+Inherited from: VisNetwork.Edge.widthConstraint
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:1047

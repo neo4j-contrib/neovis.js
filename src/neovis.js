@@ -141,7 +141,7 @@ export class NeoVis {
 	}
 
 	_retrieveProperty(prop, node) {
-		if (typeof node === 'object' && typeof node.properties === 'object') {
+		if (typeof node?.properties === 'object') {
 			return node.properties[prop];
 		}
 		throw new Error('Neo4j node is not properly constructed');
@@ -283,7 +283,7 @@ export class NeoVis {
 		return edge;
 	}
 
-	propertyToString(key, value) {
+	propertyToHtml(key, value) {
 		if (Array.isArray(value) && value.length > 1) {
 			let out = `<strong>${key}:</strong><br /><ul>`;
 			for (let val of value) {
@@ -474,6 +474,22 @@ export class NeoVis {
 	}
 
 	nodeToHtml(neo4jNode, title_properties) {
+		let titleString = '';
+		if (!title_properties) {
+			title_properties = Object.keys(neo4jNode.properties);
+		}
+		for (const key of title_properties) {
+			const propVal = this._retrieveProperty(key, neo4jNode);
+			if (propVal) {
+				titleString += this.propertyToHtml(key, propVal);
+			}
+		}
+		const title = document.createElement('div');
+		title.innerHTML = titleString;
+		return title;
+	}
+
+	nodeToString(neo4jNode, title_properties) {
 		let title = '';
 		if (!title_properties) {
 			title_properties = Object.keys(neo4jNode.properties);
@@ -481,7 +497,7 @@ export class NeoVis {
 		for (const key of title_properties) {
 			const propVal = this._retrieveProperty(key, neo4jNode);
 			if (propVal) {
-				title += this.propertyToString(key, propVal);
+				title += `${key}: ${propVal}\n`;
 			}
 		}
 		return title;
