@@ -51,7 +51,7 @@ Renames and exports: [NeoVis](classes/neovis.md)
 
 Cypher quarry
 
-Defined in: [index.d.ts:39](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L39)
+Defined in: [index.d.ts:39](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L39)
 
 ___
 
@@ -61,14 +61,14 @@ ___
 
 Maps a type recursively and replace each non object type with the new type
 
-#### Type parameters:
+#### Type parameters
 
-Name | Description |
-:------ | :------ |
-`T` | type to map   |
-`New` | type to map to for each non object type    |
+| Name | Description |
+| :------ | :------ |
+| `T` | type to map |
+| `New` | type to map to for each non object type |
 
-Defined in: [index.d.ts:22](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L22)
+Defined in: [index.d.ts:22](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L22)
 
 ___
 
@@ -79,14 +79,14 @@ ___
 Maps a type recursively and adds the ability for each object property to be a function that returns the same type
 but replace each non object type with a function that returns the same type
 
-#### Type parameters:
+#### Type parameters
 
-Name | Description |
-:------ | :------ |
-`T` | type to map   |
-`PARAM_TYPE` | type of parameter the functions get    |
+| Name | Description |
+| :------ | :------ |
+| `T` | type to map |
+| `PARAM_TYPE` | type of parameter the functions get |
 
-Defined in: [index.d.ts:32](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L32)
+Defined in: [index.d.ts:32](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L32)
 
 ## Variables
 
@@ -94,7 +94,7 @@ Defined in: [index.d.ts:32](https://github.com/thebestnom/neovis.js/blob/6bc034a
 
 • `Const` **NEOVIS\_ADVANCED\_CONFIG**: unique *symbol*
 
-Defined in: [index.d.ts:5](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L5)
+Defined in: [index.d.ts:5](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L5)
 
 ___
 
@@ -102,4 +102,4 @@ ___
 
 • `Const` **NEOVIS\_DEFAULT\_CONFIG**: unique *symbol*
 
-Defined in: [index.d.ts:4](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L4)
+Defined in: [index.d.ts:4](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L4)

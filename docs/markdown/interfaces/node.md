@@ -6,7 +6,7 @@ A network node with raw neo4j node
 
 ## Hierarchy
 
-* *Node*
+- *Node*
 
   ↳ **Node**
 
@@ -52,6 +52,8 @@ A network node with raw neo4j node
 
 • `Optional` **borderWidth**: *number*
 
+Inherited from: VisNetwork.Node.borderWidth
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:897
 
 ___
@@ -59,6 +61,8 @@ ___
 ### borderWidthSelected
 
 • `Optional` **borderWidthSelected**: *number*
+
+Inherited from: VisNetwork.Node.borderWidthSelected
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:899
 
@@ -68,6 +72,8 @@ ___
 
 • `Optional` **brokenImage**: *string*
 
+Inherited from: VisNetwork.Node.brokenImage
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:901
 
 ___
@@ -75,6 +81,8 @@ ___
 ### chosen
 
 • `Optional` **chosen**: *boolean* \| NodeChosen
+
+Inherited from: VisNetwork.Node.chosen
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:905
 
@@ -84,6 +92,8 @@ ___
 
 • `Optional` **color**: *string* \| Color
 
+Inherited from: VisNetwork.Node.color
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:903
 
 ___
@@ -91,6 +101,8 @@ ___
 ### fixed
 
 • `Optional` **fixed**: *boolean* \| { `x?`: *boolean* ; `y?`: *boolean*  }
+
+Inherited from: VisNetwork.Node.fixed
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:909
 
@@ -100,6 +112,8 @@ ___
 
 • `Optional` **font**: *string* \| Font
 
+Inherited from: VisNetwork.Node.font
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:914
 
 ___
@@ -107,6 +121,8 @@ ___
 ### group
 
 • `Optional` **group**: *string*
+
+Inherited from: VisNetwork.Node.group
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:916
 
@@ -116,6 +132,8 @@ ___
 
 • `Optional` **hidden**: *boolean*
 
+Inherited from: VisNetwork.Node.hidden
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:918
 
 ___
@@ -124,15 +142,17 @@ ___
 
 • `Optional` **icon**: *object*
 
-#### Type declaration:
+#### Type declaration
 
-Name | Type |
-:------ | :------ |
-`code`? | *string* |
-`color`? | *string* |
-`face`? | *string* |
-`size`? | *number* |
-`weight`? | IdType |
+| Name | Type |
+| :------ | :------ |
+| `code?` | *string* |
+| `color?` | *string* |
+| `face?` | *string* |
+| `size?` | *number* |
+| `weight?` | *string* \| *number* |
+
+Inherited from: VisNetwork.Node.icon
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:920
 
@@ -142,6 +162,8 @@ ___
 
 • `Optional` **id**: IdType
 
+Inherited from: VisNetwork.Node.id
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:760
 
 ___
@@ -149,6 +171,8 @@ ___
 ### image
 
 • `Optional` **image**: *string* \| Image
+
+Inherited from: VisNetwork.Node.image
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:928
 
@@ -158,6 +182,8 @@ ___
 
 • `Optional` **imagePadding**: *number* \| ImagePadding
 
+Inherited from: VisNetwork.Node.imagePadding
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:930
 
 ___
@@ -165,6 +191,8 @@ ___
 ### label
 
 • `Optional` **label**: *string*
+
+Inherited from: VisNetwork.Node.label
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:932
 
@@ -174,6 +202,8 @@ ___
 
 • `Optional` **labelHighlightBold**: *boolean*
 
+Inherited from: VisNetwork.Node.labelHighlightBold
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:934
 
 ___
@@ -181,6 +211,8 @@ ___
 ### level
 
 • `Optional` **level**: *number*
+
+Inherited from: VisNetwork.Node.level
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:936
 
@@ -190,14 +222,16 @@ ___
 
 • `Optional` **margin**: *object*
 
-#### Type declaration:
+#### Type declaration
 
-Name | Type |
-:------ | :------ |
-`bottom`? | *number* |
-`left`? | *number* |
-`right`? | *number* |
-`top`? | *number* |
+| Name | Type |
+| :------ | :------ |
+| `bottom?` | *number* |
+| `left?` | *number* |
+| `right?` | *number* |
+| `top?` | *number* |
+
+Inherited from: VisNetwork.Node.margin
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:938
 
@@ -207,6 +241,8 @@ ___
 
 • `Optional` **mass**: *number*
 
+Inherited from: VisNetwork.Node.mass
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:945
 
 ___
@@ -215,6 +251,8 @@ ___
 
 • `Optional` **opacity**: *number*
 
+Inherited from: VisNetwork.Node.opacity
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:907
 
 ___
@@ -222,6 +260,8 @@ ___
 ### physics
 
 • `Optional` **physics**: *boolean*
+
+Inherited from: VisNetwork.Node.physics
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:947
 
@@ -233,13 +273,15 @@ ___
 
 **`link`** https://neo4j.com/docs/api/javascript-driver/current/class/src/graph-types.js~Node.html
 
-Defined in: [index.d.ts:252](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L252)
+Defined in: [index.d.ts:252](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L252)
 
 ___
 
 ### scaling
 
 • `Optional` **scaling**: OptionsScaling
+
+Inherited from: VisNetwork.Node.scaling
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:949
 
@@ -249,6 +291,8 @@ ___
 
 • `Optional` **shadow**: *boolean* \| OptionsShadow
 
+Inherited from: VisNetwork.Node.shadow
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:951
 
 ___
@@ -256,6 +300,8 @@ ___
 ### shape
 
 • `Optional` **shape**: *string*
+
+Inherited from: VisNetwork.Node.shape
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:953
 
@@ -265,16 +311,18 @@ ___
 
 • `Optional` **shapeProperties**: *object*
 
-#### Type declaration:
+#### Type declaration
 
-Name | Type |
-:------ | :------ |
-`borderDashes`? | *boolean* \| *number*[] |
-`borderRadius`? | *number* |
-`coordinateOrigin`? | *string* |
-`interpolation`? | *boolean* |
-`useBorderWithImage`? | *boolean* |
-`useImageSize`? | *boolean* |
+| Name | Type |
+| :------ | :------ |
+| `borderDashes?` | *boolean* \| *number*[] |
+| `borderRadius?` | *number* |
+| `coordinateOrigin?` | *string* |
+| `interpolation?` | *boolean* |
+| `useBorderWithImage?` | *boolean* |
+| `useImageSize?` | *boolean* |
+
+Inherited from: VisNetwork.Node.shapeProperties
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:955
 
@@ -284,13 +332,17 @@ ___
 
 • `Optional` **size**: *number*
 
+Inherited from: VisNetwork.Node.size
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:964
 
 ___
 
 ### title
 
-• `Optional` **title**: *string*
+• `Optional` **title**: *string* \| HTMLElement
+
+Inherited from: VisNetwork.Node.title
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:966
 
@@ -299,6 +351,8 @@ ___
 ### value
 
 • `Optional` **value**: *number*
+
+Inherited from: VisNetwork.Node.value
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:968
 
@@ -312,6 +366,8 @@ If false, no widthConstraint is applied. If a number is specified, the minimum a
 The node's label's lines will be broken on spaces to stay below the maximum and the node's width
 will be set to the minimum if less than the value.
 
+Inherited from: VisNetwork.Node.widthConstraint
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:975
 
 ___
@@ -320,6 +376,8 @@ ___
 
 • `Optional` **x**: *number*
 
+Inherited from: VisNetwork.Node.x
+
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:977
 
 ___
@@ -327,5 +385,7 @@ ___
 ### y
 
 • `Optional` **y**: *number*
+
+Inherited from: VisNetwork.Node.y
 
 Defined in: node_modules/vis-network/declarations/network/Network.d.ts:979

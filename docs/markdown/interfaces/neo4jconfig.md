@@ -19,7 +19,7 @@
 
 **`link`** https://neo4j.com/docs/api/javascript-driver/current/function/index.html#static-function-driver
 
-Defined in: [index.d.ts:92](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L92)
+Defined in: [index.d.ts:92](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L92)
 
 ___
 
@@ -27,7 +27,7 @@ ___
 
 • **server\_password**: *string*
 
-Defined in: [index.d.ts:88](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L88)
+Defined in: [index.d.ts:88](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L88)
 
 ___
 
@@ -39,7 +39,7 @@ neo4j server
 
 **`example`** bolt://localhost:7687
 
-Defined in: [index.d.ts:86](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L86)
+Defined in: [index.d.ts:86](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L86)
 
 ___
 
@@ -47,4 +47,4 @@ ___
 
 • **server\_user**: *string*
 
-Defined in: [index.d.ts:87](https://github.com/thebestnom/neovis.js/blob/6bc034a/index.d.ts#L87)
+Defined in: [index.d.ts:87](https://github.com/thebestnom/neovis.js/blob/689e3a9/index.d.ts#L87)
