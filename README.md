@@ -35,14 +35,14 @@ For ease of use Neovis.js can be obtained from Neo4jLabs CDN:
 
 ```html
 
-<script src="https://unpkg.com/neovis.js@2.0.0-alpha.3"></script>
+<script src="https://unpkg.com/neovis.js@2.0.0-alpha.5"></script>
 ```
 
 *Version without neo4j-driver dependency*
 
 ```html
 
-<script src="https://unpkg.com/neovis.js@2.0.0-alpha.3/dist/neovis-without-dependencies.js"></script>
+<script src="https://unpkg.com/neovis.js@2.0.0-alpha.5/dist/neovis-without-dependencies.js"></script>
 ```
 
 ## Quickstart Example
