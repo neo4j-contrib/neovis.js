@@ -504,4 +504,70 @@ export function objectToTitleString(neo4jNode, title_properties) {
 	return title;
 }
 
+export function migrateFromOldConfig(oldNeoVisConfig) {
+	return {
+		container_id: oldNeoVisConfig.container_id,
+		initial_cypher: oldNeoVisConfig.initial_cypher,
+		console_debug: oldNeoVisConfig.console_debug,
+		neo4j: {
+			server_url: oldNeoVisConfig.server_url,
+			server_user: oldNeoVisConfig.server_url,
+			server_password: oldNeoVisConfig.server_password,
+			driverConfig: oldNeoVisConfig.encrypted || oldNeoVisConfig.trust ? {
+				encrypted: oldNeoVisConfig.encrypted,
+				trust: oldNeoVisConfig.trust
+			} : undefined
+		},
+		visConfig: oldNeoVisConfig.arrows || oldNeoVisConfig.hierarchical ? {
+			edges: oldNeoVisConfig.arrows ? {
+				arrows: {
+					to: {
+						enabled: oldNeoVisConfig.arrows
+					}
+				}
+			} : undefined,
+			layout: oldNeoVisConfig.hierarchical ? {
+				enabled: oldNeoVisConfig.hierarchical,
+				sortMethod: oldNeoVisConfig.hierarchical_sort_method
+			} : undefined
+		} : undefined,
+		labels: oldNeoVisConfig.labels ? Object.entries(oldNeoVisConfig.labels)
+			.concat(oldNeoVisConfig.labels?.[NEOVIS_DEFAULT_CONFIG] ? [[NEOVIS_DEFAULT_CONFIG, oldNeoVisConfig.labels[NEOVIS_DEFAULT_CONFIG]]] : [])
+			.reduce((newLabelsConfig, [label, oldLabelConfig]) => {
+				newLabelsConfig[label] = {
+					label: typeof oldLabelConfig.caption !== 'function' ? oldLabelConfig.caption : undefined,
+					value: oldLabelConfig.size,
+					group: oldLabelConfig.community,
+					[NEOVIS_ADVANCED_CONFIG]: {
+						cypher: oldLabelConfig.sizeCypher ? {
+							value: oldLabelConfig.sizeCypher
+						} : undefined,
+						function: deepmerge({
+							title: (props) => objectToTitleHtml(props, oldLabelConfig.title_properties)
+						}, typeof oldLabelConfig.caption === 'function' ? { label: oldLabelConfig.caption } : {}) ,
+						static: {
+							font: oldLabelConfig.font,
+							shape: oldLabelConfig.image ? 'image' : 'dot',
+							image: oldLabelConfig.image
+						}
+					}
+				};
+				return newLabelsConfig;
+			}, {}) : undefined,
+		relationships: oldNeoVisConfig.relationships ? Object.entries(oldNeoVisConfig.relationships)
+			.concat(oldNeoVisConfig.relationships[NEOVIS_DEFAULT_CONFIG] ? [[NEOVIS_DEFAULT_CONFIG, oldNeoVisConfig.relationships[NEOVIS_DEFAULT_CONFIG]]] : [])
+			.reduce((newLabelsConfig, [relationship, oldRelationshipsConfig]) => {
+				newLabelsConfig[relationship] = {
+					value: oldRelationshipsConfig.thickness,
+					[NEOVIS_ADVANCED_CONFIG]: {
+						function: {
+							title: oldRelationshipsConfig.caption ? objectToTitleHtml : undefined
+						}
+					}
+				};
+				return newLabelsConfig;
+			}, {}) : undefined
+	};
+}
+
 export default NeoVis;

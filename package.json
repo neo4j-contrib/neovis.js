@@ -72,7 +72,7 @@
     "@babel/runtime-corejs3": "^7.12.13",
     "deepmerge": "^4.2.2",
     "neo4j-driver": "^4.1.0",
-    "vis-network": "^9.0.2"
+    "vis-network": "^9.1.0"
   },
   "jest": {
     "moduleNameMapper": {

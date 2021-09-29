@@ -345,3 +345,53 @@ export function objectToTitleHtml(neo4jNode: Neo4j.Node, title_properties: [stri
  * @param title_properties which properties to map
  */
 export function objectToTitleString(neo4jNode: Neo4j.Node, title_properties: [string]): string;
+
+/**
+ * @deprecated for migration only
+ */
+export interface OldLabelConfig {
+    caption?: string;
+    size?: string;
+    community?: string;
+    sizeCypher?: string;
+    image?: string;
+}
+
+/**
+ * @deprecated for migration only
+ */
+export interface OldRelationshipConfig {
+    thickness?: string;
+    caption?: boolean | string;
+}
+
+/**
+ * @deprecated for migration only
+ */
+export interface OldNeoVisConfig {
+    container_id: string;
+    server_url: string;
+    server_user: string;
+    server_password: string;
+    labels?: {
+        [label: string]: OldLabelConfig,
+        [NEOVIS_DEFAULT_CONFIG]?: OldLabelConfig
+    };
+    relationships?: {
+        [relationship: string]: OldRelationshipConfig,
+        [NEOVIS_DEFAULT_CONFIG]?: OldRelationshipConfig
+    };
+    arrows?: boolean;
+    hierarchical?: boolean;
+    hierarchical_sort_method?: "hubsize" | "directed";
+    initial_cypher?: string;
+    console_debug?: boolean;
+    encrypted?: "ENCRYPTION_OFF" | "ENCRYPTION_ON";
+    trust?: "TRUST_ALL_CERTIFICATES" | "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES";
+}
+/**
+ * @deprecated will be removed in the future
+ * migrate old config to the new one
+ * @param oldNeoVisConfig 1.0.0 config object
+ */
+export function migrateFromOldConfig(oldNeoVisConfig: OldNeoVisConfig): NeovisConfig;

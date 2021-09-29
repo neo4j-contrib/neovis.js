@@ -1,6 +1,5 @@
 import Neo4j, * as Neo4jMock from 'neo4j-driver';
-import Neovis from '../src/neovis';
-import { NEOVIS_DEFAULT_CONFIG, NEOVIS_ADVANCED_CONFIG } from '../src/neovis';
+import Neovis, { NEOVIS_DEFAULT_CONFIG, NEOVIS_ADVANCED_CONFIG, migrateFromOldConfig }  from '../src/neovis';
 import { NeoVisEvents } from '../src/events';
 import * as testUtils from './testUtils';
 
@@ -523,5 +522,37 @@ describe('Neovis', () => {
 			expect(neovis._data.nodes.get(1)).toHaveProperty('label', intProperityValue);
 		});
 
+	});
+
+	describe('neovis config migration', () => {
+		const oldConfig = {
+			initial_cypher,
+			container_id,
+			labels: {
+				a: {
+					caption: 'name'
+				},
+				[NEOVIS_DEFAULT_CONFIG]: {
+					test: 'test'
+				}
+			},
+			relationships: {
+				a: {
+					thickness: 0.1
+				},
+				[NEOVIS_DEFAULT_CONFIG]: {
+					test: 'test'
+				}
+			}
+		};
+		it('should work after full old config migration', async () => {
+			const neovis = new Neovis(migrateFromOldConfig(oldConfig));
+			testUtils.mockNormalRunSubscribe([
+				testUtils.makeRecord([testUtils.makeNode([label1])]),
+			]);
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(neovis._data.nodes.get(1)).toBeDefined();
+		});
 	});
 });
