@@ -44,16 +44,6 @@ export class NeoVis {
 	 *
 	 * @constructor
 	 * @param {object} config - configures the visualization and Neo4j server connection
-	 *  {
-	 *    container:
-	 *    server_url:
-	 *    server_password?:
-	 *    server_username?:
-	 *    server_database?:
-	 *    labels:
-	 *
-	 *  }
-	 *
 	 */
 	constructor(config) {
 		this._init(config);
@@ -71,7 +61,7 @@ export class NeoVis {
 
 	_init(config) {
 
-		if (config.labels && config.labels[NEOVIS_DEFAULT_CONFIG]) {
+		if (config.labels?.[NEOVIS_DEFAULT_CONFIG]) {
 			for (let key of Object.keys(config.labels)) {
 				// getting out of my for not changing the original config object
 				config = {
@@ -83,7 +73,7 @@ export class NeoVis {
 				};
 			}
 		}
-		if (config.relationships && config.relationships[NEOVIS_DEFAULT_CONFIG]) {
+		if (config.relationships?.[NEOVIS_DEFAULT_CONFIG]) {
 			// getting out of my for not changing the original config object
 			for (let key of Object.keys(config.relationships)) {
 				config = {
@@ -133,9 +123,9 @@ export class NeoVis {
 		return results;
 	}
 
-	_runFunction(func, node) {
+	async _runFunction(func, node) {
 		if (typeof func === 'function') {
-			return func(node);
+			return await func(node);
 		}
 		throw new Error('Function type property field must be a function');
 	}
@@ -189,7 +179,7 @@ export class NeoVis {
 		}
 	}
 
-	_buildFunctionObject(functionConfig, object, neo4jObj) {
+	async _buildFunctionObject(functionConfig, object, neo4jObj) {
 		if (functionConfig && typeof functionConfig === 'object') {
 			for (const prop of Object.keys(functionConfig)) {
 				const func = functionConfig[prop];
@@ -197,17 +187,50 @@ export class NeoVis {
 					if (!object[prop]) {
 						object[prop] = {};
 					}
-					this._buildFunctionObject(func, object[prop], neo4jObj);
+					await this._buildFunctionObject(func, object[prop], neo4jObj);
 				} else {
-					object[prop] = this._runFunction(func, neo4jObj);
+					object[prop] = await this._runFunction(func, neo4jObj);
 				}
 			}
 		}
 	}
 
+	async #buildVisObject(config, baseObejct, neo4jObject) {
+		if(!config) {
+			return;
+		}
+		let staticConfig;
+		let cypherConfig;
+		let propertyConfig;
+		let functionConfig;
+
+		const advancedConfig = config[NEOVIS_ADVANCED_CONFIG];
+
+		if(this._config.non_flat) {
+			if (advancedConfig !== undefined) {
+				throw new Error('Advanced config and non flat config should not be together');
+			}
+			staticConfig = config.static;
+			cypherConfig = config.cypher;
+			propertyConfig = config.property;
+			functionConfig = config.function;
+		}  else {
+			propertyConfig = config;
+			if (advancedConfig !== undefined && typeof advancedConfig != 'object') {
+				throw new Error('Advanced config should be an object. See documentation for details.');
+			}
+			cypherConfig = advancedConfig?.cypher;
+			staticConfig = advancedConfig?.static;
+			functionConfig = advancedConfig?.function;
+		}
+		this._buildPropertyNameObject(propertyConfig, baseObejct, neo4jObject);
+		this._buildStaticObject(staticConfig, baseObejct);
+		await this._buildCypherObject(cypherConfig, baseObejct, neo4jObject);
+		await this._buildFunctionObject(functionConfig, baseObejct, neo4jObject);
+	}
+
 	/**
 	 * Build node object for vis from a neo4j Node
-	 * FIXME: use config
 	 * FIXME: move to private api
 	 * @param neo4jNode
 	 * @returns {{}}
@@ -216,27 +239,13 @@ export class NeoVis {
 		let node = {};
 		let label = neo4jNode.labels[0];
 
-		let labelConfig = this._config && this._config.labels && (this._config.labels[label] || this._config.labels[NEOVIS_DEFAULT_CONFIG]);
-
-		const advancedConfig = labelConfig && labelConfig[NEOVIS_ADVANCED_CONFIG];
+		let labelConfig = this._config?.labels?.[label] ?? this._config?.defaultLabelConfig ?? this._config?.labels?.[NEOVIS_DEFAULT_CONFIG];
 
 		node.id = neo4jNode.identity;
 		node.raw = neo4jNode;
 
-		this._buildPropertyNameObject(labelConfig, node, neo4jNode);
-		if (advancedConfig !== undefined && typeof advancedConfig != 'object') {
-			throw new Error('Advanced config should be an object. See documentation for details.');
-		}
-		if (advancedConfig && typeof advancedConfig === 'object') {
-			const staticConfig = advancedConfig.static;
-			this._buildStaticObject(staticConfig, node);
+		await this.#buildVisObject(labelConfig, node, neo4jNode);
 
-			const cypherConfig = advancedConfig.cypher;
-			await this._buildCypherObject(cypherConfig, node, node.id);
-
-			const functionConfig = advancedConfig.function;
-			this._buildFunctionObject(functionConfig, node, neo4jNode);
-		}
 		return node;
 	}
 
@@ -247,10 +256,8 @@ export class NeoVis {
 	 * @returns {{}}
 	 */
 	async buildEdgeVisObject(r) {
-		const nodeTypeConfig = this._config && this._config.relationships &&
-			(this._config.relationships[r.type] || this._config.relationships[NEOVIS_DEFAULT_CONFIG]);
-
-		const advancedConfig = nodeTypeConfig && nodeTypeConfig[NEOVIS_ADVANCED_CONFIG];
+		const relationshipConfig = this._config?.relationships?.[r.type] ?? this._config?.defaultRelationshipConfig ??
+			this._config?.relationships?.[NEOVIS_DEFAULT_CONFIG];
 
 		let edge = {};
 		edge.id = r.identity;
@@ -258,20 +265,7 @@ export class NeoVis {
 		edge.to = r.end;
 		edge.raw = r;
 
-		this._buildPropertyNameObject(nodeTypeConfig, edge, r);
-		if (advancedConfig !== undefined && typeof advancedConfig != 'object') {
-			throw new Error('Advanced config should be an object. See documentation for details.');
-		}
-		if (advancedConfig && typeof advancedConfig === 'object') {
-			const staticConfig = advancedConfig.static;
-			this._buildStaticObject(staticConfig, edge);
-
-			const cypherConfig = advancedConfig.cypher;
-			await this._buildCypherObject(cypherConfig, edge, edge.id);
-
-			const functionConfig = advancedConfig.function;
-			this._buildFunctionObject(functionConfig, edge, r);
-		}
+		await this.#buildVisObject(relationshipConfig, edge, r);
 
 		return edge;
 	}
@@ -284,7 +278,7 @@ export class NeoVis {
 		// run query
 		let recordCount = 0;
 		const _query = query || this._query;
-		const session = this._driver.session(this._database && { database: this._database });
+		const session = this._driver.session(this._database ?? { database: this._database });
 		const dataBuildPromises = [];
 		session
 			.run(_query, { limit: 30 })
@@ -293,12 +287,12 @@ export class NeoVis {
 					recordCount++;
 
 					this._consoleLog('CLASS NAME');
-					this._consoleLog(record && record.constructor.name);
+					this._consoleLog(record?.constructor.name);
 					this._consoleLog(record);
 
 					const dataPromises = Object.values(record.toObject()).map(async (v) => {
 						this._consoleLog('Constructor:');
-						this._consoleLog(v && v.constructor.name);
+						this._consoleLog(v?.constructor.name);
 						if (v instanceof Neo4j.types.Node) {
 							let node = await this.buildNodeVisObject(v);
 							try {
@@ -329,7 +323,7 @@ export class NeoVis {
 						} else if (v instanceof Array) {
 							for (let obj of v) {
 								this._consoleLog('Array element constructor:');
-								this._consoleLog(obj && obj.constructor.name);
+								this._consoleLog(obj?.constructor.name);
 								if (obj instanceof Neo4j.types.Node) {
 									let node = await this.buildNodeVisObject(obj);
 									this._data.nodes.update(node);
@@ -509,6 +503,7 @@ export function migrateFromOldConfig(oldNeoVisConfig) {
 		container_id: oldNeoVisConfig.container_id,
 		initial_cypher: oldNeoVisConfig.initial_cypher,
 		console_debug: oldNeoVisConfig.console_debug,
+		server_database: oldNeoVisConfig.server_database,
 		neo4j: {
 			server_url: oldNeoVisConfig.server_url,
 			server_user: oldNeoVisConfig.server_url,
