@@ -1,5 +1,5 @@
 import Neo4j, * as Neo4jMock from 'neo4j-driver';
-import Neovis, { NEOVIS_DEFAULT_CONFIG, NEOVIS_ADVANCED_CONFIG, migrateFromOldConfig }  from '../src/neovis';
+import Neovis, { NEOVIS_DEFAULT_CONFIG, NEOVIS_ADVANCED_CONFIG, migrateFromOldConfig } from '../src/neovis';
 import { NeoVisEvents } from '../src/events';
 import * as testUtils from './testUtils';
 
@@ -357,6 +357,84 @@ describe('Neovis', () => {
 			expect(neovis._data.nodes.get(1)).toHaveProperty('font', undefined);
 		});
 	});
+	describe('neovis non flat config test', () => {
+		const imageUrl = 'https://visjs.org/images/visjs_logo.png';
+		const fontSize = 28;
+		const fontColor = '#00FF00';
+		let config = {
+			container_id: container_id,
+			non_flat: true,
+			labels: {
+				[label1]: {
+					'static': {
+						image: imageUrl,
+						font: {
+							'size': fontSize,
+							'color': fontColor,
+						}
+					}
+				}
+			},
+			initial_cypher: initial_cypher
+		};
+		beforeEach(() => {
+			neovis = new Neovis(config);
+		});
+
+		it('image field in config should reflect in node data', async () => {
+			const node1 = testUtils.makeNode([label1]);
+			testUtils.mockFullRunSubscribe({
+				[initial_cypher]: {
+					default: [testUtils.makeRecord([node1])]
+				}
+			});
+
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(neovis._data.nodes.get(1)).toHaveProperty('image', imageUrl);
+		});
+
+		it('image field for type not specified in config should not reflect in node data', async () => {
+			const node1 = testUtils.makeNode([label2]);
+			testUtils.mockFullRunSubscribe({
+				[initial_cypher]: {
+					default: [testUtils.makeRecord([node1])]
+				}
+			});
+
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(neovis._data.nodes.get(1)).toHaveProperty('image', undefined);
+		});
+
+		it('font field in config should reflect in node data', async () => {
+			const node1 = testUtils.makeNode([label1]);
+			testUtils.mockFullRunSubscribe({
+				[initial_cypher]: {
+					default: [testUtils.makeRecord([node1])]
+				}
+			});
+
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(neovis._data.nodes.get(1).font).toBeDefined();
+			expect(neovis._data.nodes.get(1).font.size).toBe(fontSize);
+			expect(neovis._data.nodes.get(1).font.color).toBe(fontColor);
+		});
+
+		it('font field for type not specified in config should not reflect in node data', async () => {
+			const node1 = testUtils.makeNode([label2]);
+			testUtils.mockFullRunSubscribe({
+				[initial_cypher]: {
+					default: [testUtils.makeRecord([node1])]
+				}
+			});
+
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(neovis._data.nodes.get(1)).toHaveProperty('font', undefined);
+		});
+	});
 
 	// TODO: After upgrading to merge config, type casting is failing due to not able to detect target type. A proper way
 	// 			either let the user to define type casting or do it automaticlly need to be implemented.
@@ -472,7 +550,7 @@ describe('Neovis', () => {
 					[label1]: {
 						[NEOVIS_ADVANCED_CONFIG]: {
 							'function': {
-								'label': () => {return intProperityValue;}
+								'label': () => intProperityValue
 							}
 						}
 					}
