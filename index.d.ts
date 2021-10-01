@@ -50,6 +50,10 @@ export interface NeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> {
     function?: RecursiveMapToFunction<VIS_TYPE, NEO_TYPE>;
 }
 
+export interface NonFlatNeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> extends NeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> {
+    property?: RecursiveMapTo<VIS_TYPE, string>;
+}
+
 /**
  * A mapper between neo4j node properties names to vis-network node config
  * @link https://visjs.github.io/vis-network/docs/network/nodes.html
@@ -83,13 +87,51 @@ export interface Neo4jConfig {
      * neo4j server
      * @example bolt://localhost:7687
      */
-    server_url: string;
-    server_user: string;
-    server_password: string;
+    server_url?: string;
+    server_user?: string;
+    server_password?: string;
     /**
      * @link https://neo4j.com/docs/api/javascript-driver/current/function/index.html#configuration
      */
-    driverConfig: Neo4j.Config;
+    driverConfig?: Neo4j.Config;
+}
+
+export interface BaseNeovisConfig {
+    /**
+     * Html id of the element you want NeoVis to render on
+     */
+    container_id: string;
+    /**
+     * database name you want to connect to
+     * @default neo4j
+     */
+    server_database?: string;
+    /**
+     * Neo4j Driver instance or configuration to make one
+     */
+    neo4j?: Neo4j.Driver | Neo4jConfig;
+    /**
+     * Vis network config to override neovis defaults
+     * @link https://visjs.github.io/vis-network/docs/network/#options
+     */
+    visConfig?: VisNetwork.Options;
+
+    /**
+     * The Cypher query that will get the data
+     */
+    initial_cypher?: Cypher;
+    /**
+     * Should output debug messages to console
+     * @default false
+     */
+    console_debug?: boolean;
+
+
+    /**
+     * Tells Neovis is the config is flat or not
+     * @default false
+     */
+    non_flat?: boolean;
 }
 
 /**
@@ -167,25 +209,8 @@ export interface Neo4jConfig {
  * }
  * ```
  */
-export interface NeovisConfig {
-    /**
-     * Html id of the element you want NeoVis to render on
-     */
-    container_id: string;
-    /**
-     * database name you want to connect to
-     * @default neo4j
-     */
-    server_database: string;
-    /**
-     * Neo4j Driver instance or configuration to make one
-     */
-    neo4j: Neo4j.Driver | Neo4jConfig;
-    /**
-     * Vis network config to override neovis defaults
-     * @link https://visjs.github.io/vis-network/docs/network/#options
-     */
-    visConfig: VisNetwork.Options;
+export interface NeovisConfig extends BaseNeovisConfig {
+    non_flat?: false;
     /**
      * @example ```javascript
      *{
@@ -231,15 +256,14 @@ export interface NeovisConfig {
         [relationship: string]: RelationshipConfig,
         [NEOVIS_DEFAULT_CONFIG]?: RelationshipConfig
     };
-    /**
-     * The Cypher query that will get the data
-     */
-    initial_cypher?: Cypher;
-    /**
-     * Should output debug messages to console
-     * @default false
-     */
-    console_debug?: boolean;
+}
+
+export interface NonFlatNeovisConfig extends BaseNeovisConfig {
+    non_flat: true;
+    defaultLabelConfig?: NonFlatNeoVisAdvanceConfig<VisNetwork.Node, Neo4j.Node<number>>;
+    defaultRelationshipsConfig?: NonFlatNeoVisAdvanceConfig<VisNetwork.Edge, Neo4j.Relationship<number>>;
+    labels?: Record<string, NonFlatNeoVisAdvanceConfig<VisNetwork.Node, Neo4j.Node<number>>>
+    relationships?: Record<string, NonFlatNeoVisAdvanceConfig<VisNetwork.Edge, Neo4j.Relationship<number>>>;
 }
 
 /**
@@ -263,7 +287,7 @@ export interface Edge extends VisNetwork.Edge {
 }
 
 export declare class NeoVis {
-    constructor(config: NeovisConfig);
+    constructor(config: NeovisConfig | NonFlatNeovisConfig);
 
     /**
      * All view nodes as DataSet
@@ -304,7 +328,7 @@ export declare class NeoVis {
      * Reset the config object and reload data
      * @param config
      */
-    reinit(config: NeovisConfig): void;
+    reinit(config: NeovisConfig | NonFlatNeovisConfig): void;
 
     /**
      * Clear the network and fetch live data form the server and reload the visualization
@@ -373,6 +397,7 @@ export interface OldNeoVisConfig {
     server_url: string;
     server_user: string;
     server_password: string;
+    server_database: string;
     labels?: {
         [label: string]: OldLabelConfig,
         [NEOVIS_DEFAULT_CONFIG]?: OldLabelConfig
@@ -389,6 +414,7 @@ export interface OldNeoVisConfig {
     encrypted?: "ENCRYPTION_OFF" | "ENCRYPTION_ON";
     trust?: "TRUST_ALL_CERTIFICATES" | "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES";
 }
+
 /**
  * @deprecated will be removed in the future
  * migrate old config to the new one
