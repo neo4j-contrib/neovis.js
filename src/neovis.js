@@ -206,7 +206,7 @@ export class NeoVis {
 
 		const advancedConfig = config[NEOVIS_ADVANCED_CONFIG];
 
-		if(this._config.non_flat) {
+		if(this._config.nonFlat) {
 			if (advancedConfig !== undefined) {
 				throw new Error('Advanced config and non flat config should not be together');
 			}

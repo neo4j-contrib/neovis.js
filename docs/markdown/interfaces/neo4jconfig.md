@@ -15,36 +15,36 @@
 
 ### driverConfig
 
-• **driverConfig**: Config
+• `Optional` **driverConfig**: Config
 
 **`link`** https://neo4j.com/docs/api/javascript-driver/current/function/index.html#configuration
 
-Defined in: [index.d.ts:92](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L92)
+Defined in: [index.d.ts:96](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L96)
 
 ___
 
 ### server\_password
 
-• **server\_password**: *string*
+• `Optional` **server\_password**: *string*
 
-Defined in: [index.d.ts:88](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L88)
+Defined in: [index.d.ts:92](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L92)
 
 ___
 
 ### server\_url
 
-• **server\_url**: *string*
+• `Optional` **server\_url**: *string*
 
 neo4j server
 
 **`example`** bolt://localhost:7687
 
-Defined in: [index.d.ts:86](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L86)
+Defined in: [index.d.ts:90](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L90)
 
 ___
 
 ### server\_user
 
-• **server\_user**: *string*
+• `Optional` **server\_user**: *string*
 
-Defined in: [index.d.ts:87](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L87)
+Defined in: [index.d.ts:91](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L91)

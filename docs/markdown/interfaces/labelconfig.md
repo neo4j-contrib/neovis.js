@@ -59,7 +59,7 @@ mapping static options to each node
 mapping cypher to run for each node to determine vis-network node option
 mapping function that gets the neo4j node and returns vis-network node option
 
-Defined in: [index.d.ts:64](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L64)
+Defined in: [index.d.ts:68](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L68)
 
 ___
 
