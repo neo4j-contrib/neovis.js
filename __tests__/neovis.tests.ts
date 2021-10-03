@@ -215,8 +215,6 @@ describe('Neovis', () => {
 			neovis = new Neovis(neovisConfig);
 		});
 
-		// TODO: session.readTransaction needs to be properly mocked
-		//       skipping this test until mock is added
 		it('should call sizeCypher and save return value to data set value', async () => {
 			const node = testUtils.makeNode([label1]);
 			testUtils.mockFullRunSubscribe({
@@ -381,57 +379,6 @@ describe('Neovis', () => {
 	describe('neovis type casting test', () => {
 		const intProperity = 'intProperity';
 		const intProperityValue = 40;
-		const expectedIntProperityCaption = '40';
-
-		const floatProperity = 'floatProperity';
-		const floatProperityValue = 40.5;
-		const expectedFloatProperityCaption = '40.5';
-
-		it.skip('should cast int type properity as caption', async () => {
-			let config = {
-				container_id: container_id,
-				labels: {
-					[label1]: {
-						'label': intProperity
-					}
-				},
-				initial_cypher: initial_cypher
-			};
-			neovis = new Neovis(config);
-			const node1 = testUtils.makeNode([label1], { [intProperity]: intProperityValue });
-			testUtils.mockFullRunSubscribe({
-				[initial_cypher]: {
-					default: [testUtils.makeRecord([node1])]
-				}
-			});
-			neovis.render();
-			await testUtils.neovisRenderDonePromise(neovis);
-			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1);
-			expect(neovis._data.nodes.get(1)).toHaveProperty('label', expectedIntProperityCaption); // 1 node before update with cypher
-		});
-
-		it.skip('should cast float type properity as caption', async () => {
-			let config = {
-				container_id: container_id,
-				labels: {
-					[label1]: {
-						'label': floatProperity
-					}
-				},
-				initial_cypher: initial_cypher
-			};
-			neovis = new Neovis(config);
-			const node1 = testUtils.makeNode([label1], { [floatProperity]: floatProperityValue });
-			testUtils.mockFullRunSubscribe({
-				[initial_cypher]: {
-					default: [testUtils.makeRecord([node1])]
-				}
-			});
-			neovis.render();
-			await testUtils.neovisRenderDonePromise(neovis);
-			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1);
-			expect(neovis._data.nodes.get(1)).toHaveProperty('label', expectedFloatProperityCaption); // 1 node before update with cypher
-		});
 
 		it('should merge property name type to vis.js config properly', async () => {
 			let config = {
@@ -510,8 +457,6 @@ describe('Neovis', () => {
 			expect(neovis._data.nodes.get(1)).toHaveProperty('label', intProperityValue);
 		});
 
-		// TODO: session.readTransaction needs to be properly mocked
-		//       skipping this test until mock is added
 		it('should merge cypher type to vis.js config properly', async () => {
 			const sizeCypher = 'sizeCypher';
 			let config = {

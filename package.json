@@ -13,7 +13,7 @@
   "scripts": {
     "test": "jest __tests__/neovis.tests.js",
     "eslint": "eslint .",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "run-s typedoc build",
     "clean": "rimraf ./dist",
     "build": "run-s clean build:prod",
     "build-dev": "run-s clean build:dev",
@@ -24,8 +24,8 @@
     "build:dev:with-dependencies": "cross-env BUILD_WITH_DEPENDENCIES=true webpack --mode=development",
     "build:dev:without-dependencies": "webpack --mode=development",
     "typedoc": "run-p typedoc:*",
-    "typedoc:html": "typedoc index.d.ts --out docs/html --plugin none",
-    "typedoc:markdown": "typedoc index.d.ts --out docs/markdown --plugin typedoc-plugin-markdown --readme none"
+    "typedoc:html": "typedoc src/neovis.ts --out docs/html --plugin none",
+    "typedoc:markdown": "typedoc src/neovis.ts --out docs/markdown --plugin typedoc-plugin-markdown --readme none"
   },
   "repository": {
     "type": "git",
@@ -45,7 +45,9 @@
     "@babel/plugin-proposal-class-properties": "^7.12.13",
     "@babel/plugin-transform-runtime": "^7.12.15",
     "@babel/preset-env": "^7.12.13",
+    "@babel/preset-typescript": "^7.15.0",
     "@egjs/hammerjs": "^2.0.17",
+    "@types/deepmerge": "^2.2.0",
     "babel-loader": "^8.2.2",
     "core-js": "^3.9.0",
     "cross-env": "^7.0.3",
@@ -59,9 +61,9 @@
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
     "style-loader": "^2.0.0",
-    "typedoc": "^0.20.27",
+    "typedoc": "^0.22.5",
     "typedoc-plugin-markdown": "^3.5.0",
-    "typescript": "^4.1.5",
+    "typescript": "^4.4.3",
     "url-loader": "^4.1.1",
     "vis-data": "^7.1.2",
     "vis-util": "^5.0.2",
@@ -71,7 +73,7 @@
   "dependencies": {
     "@babel/runtime-corejs3": "^7.12.13",
     "deepmerge": "^4.2.2",
-    "neo4j-driver": "^4.1.0",
+    "neo4j-driver": "^4.3.3",
     "vis-network": "^9.1.0"
   },
   "jest": {
