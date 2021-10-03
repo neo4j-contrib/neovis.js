@@ -9,6 +9,12 @@
 | `VIS_TYPE` |
 | `NEO_TYPE` |
 
+## Hierarchy
+
+- **NeoVisAdvanceConfig**
+
+  ↳ [*NonFlatNeoVisAdvanceConfig*](nonflatneovisadvanceconfig.md)
+
 ## Table of contents
 
 ### Properties
@@ -25,7 +31,7 @@
 
 Cypher that will be called for every object (will look the same as
 
-Defined in: [index.d.ts:49](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L49)
+Defined in: [index.d.ts:49](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L49)
 
 ___
 
@@ -33,7 +39,7 @@ ___
 
 • `Optional` **function**: [*RecursiveMapToFunction*](../README.md#recursivemaptofunction)<VIS\_TYPE, NEO\_TYPE\>
 
-Defined in: [index.d.ts:50](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L50)
+Defined in: [index.d.ts:50](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L50)
 
 ___
 
@@ -43,4 +49,4 @@ ___
 
 Static values that will the same for every node/relationship
 
-Defined in: [index.d.ts:45](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L45)
+Defined in: [index.d.ts:45](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L45)

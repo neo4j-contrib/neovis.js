@@ -131,7 +131,7 @@ export interface BaseNeovisConfig {
      * Tells Neovis is the config is flat or not
      * @default false
      */
-    non_flat?: boolean;
+    nonFlat?: boolean;
 }
 
 /**
@@ -210,7 +210,7 @@ export interface BaseNeovisConfig {
  * ```
  */
 export interface NeovisConfig extends BaseNeovisConfig {
-    non_flat?: false;
+    nonFlat?: false;
     /**
      * @example ```javascript
      *{
@@ -258,8 +258,64 @@ export interface NeovisConfig extends BaseNeovisConfig {
     };
 }
 
+/**
+ * non flat version of the configuration (without Symbols)
+ * look at the normal config for more information
+ *
+ * @example
+ * ```js
+ * {
+ *      container_id: 'viz',
+ *      nonFlat: true,
+ *      neo4j: {
+ *      	server_url: 'bolt://localhost:7687',
+ *      	server_user: 'neo4j',
+ *      	server_password: 'gland-presentation-worry'
+ *      },
+ *      visConfig: {
+ *      	nodes: {
+ *      		shape: 'square'
+ *      	},
+ *      	edges: {
+ *      		arrows: {
+ *      			to: {enabled: true}
+ *      		}
+ *      	},
+ *      },
+ *      labels: {
+ *      	Character: {
+ *      		property: {
+ *      		    label: 'pagerank',
+ *      		    group: 'community'
+ *      	    }
+ *      		cypher: {
+ *      			value: "MATCH (n) WHERE id(n) = $id RETURN n.size"
+ *      		},
+ *      		function: {
+ *      			title: (node) => {
+ *      				return viz.nodeToHtml(node, undefined);
+ *      			}
+ *      		}
+ *      	}
+ *      },
+ *      relationships: {
+ *      	INTERACTS: {
+ *              property: {
+ *      		    value: 'weight'
+ *      	    }
+ *      		function: {
+ *      			title: (edge) => {
+ *      				return viz.nodeToHtml(edge, undefined);
+ *      			}
+ *      		}
+ *      	}
+ *      },
+ *      initial_cypher: 'MATCH (n)-[r]->(m) RETURN n,r,m'
+ * }
+ * ```
+ */
 export interface NonFlatNeovisConfig extends BaseNeovisConfig {
-    non_flat: true;
+    nonFlat: true;
     defaultLabelConfig?: NonFlatNeoVisAdvanceConfig<VisNetwork.Node, Neo4j.Node<number>>;
     defaultRelationshipsConfig?: NonFlatNeoVisAdvanceConfig<VisNetwork.Edge, Neo4j.Relationship<number>>;
     labels?: Record<string, NonFlatNeoVisAdvanceConfig<VisNetwork.Node, Neo4j.Node<number>>>

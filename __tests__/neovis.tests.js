@@ -303,7 +303,7 @@ describe('Neovis', () => {
 		initial_cypher: initial_cypher
 	}], ['non flat config', {
 		container_id,
-		non_flat: true,
+		nonFlat: true,
 		labels: {
 			[label1]: {
 				static: {

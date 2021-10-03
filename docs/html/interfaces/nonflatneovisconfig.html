@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>NeovisConfig | neovis.js</title>
+	<title>NonFlatNeovisConfig | neovis.js</title>
 	<meta name="description" content="Documentation for neovis.js">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules.html">neovis.js</a>
 				</li>
 				<li>
-					<a href="neovisconfig.html">NeovisConfig</a>
+					<a href="nonflatneovisconfig.html">NonFlatNeovisConfig</a>
 				</li>
 			</ul>
-			<h1>Interface NeovisConfig</h1>
+			<h1>Interface NonFlatNeovisConfig</h1>
 		</div>
 	</div>
 </header>
@@ -67,33 +67,15 @@
 		<div class="col-8 col-content">
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>non flat version of the configuration (without Symbols)
+						look at the normal config for more information</p>
+					</div>
 					<dl class="tsd-comment-tags">
 						<dt>example</dt>
-						<dd><pre><code class="language-js"><span style="color: #008000">//simple</span>
-<span style="color: #000000">{</span>
-<span style="color: #000000">     container_id: </span><span style="color: #A31515">&quot;viz&quot;</span><span style="color: #000000">,</span>
-<span style="color: #000000">     neo4j: {</span>
-<span style="color: #000000">         server_url: </span><span style="color: #A31515">&quot;bolt://localhost:7687&quot;</span><span style="color: #000000">,</span>
-<span style="color: #000000">         server_user: </span><span style="color: #A31515">&quot;neo4j&quot;</span><span style="color: #000000">,</span>
-<span style="color: #000000">         server_password: </span><span style="color: #A31515">&quot;sorts-swims-burglaries&quot;</span>
-<span style="color: #000000">     },</span>
-<span style="color: #000000">     labels: {</span>
-<span style="color: #000000">         Character: {</span>
-<span style="color: #000000">             label: </span><span style="color: #A31515">&quot;name&quot;</span><span style="color: #000000">,</span>
-<span style="color: #000000">             value: </span><span style="color: #A31515">&quot;pagerank&quot;</span><span style="color: #000000">,</span>
-<span style="color: #000000">             group: </span><span style="color: #A31515">&quot;community&quot;</span>
-<span style="color: #000000">         }</span>
-<span style="color: #000000">     },</span>
-<span style="color: #000000">     relationships: {</span>
-<span style="color: #000000">         INTERACTS: {</span>
-<span style="color: #000000">             value: </span><span style="color: #A31515">&quot;weight&quot;</span>
-<span style="color: #000000">         }</span>
-<span style="color: #000000">     },</span>
-<span style="color: #000000">     initial_cypher: </span><span style="color: #A31515">&quot;MATCH (n)-[r:INTERACTS]-&gt;(m) RETURN n,r,m&quot;</span>
-<span style="color: #000000">}</span>
-<span style="color: #008000">// advance</span>
-<span style="color: #000000">{</span>
+						<dd><pre><code class="language-js"><span style="color: #000000">{</span>
 <span style="color: #000000">     container_id: </span><span style="color: #A31515">&#039;viz&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">     nonFlat: </span><span style="color: #0000FF">true</span><span style="color: #000000">,</span>
 <span style="color: #000000">     neo4j: {</span>
 <span style="color: #000000">         server_url: </span><span style="color: #A31515">&#039;bolt://localhost:7687&#039;</span><span style="color: #000000">,</span>
 <span style="color: #000000">         server_user: </span><span style="color: #A31515">&#039;neo4j&#039;</span><span style="color: #000000">,</span>
@@ -111,29 +93,29 @@
 <span style="color: #000000">     },</span>
 <span style="color: #000000">     labels: {</span>
 <span style="color: #000000">         Character: {</span>
-<span style="color: #000000">             label: </span><span style="color: #A31515">&#039;pagerank&#039;</span><span style="color: #000000">,</span>
-<span style="color: #000000">             group: </span><span style="color: #A31515">&#039;community&#039;</span><span style="color: #000000">,</span>
-<span style="color: #000000">             [</span><span style="color: #001080">NeoVis</span><span style="color: #000000">.</span><span style="color: #0070C1">NEOVIS_ADVANCED_CONFIG</span><span style="color: #000000">]: {</span>
-<span style="color: #000000">                 </span><span style="color: #001080">cypher:</span><span style="color: #000000"> {</span>
-<span style="color: #000000">                     </span><span style="color: #001080">value:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;MATCH (n) WHERE id(n) = $id RETURN n.size&quot;</span>
-<span style="color: #000000">                 },</span>
-<span style="color: #000000">                 </span><span style="color: #001080">function:</span><span style="color: #000000"> {</span>
-<span style="color: #000000">                     </span><span style="color: #795E26">title</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">node</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">                         </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">viz</span><span style="color: #000000">.</span><span style="color: #795E26">nodeToHtml</span><span style="color: #000000">(</span><span style="color: #001080">node</span><span style="color: #000000">, </span><span style="color: #0000FF">undefined</span><span style="color: #000000">);</span>
-<span style="color: #000000">                     }</span>
-<span style="color: #000000">                 },</span>
+<span style="color: #000000">             property: {</span>
+<span style="color: #000000">                 label: </span><span style="color: #A31515">&#039;pagerank&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">                 group: </span><span style="color: #A31515">&#039;community&#039;</span>
+<span style="color: #000000">             }</span>
+<span style="color: #000000">             cypher: {</span>
+<span style="color: #000000">                 value: </span><span style="color: #A31515">&quot;MATCH (n) WHERE id(n) = $id RETURN n.size&quot;</span>
+<span style="color: #000000">             },</span>
+<span style="color: #000000">             </span><span style="color: #0000FF">function</span><span style="color: #000000">: {</span>
+<span style="color: #000000">                 title: (</span><span style="color: #001080">node</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">                     </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">viz</span><span style="color: #000000">.</span><span style="color: #795E26">nodeToHtml</span><span style="color: #000000">(</span><span style="color: #001080">node</span><span style="color: #000000">, </span><span style="color: #0000FF">undefined</span><span style="color: #000000">);</span>
+<span style="color: #000000">                 }</span>
 <span style="color: #000000">             }</span>
 <span style="color: #000000">         }</span>
 <span style="color: #000000">     },</span>
 <span style="color: #000000">     relationships: {</span>
 <span style="color: #000000">         INTERACTS: {</span>
-<span style="color: #000000">             value: </span><span style="color: #A31515">&#039;weight&#039;</span><span style="color: #000000">,</span>
-<span style="color: #000000">             [</span><span style="color: #001080">NeoVis</span><span style="color: #000000">.</span><span style="color: #0070C1">NEOVIS_ADVANCED_CONFIG</span><span style="color: #000000">]: {</span>
-<span style="color: #000000">                 </span><span style="color: #001080">function:</span><span style="color: #000000"> {</span>
-<span style="color: #000000">                     </span><span style="color: #795E26">title</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">edge</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">                         </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">viz</span><span style="color: #000000">.</span><span style="color: #795E26">nodeToHtml</span><span style="color: #000000">(</span><span style="color: #001080">edge</span><span style="color: #000000">, </span><span style="color: #0000FF">undefined</span><span style="color: #000000">);</span>
-<span style="color: #000000">                     }</span>
-<span style="color: #000000">                 },</span>
+<span style="color: #000000">             property: {</span>
+<span style="color: #000000">                 value: </span><span style="color: #A31515">&#039;weight&#039;</span>
+<span style="color: #000000">             }</span>
+<span style="color: #000000">             </span><span style="color: #0000FF">function</span><span style="color: #000000">: {</span>
+<span style="color: #000000">                 title: (</span><span style="color: #001080">edge</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">                     </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">viz</span><span style="color: #000000">.</span><span style="color: #795E26">nodeToHtml</span><span style="color: #000000">(</span><span style="color: #001080">edge</span><span style="color: #000000">, </span><span style="color: #0000FF">undefined</span><span style="color: #000000">);</span>
+<span style="color: #000000">                 }</span>
 <span style="color: #000000">             }</span>
 <span style="color: #000000">         }</span>
 <span style="color: #000000">     },</span>
@@ -151,7 +133,7 @@
 						<a href="baseneovisconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">BaseNeovisConfig</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">NeovisConfig</span>
+								<span class="target">NonFlatNeovisConfig</span>
 							</li>
 						</ul>
 					</li>
@@ -164,15 +146,17 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="neovisconfig.html#console_debug" class="tsd-kind-icon">console_<wbr>debug</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="neovisconfig.html#container_id" class="tsd-kind-icon">container_<wbr>id</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="neovisconfig.html#initial_cypher" class="tsd-kind-icon">initial_<wbr>cypher</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="neovisconfig.html#labels" class="tsd-kind-icon">labels</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="neovisconfig.html#neo4j" class="tsd-kind-icon">neo4j</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite"><a href="neovisconfig.html#nonflat" class="tsd-kind-icon">non<wbr>Flat</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="neovisconfig.html#relationships" class="tsd-kind-icon">relationships</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="neovisconfig.html#server_database" class="tsd-kind-icon">server_<wbr>database</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="neovisconfig.html#visconfig" class="tsd-kind-icon">vis<wbr>Config</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="nonflatneovisconfig.html#console_debug" class="tsd-kind-icon">console_<wbr>debug</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="nonflatneovisconfig.html#container_id" class="tsd-kind-icon">container_<wbr>id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="nonflatneovisconfig.html#defaultlabelconfig" class="tsd-kind-icon">default<wbr>Label<wbr>Config</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="nonflatneovisconfig.html#defaultrelationshipsconfig" class="tsd-kind-icon">default<wbr>Relationships<wbr>Config</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="nonflatneovisconfig.html#initial_cypher" class="tsd-kind-icon">initial_<wbr>cypher</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="nonflatneovisconfig.html#labels" class="tsd-kind-icon">labels</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="nonflatneovisconfig.html#neo4j" class="tsd-kind-icon">neo4j</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite"><a href="nonflatneovisconfig.html#nonflat" class="tsd-kind-icon">non<wbr>Flat</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="nonflatneovisconfig.html#relationships" class="tsd-kind-icon">relationships</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="nonflatneovisconfig.html#server_database" class="tsd-kind-icon">server_<wbr>database</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="nonflatneovisconfig.html#visconfig" class="tsd-kind-icon">vis<wbr>Config</a></li>
 							</ul>
 						</section>
 					</div>
@@ -217,6 +201,26 @@
 						</div>
 					</div>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="defaultlabelconfig" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> default<wbr>Label<wbr>Config</h3>
+					<div class="tsd-signature tsd-kind-icon">default<wbr>Label<wbr>Config<span class="tsd-signature-symbol">:</span> <a href="nonflatneovisadvanceconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">NonFlatNeoVisAdvanceConfig</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L319">index.d.ts:319</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="defaultrelationshipsconfig" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> default<wbr>Relationships<wbr>Config</h3>
+					<div class="tsd-signature tsd-kind-icon">default<wbr>Relationships<wbr>Config<span class="tsd-signature-symbol">:</span> <a href="nonflatneovisadvanceconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">NonFlatNeoVisAdvanceConfig</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Edge</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Relationship</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L320">index.d.ts:320</a></li>
+						</ul>
+					</aside>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="initial_cypher" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> initial_<wbr>cypher</h3>
@@ -236,46 +240,12 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="labels" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> labels</h3>
-					<div class="tsd-signature tsd-kind-icon">labels<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>[NEOVIS_DEFAULT_CONFIG]<span class="tsd-signature-symbol">?: </span><a href="labelconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">LabelConfig</a><span class="tsd-signature-symbol"> }</span></div>
+					<div class="tsd-signature tsd-kind-icon">labels<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="nonflatneovisadvanceconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">NonFlatNeoVisAdvanceConfig</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L234">index.d.ts:234</a></li>
+							<li>Defined in <a href="https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L321">index.d.ts:321</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<dl class="tsd-comment-tags">
-							<dt>example</dt>
-							<dd><pre><code class="language-javascript"><span style="color: #000000">{</span>
-<span style="color: #000000">    Character: {</span>
-<span style="color: #000000">    label: </span><span style="color: #A31515">&#039;pagerank&#039;</span><span style="color: #000000">,</span>
-<span style="color: #000000">        group: </span><span style="color: #A31515">&#039;community&#039;</span><span style="color: #000000">,</span>
-<span style="color: #000000">        [</span><span style="color: #001080">NeoVis</span><span style="color: #000000">.</span><span style="color: #0070C1">NEOVIS_ADVANCED_CONFIG</span><span style="color: #000000">]: {</span>
-<span style="color: #000000">            </span><span style="color: #001080">cypher:</span><span style="color: #000000"> {</span>
-<span style="color: #000000">                </span><span style="color: #001080">value:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;MATCH (n) WHERE id(n) = $id RETURN n.size&quot;</span>
-<span style="color: #000000">            },</span>
-<span style="color: #000000">            </span><span style="color: #001080">function:</span><span style="color: #000000"> {</span>
-<span style="color: #000000">                </span><span style="color: #795E26">title</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">node</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">                    </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">viz</span><span style="color: #000000">.</span><span style="color: #795E26">nodeToHtml</span><span style="color: #000000">(</span><span style="color: #001080">node</span><span style="color: #000000">, </span><span style="color: #0000FF">undefined</span><span style="color: #000000">);</span>
-<span style="color: #000000">                }</span>
-<span style="color: #000000">            },</span>
-<span style="color: #000000">        }</span>
-<span style="color: #000000">    }</span>
-<span style="color: #000000">}</span>
-</code></pre>
-							</dd>
-						</dl>
-					</div>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-index-signature">
-								<h5><span class="tsd-signature-symbol">[</span>label: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><a href="labelconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">LabelConfig</a></h5>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> [NEOVIS_<wbr>DEFAULT_<wbr>CONFIG]<span class="tsd-signature-symbol">?: </span><a href="labelconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">LabelConfig</a></h5>
-							</li>
-						</ul>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="neo4j" class="tsd-anchor"></a>
@@ -295,12 +265,12 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
 					<a name="nonflat" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> non<wbr>Flat</h3>
-					<div class="tsd-signature tsd-kind-icon">non<wbr>Flat<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">false</span></div>
+					<h3>non<wbr>Flat</h3>
+					<div class="tsd-signature tsd-kind-icon">non<wbr>Flat<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">true</span></div>
 					<aside class="tsd-sources">
 						<p>Overrides <a href="baseneovisconfig.html">BaseNeovisConfig</a>.<a href="baseneovisconfig.html#nonflat">nonFlat</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L213">index.d.ts:213</a></li>
+							<li>Defined in <a href="https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L318">index.d.ts:318</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -312,42 +282,12 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="relationships" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> relationships</h3>
-					<div class="tsd-signature tsd-kind-icon">relationships<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>[NEOVIS_DEFAULT_CONFIG]<span class="tsd-signature-symbol">?: </span><a href="relationshipconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">RelationshipConfig</a><span class="tsd-signature-symbol"> }</span></div>
+					<div class="tsd-signature tsd-kind-icon">relationships<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="nonflatneovisadvanceconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">NonFlatNeoVisAdvanceConfig</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Edge</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Relationship</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L255">index.d.ts:255</a></li>
+							<li>Defined in <a href="https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L322">index.d.ts:322</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<dl class="tsd-comment-tags">
-							<dt>example</dt>
-							<dd><pre><code class="language-js"><span style="color: #000000">{</span>
-<span style="color: #000000">     INTERACTS: {</span>
-<span style="color: #000000">         value: </span><span style="color: #A31515">&#039;weight&#039;</span><span style="color: #000000">,</span>
-<span style="color: #000000">         [</span><span style="color: #001080">NeoVis</span><span style="color: #000000">.</span><span style="color: #0070C1">NEOVIS_ADVANCED_CONFIG</span><span style="color: #000000">]: {</span>
-<span style="color: #000000">             </span><span style="color: #001080">function:</span><span style="color: #000000"> {</span>
-<span style="color: #000000">                 </span><span style="color: #795E26">title</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">edge</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">                     </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">viz</span><span style="color: #000000">.</span><span style="color: #795E26">nodeToHtml</span><span style="color: #000000">(</span><span style="color: #001080">edge</span><span style="color: #000000">, </span><span style="color: #0000FF">undefined</span><span style="color: #000000">);</span>
-<span style="color: #000000">                 }</span>
-<span style="color: #000000">             },</span>
-<span style="color: #000000">         }</span>
-<span style="color: #000000">     }</span>
-<span style="color: #000000">}</span>
-</code></pre>
-							</dd>
-						</dl>
-					</div>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-index-signature">
-								<h5><span class="tsd-signature-symbol">[</span>relationship: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><a href="relationshipconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">RelationshipConfig</a></h5>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> [NEOVIS_<wbr>DEFAULT_<wbr>CONFIG]<span class="tsd-signature-symbol">?: </span><a href="relationshipconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">RelationshipConfig</a></h5>
-							</li>
-						</ul>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="server_database" class="tsd-anchor"></a>
@@ -427,51 +367,57 @@
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="neovisadvanceconfig.html" class="tsd-kind-icon">Neo<wbr>Vis<wbr>Advance<wbr>Config</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface">
+					<li class=" tsd-kind-interface">
 						<a href="neovisconfig.html" class="tsd-kind-icon">Neovis<wbr>Config</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="neovisconfig.html#console_debug" class="tsd-kind-icon">console_<wbr>debug</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="neovisconfig.html#container_id" class="tsd-kind-icon">container_<wbr>id</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="neovisconfig.html#initial_cypher" class="tsd-kind-icon">initial_<wbr>cypher</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="neovisconfig.html#labels" class="tsd-kind-icon">labels</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="neovisconfig.html#neo4j" class="tsd-kind-icon">neo4j</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
-								<a href="neovisconfig.html#nonflat" class="tsd-kind-icon">non<wbr>Flat</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="neovisconfig.html#relationships" class="tsd-kind-icon">relationships</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="neovisconfig.html#server_database" class="tsd-kind-icon">server_<wbr>database</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="neovisconfig.html#visconfig" class="tsd-kind-icon">vis<wbr>Config</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-interface">
 						<a href="node.html" class="tsd-kind-icon">Node</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="nonflatneovisadvanceconfig.html" class="tsd-kind-icon">Non<wbr>Flat<wbr>Neo<wbr>Vis<wbr>Advance<wbr>Config</a>
 					</li>
-					<li class=" tsd-kind-interface">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface">
 						<a href="nonflatneovisconfig.html" class="tsd-kind-icon">Non<wbr>Flat<wbr>Neovis<wbr>Config</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="nonflatneovisconfig.html#console_debug" class="tsd-kind-icon">console_<wbr>debug</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="nonflatneovisconfig.html#container_id" class="tsd-kind-icon">container_<wbr>id</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="nonflatneovisconfig.html#defaultlabelconfig" class="tsd-kind-icon">default<wbr>Label<wbr>Config</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="nonflatneovisconfig.html#defaultrelationshipsconfig" class="tsd-kind-icon">default<wbr>Relationships<wbr>Config</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="nonflatneovisconfig.html#initial_cypher" class="tsd-kind-icon">initial_<wbr>cypher</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="nonflatneovisconfig.html#labels" class="tsd-kind-icon">labels</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="nonflatneovisconfig.html#neo4j" class="tsd-kind-icon">neo4j</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
+								<a href="nonflatneovisconfig.html#nonflat" class="tsd-kind-icon">non<wbr>Flat</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="nonflatneovisconfig.html#relationships" class="tsd-kind-icon">relationships</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="nonflatneovisconfig.html#server_database" class="tsd-kind-icon">server_<wbr>database</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="nonflatneovisconfig.html#visconfig" class="tsd-kind-icon">vis<wbr>Config</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-interface">
 						<a href="oldlabelconfig.html" class="tsd-kind-icon">Old<wbr>Label<wbr>Config</a>
 					</li>

@@ -1,34 +1,15 @@
-[neovis.js](../README.md) / NeovisConfig
+[neovis.js](../README.md) / NonFlatNeovisConfig
 
-# Interface: NeovisConfig
+# Interface: NonFlatNeovisConfig
+
+non flat version of the configuration (without Symbols)
+look at the normal config for more information
 
 **`example`**
 ```js
-//simple
-{
-     container_id: "viz",
-     neo4j: {
-     	server_url: "bolt://localhost:7687",
-     	server_user: "neo4j",
-     	server_password: "sorts-swims-burglaries"
-     },
-     labels: {
-     	Character: {
-     		label: "name",
-     		value: "pagerank",
-     		group: "community"
-     	}
-     },
-     relationships: {
-     	INTERACTS: {
-     		value: "weight"
-     	}
-     },
-     initial_cypher: "MATCH (n)-[r:INTERACTS]->(m) RETURN n,r,m"
-}
-// advance
 {
      container_id: 'viz',
+     nonFlat: true,
      neo4j: {
      	server_url: 'bolt://localhost:7687',
      	server_user: 'neo4j',
@@ -46,29 +27,29 @@
      },
      labels: {
      	Character: {
-     		label: 'pagerank',
-     		group: 'community',
-     		[NeoVis.NEOVIS_ADVANCED_CONFIG]: {
-     			cypher: {
-     				value: "MATCH (n) WHERE id(n) = $id RETURN n.size"
-     			},
-     			function: {
-     				title: (node) => {
-     					return viz.nodeToHtml(node, undefined);
-     				}
-     			},
+     		property: {
+     		    label: 'pagerank',
+     		    group: 'community'
+     	    }
+     		cypher: {
+     			value: "MATCH (n) WHERE id(n) = $id RETURN n.size"
+     		},
+     		function: {
+     			title: (node) => {
+     				return viz.nodeToHtml(node, undefined);
+     			}
      		}
      	}
      },
      relationships: {
      	INTERACTS: {
-     		value: 'weight',
-     		[NeoVis.NEOVIS_ADVANCED_CONFIG]: {
-     			function: {
-     				title: (edge) => {
-     					return viz.nodeToHtml(edge, undefined);
-     				}
-     			},
+             property: {
+     		    value: 'weight'
+     	    }
+     		function: {
+     			title: (edge) => {
+     				return viz.nodeToHtml(edge, undefined);
+     			}
      		}
      	}
      },
@@ -80,21 +61,23 @@
 
 - [*BaseNeovisConfig*](baseneovisconfig.md)
 
-  ↳ **NeovisConfig**
+  ↳ **NonFlatNeovisConfig**
 
 ## Table of contents
 
 ### Properties
 
-- [console\_debug](neovisconfig.md#console_debug)
-- [container\_id](neovisconfig.md#container_id)
-- [initial\_cypher](neovisconfig.md#initial_cypher)
-- [labels](neovisconfig.md#labels)
-- [neo4j](neovisconfig.md#neo4j)
-- [nonFlat](neovisconfig.md#nonflat)
-- [relationships](neovisconfig.md#relationships)
-- [server\_database](neovisconfig.md#server_database)
-- [visConfig](neovisconfig.md#visconfig)
+- [console\_debug](nonflatneovisconfig.md#console_debug)
+- [container\_id](nonflatneovisconfig.md#container_id)
+- [defaultLabelConfig](nonflatneovisconfig.md#defaultlabelconfig)
+- [defaultRelationshipsConfig](nonflatneovisconfig.md#defaultrelationshipsconfig)
+- [initial\_cypher](nonflatneovisconfig.md#initial_cypher)
+- [labels](nonflatneovisconfig.md#labels)
+- [neo4j](nonflatneovisconfig.md#neo4j)
+- [nonFlat](nonflatneovisconfig.md#nonflat)
+- [relationships](nonflatneovisconfig.md#relationships)
+- [server\_database](nonflatneovisconfig.md#server_database)
+- [visConfig](nonflatneovisconfig.md#visconfig)
 
 ## Properties
 
@@ -124,6 +107,22 @@ Defined in: [index.d.ts:103](https://github.com/thebestnom/neovis.js/blob/ed1c24
 
 ___
 
+### defaultLabelConfig
+
+• `Optional` **defaultLabelConfig**: [*NonFlatNeoVisAdvanceConfig*](nonflatneovisadvanceconfig.md)<Node, Node<number\>\>
+
+Defined in: [index.d.ts:319](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L319)
+
+___
+
+### defaultRelationshipsConfig
+
+• `Optional` **defaultRelationshipsConfig**: [*NonFlatNeoVisAdvanceConfig*](nonflatneovisadvanceconfig.md)<Edge, Relationship<number\>\>
+
+Defined in: [index.d.ts:320](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L320)
+
+___
+
 ### initial\_cypher
 
 • `Optional` **initial\_cypher**: *string*
@@ -138,34 +137,9 @@ ___
 
 ### labels
 
-• `Optional` **labels**: *object*
+• `Optional` **labels**: *Record*<string, [*NonFlatNeoVisAdvanceConfig*](nonflatneovisadvanceconfig.md)<Node, Node<number\>\>\>
 
-**`example`** ```javascript
-{
-	Character: {
-	label: 'pagerank',
-		group: 'community',
-		[NeoVis.NEOVIS_ADVANCED_CONFIG]: {
-			cypher: {
-				value: "MATCH (n) WHERE id(n) = $id RETURN n.size"
-			},
-			function: {
-				title: (node) => {
-					return viz.nodeToHtml(node, undefined);
-				}
-			},
-		}
-	}
-}
-```
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `[NEOVIS_DEFAULT_CONFIG]?` | [*LabelConfig*](labelconfig.md) |
-
-Defined in: [index.d.ts:234](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L234)
+Defined in: [index.d.ts:321](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L321)
 
 ___
 
@@ -183,43 +157,21 @@ ___
 
 ### nonFlat
 
-• `Optional` **nonFlat**: ``false``
+• **nonFlat**: ``true``
 
 Tells Neovis is the config is flat or not
 
 Overrides: [BaseNeovisConfig](baseneovisconfig.md).[nonFlat](baseneovisconfig.md#nonflat)
 
-Defined in: [index.d.ts:213](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L213)
+Defined in: [index.d.ts:318](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L318)
 
 ___
 
 ### relationships
 
-• `Optional` **relationships**: *object*
+• `Optional` **relationships**: *Record*<string, [*NonFlatNeoVisAdvanceConfig*](nonflatneovisadvanceconfig.md)<Edge, Relationship<number\>\>\>
 
-**`example`**
-``` js
-{
-     INTERACTS: {
- 	    value: 'weight',
- 	    [NeoVis.NEOVIS_ADVANCED_CONFIG]: {
- 	    	function: {
- 	    		title: (edge) => {
- 	    			return viz.nodeToHtml(edge, undefined);
- 	    		}
- 	    	},
- 	    }
-     }
-}
-```
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `[NEOVIS_DEFAULT_CONFIG]?` | [*RelationshipConfig*](relationshipconfig.md) |
-
-Defined in: [index.d.ts:255](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L255)
+Defined in: [index.d.ts:322](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L322)
 
 ___
 

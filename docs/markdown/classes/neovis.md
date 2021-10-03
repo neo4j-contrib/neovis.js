@@ -29,17 +29,17 @@
 
 ### constructor
 
-\+ **new NeoVis**(`config`: [*NeovisConfig*](../interfaces/neovisconfig.md)): [*NeoVis*](neovis.md)
+\+ **new NeoVis**(`config`: [*NeovisConfig*](../interfaces/neovisconfig.md) \| [*NonFlatNeovisConfig*](../interfaces/nonflatneovisconfig.md)): [*NeoVis*](neovis.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `config` | [*NeovisConfig*](../interfaces/neovisconfig.md) |
+| `config` | [*NeovisConfig*](../interfaces/neovisconfig.md) \| [*NonFlatNeovisConfig*](../interfaces/nonflatneovisconfig.md) |
 
 **Returns:** [*NeoVis*](neovis.md)
 
-Defined in: [index.d.ts:265](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L265)
+Defined in: [index.d.ts:345](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L345)
 
 ## Accessors
 
@@ -53,7 +53,7 @@ All view edges as DataSet
 
 **Returns:** *DataSet*<[*Edge*](../interfaces/edge.md), ``"id"``\>
 
-Defined in: [index.d.ts:278](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L278)
+Defined in: [index.d.ts:358](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L358)
 
 ___
 
@@ -67,7 +67,7 @@ The vis network object
 
 **Returns:** *Network*
 
-Defined in: [index.d.ts:284](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L284)
+Defined in: [index.d.ts:364](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L364)
 
 ___
 
@@ -81,7 +81,7 @@ All view nodes as DataSet
 
 **Returns:** *DataSet*<[*Node*](../interfaces/node.md), ``"id"``\>
 
-Defined in: [index.d.ts:272](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L272)
+Defined in: [index.d.ts:352](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L352)
 
 ## Methods
 
@@ -93,7 +93,7 @@ Clear the data for the visualization
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:294](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L294)
+Defined in: [index.d.ts:374](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L374)
 
 ___
 
@@ -110,13 +110,13 @@ ___
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:301](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L301)
+Defined in: [index.d.ts:381](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L381)
 
 ___
 
 ### reinit
 
-▸ **reinit**(`config`: [*NeovisConfig*](../interfaces/neovisconfig.md)): *void*
+▸ **reinit**(`config`: [*NeovisConfig*](../interfaces/neovisconfig.md) \| [*NonFlatNeovisConfig*](../interfaces/nonflatneovisconfig.md)): *void*
 
 Reset the config object and reload data
 
@@ -124,11 +124,11 @@ Reset the config object and reload data
 
 | Name | Type |
 | :------ | :------ |
-| `config` | [*NeovisConfig*](../interfaces/neovisconfig.md) |
+| `config` | [*NeovisConfig*](../interfaces/neovisconfig.md) \| [*NonFlatNeovisConfig*](../interfaces/nonflatneovisconfig.md) |
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:307](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L307)
+Defined in: [index.d.ts:387](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L387)
 
 ___
 
@@ -140,7 +140,7 @@ Clear the network and fetch live data form the server and reload the visualizati
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:312](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L312)
+Defined in: [index.d.ts:392](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L392)
 
 ___
 
@@ -152,7 +152,7 @@ Renders the network
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:289](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L289)
+Defined in: [index.d.ts:369](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L369)
 
 ___
 
@@ -170,7 +170,7 @@ Execute an arbitrary Cypher query and re-render the visualization
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:323](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L323)
+Defined in: [index.d.ts:403](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L403)
 
 ___
 
@@ -182,7 +182,7 @@ Stabilize the visualization
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:317](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L317)
+Defined in: [index.d.ts:397](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L397)
 
 ___
 
@@ -201,4 +201,4 @@ This function will not change the original query given by renderWithCypher or th
 
 **Returns:** *void*
 
-Defined in: [index.d.ts:330](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L330)
+Defined in: [index.d.ts:410](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L410)
