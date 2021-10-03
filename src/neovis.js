@@ -104,7 +104,7 @@ export class NeoVis {
 		let results = [];
 
 		try {
-			const result = await session.readTransaction(tx => tx.run(cypher, { id: id }));
+			const result = await session.readTransaction(tx => tx.run(cypher, { id }));
 			for (let record of result.records) {
 				record.forEach((v) => {
 					results.push(v);
@@ -225,7 +225,7 @@ export class NeoVis {
 		}
 		this._buildPropertyNameObject(propertyConfig, baseObejct, neo4jObject);
 		this._buildStaticObject(staticConfig, baseObejct);
-		await this._buildCypherObject(cypherConfig, baseObejct, neo4jObject);
+		await this._buildCypherObject(cypherConfig, baseObejct, baseObejct.id);
 		await this._buildFunctionObject(functionConfig, baseObejct, neo4jObject);
 	}
 

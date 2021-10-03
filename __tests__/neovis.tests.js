@@ -203,7 +203,11 @@ describe('Neovis', () => {
 			container_id,
 			labels: {
 				[label1]: {
-					sizeCypher: sizeCypher
+					[NEOVIS_ADVANCED_CONFIG]: {
+						cypher: {
+							value: sizeCypher
+						}
+					}
 				}
 			}
 		};
@@ -213,14 +217,14 @@ describe('Neovis', () => {
 
 		// TODO: session.readTransaction needs to be properly mocked
 		//       skipping this test until mock is added
-		it.skip('should call sizeCypher and save return value to data set value', async () => {
+		it('should call sizeCypher and save return value to data set value', async () => {
 			const node = testUtils.makeNode([label1]);
 			testUtils.mockFullRunSubscribe({
 				[initial_cypher]: {
 					default: [testUtils.makeRecord([node])]
 				},
 				[sizeCypher]: {
-					[node.identity.toInt()]: [testUtils.makeRecord([Neo4j.int(1)])]
+					[node.identity]: [testUtils.makeRecord([Neo4j.int(1)])]
 				}
 			});
 
@@ -278,105 +282,41 @@ describe('Neovis', () => {
 		});
 	});
 
-	describe('neovis config test', () => {
-		const imageUrl = 'https://visjs.org/images/visjs_logo.png';
-		const fontSize = 28;
-		const fontColor = '#00FF00';
-		let config = {
-			container_id: container_id,
-			labels: {
-				[label1]: {
-					[NEOVIS_ADVANCED_CONFIG]: {
-						'static': {
-							image: imageUrl,
-							font: {
-								'size': fontSize,
-								'color': fontColor,
-							}
-						}
-					}
-				}
-			},
-			initial_cypher: initial_cypher
-		};
-		beforeEach(() => {
-			neovis = new Neovis(config);
-		});
-
-		it('image field in config should reflect in node data', async () => {
-			const node1 = testUtils.makeNode([label1]);
-			testUtils.mockFullRunSubscribe({
-				[initial_cypher]: {
-					default: [testUtils.makeRecord([node1])]
-				}
-			});
-
-			neovis.render();
-			await testUtils.neovisRenderDonePromise(neovis);
-			expect(neovis._data.nodes.get(1)).toHaveProperty('image', imageUrl);
-		});
-
-		it('image field for type not specified in config should not reflect in node data', async () => {
-			const node1 = testUtils.makeNode([label2]);
-			testUtils.mockFullRunSubscribe({
-				[initial_cypher]: {
-					default: [testUtils.makeRecord([node1])]
-				}
-			});
-
-			neovis.render();
-			await testUtils.neovisRenderDonePromise(neovis);
-			expect(neovis._data.nodes.get(1)).toHaveProperty('image', undefined);
-		});
-
-		it('font field in config should reflect in node data', async () => {
-			const node1 = testUtils.makeNode([label1]);
-			testUtils.mockFullRunSubscribe({
-				[initial_cypher]: {
-					default: [testUtils.makeRecord([node1])]
-				}
-			});
-
-			neovis.render();
-			await testUtils.neovisRenderDonePromise(neovis);
-			expect(neovis._data.nodes.get(1).font).toBeDefined();
-			expect(neovis._data.nodes.get(1).font.size).toBe(fontSize);
-			expect(neovis._data.nodes.get(1).font.color).toBe(fontColor);
-		});
-
-		it('font field for type not specified in config should not reflect in node data', async () => {
-			const node1 = testUtils.makeNode([label2]);
-			testUtils.mockFullRunSubscribe({
-				[initial_cypher]: {
-					default: [testUtils.makeRecord([node1])]
-				}
-			});
-
-			neovis.render();
-			await testUtils.neovisRenderDonePromise(neovis);
-			expect(neovis._data.nodes.get(1)).toHaveProperty('font', undefined);
-		});
-	});
-	describe('neovis non flat config test', () => {
-		const imageUrl = 'https://visjs.org/images/visjs_logo.png';
-		const fontSize = 28;
-		const fontColor = '#00FF00';
-		let config = {
-			container_id: container_id,
-			non_flat: true,
-			labels: {
-				[label1]: {
-					'static': {
+	const imageUrl = 'https://visjs.org/images/visjs_logo.png';
+	const fontSize = 28;
+	const fontColor = '#00FF00';
+	describe.each([['config', {
+		container_id,
+		labels: {
+			[label1]: {
+				[NEOVIS_ADVANCED_CONFIG]: {
+					static: {
 						image: imageUrl,
 						font: {
-							'size': fontSize,
-							'color': fontColor,
+							size: fontSize,
+							color: fontColor,
 						}
 					}
 				}
-			},
-			initial_cypher: initial_cypher
-		};
+			}
+		},
+		initial_cypher: initial_cypher
+	}], ['non flat config', {
+		container_id,
+		non_flat: true,
+		labels: {
+			[label1]: {
+				static: {
+					image: imageUrl,
+					font: {
+						size: fontSize,
+						color: fontColor,
+					}
+				}
+			}
+		},
+		initial_cypher: initial_cypher
+	}]])('neovis advance %s test', (configName, config) => {
 		beforeEach(() => {
 			neovis = new Neovis(config);
 		});
@@ -572,15 +512,15 @@ describe('Neovis', () => {
 
 		// TODO: session.readTransaction needs to be properly mocked
 		//       skipping this test until mock is added
-		it.skip('should merge cypher type to vis.js config properly', async () => {
+		it('should merge cypher type to vis.js config properly', async () => {
 			const sizeCypher = 'sizeCypher';
 			let config = {
 				container_id: container_id,
 				labels: {
 					[label1]: {
 						[NEOVIS_ADVANCED_CONFIG]: {
-							'cypher': {
-								'label': sizeCypher
+							cypher: {
+								label: sizeCypher
 							}
 						}
 					}
@@ -592,11 +532,14 @@ describe('Neovis', () => {
 			testUtils.mockFullRunSubscribe({
 				[initial_cypher]: {
 					default: [testUtils.makeRecord([node1])]
+				},
+				[sizeCypher]: {
+					[node1.identity]: [testUtils.makeRecord([intProperityValue])]
 				}
 			});
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
-			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1);
+			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(2);
 			expect(neovis._data.nodes.get(1)).toHaveProperty('label', intProperityValue);
 		});
 

@@ -8,9 +8,14 @@ export const mockSessionRun = jest.fn(() => {
 
 export const mockSessionClose = jest.fn().mockImplementation(() => {});
 
+export const mockReadTransaction = jest.fn(function (callback) {
+	return callback(this);
+});
+
 export const mockSession = jest.fn().mockImplementation(() => ({
 	run: mockSessionRun,
-	close: mockSessionClose
+	close: mockSessionClose,
+	readTransaction: mockReadTransaction
 }));
 
 export const mockDriver = jest.spyOn(Neo4j, 'driver').mockImplementation(() => ({
