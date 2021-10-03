@@ -1,11 +1,12 @@
-export const NeoVisEvents = Object.freeze({
-	CompletionEvent: 'completed',
-	ClickNodeEvent: 'clickNode',
-	ClickEdgeEvent: 'clickEdge',
-	ErrorEvent: 'error'
-});
+export enum NeoVisEvents {
+	CompletionEvent = 'completed',
+	ClickNodeEvent = 'clickNode',
+	ClickEdgeEvent ='clickEdge',
+	ErrorEvent = 'error'
+};
 
 export class EventController {
+	private readonly _handlers: { [p: string]: Function[] };
 
 	constructor() {
 		this._handlers = {
@@ -21,7 +22,7 @@ export class EventController {
 	 * @param {string} eventType - Type of the event to be handled
 	 * @param {callback} handler - Handler to manage the event
 	 */
-	register(eventType, handler) {
+	register(eventType: NeoVisEvents, handler: Function): void {
 		if (this._handlers[eventType] === undefined) {
 			throw new Error('Unknown event: ' + eventType);
 		}
@@ -34,7 +35,7 @@ export class EventController {
 	 * @param {string} eventType - Type of the event generated
 	 * @param {object} values - Values associated to the event
 	 */
-	generateEvent(eventType, values) {
+	generateEvent(eventType: NeoVisEvents, values: any): void {
 		if (this._handlers[eventType] === undefined) {
 			throw new Error('Unknown event: ' + eventType);
 		}

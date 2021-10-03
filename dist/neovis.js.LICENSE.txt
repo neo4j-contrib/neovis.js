@@ -19,5 +19,3 @@ PERFORMANCE OF THIS SOFTWARE.
  * Forked By Naver egjs
  * Copyright (c) hammerjs
  * Licensed under the MIT license */
-
-/** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
