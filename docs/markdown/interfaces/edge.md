@@ -189,7 +189,7 @@ ___
 
 https://neo4j.com/docs/api/javascript-driver/current/class/src/graph-types.js~Relationship.html
 
-Defined in: [index.d.ts:262](https://github.com/thebestnom/neovis.js/blob/0d65c84/index.d.ts#L262)
+Defined in: [index.d.ts:342](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L342)
 
 ___
 

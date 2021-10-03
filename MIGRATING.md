@@ -3,6 +3,18 @@
 2.0.0 was designed to be an extension of vis-network instead of a wrapper, that's means that all custom-made properties
 are now the vis-network name
 
+## quick migration
+```ts
+oldConfig = {
+    //... old configuration
+}
+const newConfig = NeoVis.migrateFromOldConfig(oldConfig);
+// or
+import { migrateFromOldConfig } from "neovis.js";
+const newConfig = migrateFromOldConfig(oldConfig)
+```
+
+
 ## specifics
 
 - neo4j driver configuration moved from flat onto the config object to `neo4j` onto the object
