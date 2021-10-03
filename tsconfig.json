@@ -4,7 +4,7 @@
     "esModuleInterop": true,
     "target": "ESNext",
     "moduleResolution": "Node",
-    "noEmit": true,
+    "emitDeclarationOnly": true,
     "declaration": true,
     "declarationDir": "./dist"
   }
