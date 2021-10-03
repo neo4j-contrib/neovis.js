@@ -408,6 +408,9 @@ export class NeoVis {
 		let defaultLabelConfig: NonFlatNeoVisAdvanceConfig<VisNetwork.Node, Neo4jTypes .Node<number>> | LabelConfig
 		if(config.nonFlat && config.defaultLabelConfig) {
 			defaultLabelConfig = config.defaultLabelConfig;
+			if(defaultLabelConfig[NEOVIS_ADVANCED_CONFIG]) {
+				throw new Error("non flat config can't use NEOVIS_ADVANCED_CONFIG, read the doc to see how the config should look");
+			}
 		} else {
 			defaultLabelConfig = (config as NeovisConfig).labels?.[NEOVIS_DEFAULT_CONFIG];
 		}
@@ -960,7 +963,7 @@ export function migrateFromOldConfig(oldNeoVisConfig: OldNeoVisConfig): NeovisCo
 				};
 				return newLabelsConfig;
 			}, {}) : undefined,
-		relationships: oldNeoVisConfig.relationships ? Object.entries(oldNeoVisConfig.relationships)
+		relationships: oldNeoVisConfig.relationships ? (Object.entries(oldNeoVisConfig.relationships) as [string | typeof NEOVIS_DEFAULT_CONFIG, OldRelationshipConfig][])
 			.concat(oldNeoVisConfig.relationships[NEOVIS_DEFAULT_CONFIG] ? [[NEOVIS_DEFAULT_CONFIG, oldNeoVisConfig.relationships[NEOVIS_DEFAULT_CONFIG]]] : [])
 			.reduce((newLabelsConfig, [relationship, oldRelationshipsConfig]) => {
 				newLabelsConfig[relationship] = {
