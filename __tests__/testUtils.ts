@@ -1,7 +1,11 @@
-import Neo4j, * as Neo4jMock from 'neo4j-driver';
+import Neo4j, * as Neo4jMockImport from 'neo4j-driver';
 import { NeoVisEvents } from '../src/events';
 
+import type Neo4jMockType from "../"
+
 jest.mock('neo4j-driver');
+
+const Neo4jMockImport
 
 let counter = 1;
 
@@ -9,7 +13,7 @@ export function clearIdCounter() {
 	counter = 1;
 }
 
-export function makeNode(labels, properties = {}) {
+export function makeNode(labels, properties = {}): Neo4j.types.Node {
 	return new Neo4j.types.Node(counter++, labels, properties);
 }
 
@@ -59,7 +63,7 @@ export function mockNormalRunSubscribe(records = []) {
 	});
 }
 
-export function mockFullRunSubscribe(cypherIdsAndAnswers) {
+export function mockFullRunSubscribe(cypherIdsAndAnswers): Promise<void> {
 	Neo4jMock.mockSessionRun.mockImplementation((cypher, parameters) => {
 		if (!cypherIdsAndAnswers[cypher]) {
 			throw new Error(`the cypher '${cypher}' was not expected`);
@@ -78,6 +82,6 @@ export function mockFullRunSubscribe(cypherIdsAndAnswers) {
 }
 
 
-export function neovisRenderDonePromise(neovis) {
+export function neovisRenderDonePromise(neovis): Promise<void> {
 	return new Promise(res => neovis.registerOnEvent(NeoVisEvents.CompletionEvent, res));
 }
