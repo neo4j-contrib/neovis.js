@@ -1,7 +1,6 @@
 import type * as Neo4jTypes from 'neo4j-driver';
-import * as vis from 'vis-network/standalone';
 import { NeoVisEvents } from './events';
-import type * as VisNetwork from "vis-network";
+import type * as VisNetwork from 'vis-network';
 export declare const NEOVIS_DEFAULT_CONFIG: unique symbol;
 export declare const NEOVIS_ADVANCED_CONFIG: unique symbol;
 export { NeoVisEvents } from './events';
@@ -77,6 +76,10 @@ export interface Neo4jConfig {
     server_password?: string;
     /**
      * @link https://neo4j.com/docs/api/javascript-driver/current/function/index.html#configuration
+     */
+    /**
+     * All view nodes as DataSet
+     * @link https://visjs.github.io/vis-data/data/dataset.html
      */
     driverConfig?: Neo4jTypes.Config;
 }
@@ -237,6 +240,8 @@ export interface NeovisConfig extends BaseNeovisConfig {
         [NEOVIS_DEFAULT_CONFIG]?: RelationshipConfig;
     };
 }
+declare type NonFlatLabelConfig = NonFlatNeoVisAdvanceConfig<VisNetwork.Node, Neo4jTypes.Node<number>>;
+declare type NonFlatRelationsipConfig = NonFlatNeoVisAdvanceConfig<VisNetwork.Edge, Neo4jTypes.Relationship<number>>;
 /**
  * non flat version of the configuration (without Symbols)
  * look at the normal config for more information
@@ -295,10 +300,10 @@ export interface NeovisConfig extends BaseNeovisConfig {
  */
 export interface NonFlatNeovisConfig extends BaseNeovisConfig {
     nonFlat: true;
-    defaultLabelConfig?: NonFlatNeoVisAdvanceConfig<VisNetwork.Node, Neo4jTypes.Node<number>>;
-    defaultRelationshipsConfig?: NonFlatNeoVisAdvanceConfig<VisNetwork.Edge, Neo4jTypes.Relationship<number>>;
-    labels?: Record<string, NonFlatNeoVisAdvanceConfig<VisNetwork.Node, Neo4jTypes.Node<number>>>;
-    relationships?: Record<string, NonFlatNeoVisAdvanceConfig<VisNetwork.Edge, Neo4jTypes.Relationship<number>>>;
+    defaultLabelConfig?: NonFlatLabelConfig;
+    defaultRelationshipsConfig?: NonFlatRelationsipConfig;
+    labels?: Record<string, NonFlatLabelConfig>;
+    relationships?: Record<string, NonFlatRelationsipConfig>;
 }
 /**
  * A network node with raw neo4j node
@@ -322,25 +327,23 @@ export interface Edge extends VisNetwork.Edge {
 }
 export declare class NeoVis {
     #private;
-    _data: {
-        nodes: vis.data.DataSet<Node, "id">;
-        edges: vis.data.DataSet<Edge, "id">;
-    };
-    private _config;
-    private _driver;
-    private _database;
-    private _query;
-    private _container;
     /**
-     * Get current vis nodes from the graph
+     * All view nodes as DataSet
+     * @link https://visjs.github.io/vis-data/data/dataset.html
      */
     get nodes(): VisNetwork.DataSet<Node>;
     /**
-     * Get current vis edges from the graph
+     * All view edges as DataSet
+     * @link https://visjs.github.io/vis-data/data/dataset.html
      */
     get edges(): VisNetwork.DataSet<Edge>;
     /**
-     * Get current network
+     * @ignore for test purposes only
+     */
+    get _config(): NeovisConfig | NonFlatNeovisConfig;
+    /**
+     * The vis network object
+     * @link https://visjs.github.io/vis-network/docs/network/#methods
      */
     get network(): VisNetwork.Network | undefined;
     /**
@@ -349,39 +352,9 @@ export declare class NeoVis {
      * @param {object} config - configures the visualization and Neo4j server connection
      */
     constructor(config: NeovisConfig | NonFlatNeovisConfig);
-    _consoleLog(message: any, level?: string): void;
-    _init(config: NeovisConfig | NonFlatNeovisConfig): void;
-    _runCypher(cypher: Cypher, id: number): Promise<Neo4jTypes.Record<{
-        [x: string]: any;
-        [x: number]: any;
-        [x: symbol]: any;
-    }, PropertyKey, {
-        [x: string]: number;
-    }> | Neo4jTypes.Record<{
-        [x: string]: any;
-        [x: number]: any;
-        [x: symbol]: any;
-    }, PropertyKey, {
-        [x: string]: number;
-    }>[]>;
-    _runFunction<NEO_TYPE>(func: Function, node: NEO_TYPE): Promise<any>;
-    _buildStaticObject<VIS_TYPE>(staticConfig: VIS_TYPE, object: Node | Edge): void;
-    _buildPropertyNameObject<VIS_TYPE, NEO_TYPE>(propertyNameConfig: RecursiveMapTo<VIS_TYPE, string>, object: Node | Edge, neo4jObj: NEO_TYPE): void;
-    _buildCypherObject<VIS_TYPE>(cypherConfig: RecursiveMapTo<VIS_TYPE, Cypher>, object: Node | Edge, id: number): Promise<void>;
-    _buildFunctionObject<VIS_TYPE, NEO_TYPE>(functionConfig: RecursiveMapToFunction<VIS_TYPE, NEO_TYPE>, object: Node | Edge, neo4jObj: NEO_TYPE): Promise<void>;
     /**
-     * Build node object for vis from a neo4j Node
-     * FIXME: move to private api
-     * @param neo4jNode
-     * @returns {{}}
+     * Renders the network
      */
-    buildNodeVisObject(neo4jNode: Neo4jTypes.Node<NumberOrInteger>): Promise<Partial<Node>>;
-    /**
-     * Build edge object for vis from a neo4j Relationship
-     * @param r
-     * @returns {{}}
-     */
-    buildEdgeVisObject(r: Neo4jTypes.Relationship<NumberOrInteger>): Promise<Partial<Edge>>;
     render(query?: Cypher): void;
     /**
      * Clear the data for the visualization
@@ -390,7 +363,7 @@ export declare class NeoVis {
     /**
      *
      * @param {string} eventType Event type to be handled
-     * @param {handler} handler Handler to manage the event
+     * @param {Function} handler Handler to manage the event
      */
     registerOnEvent(eventType: NeoVisEvents, handler: Function): void;
     /**
@@ -418,25 +391,35 @@ export declare class NeoVis {
      */
     updateWithCypher(query: Cypher): void;
 }
+/**
+ * create html display of the node
+ * @param neo4jObject node to create html from
+ * @param titleProperties which properties to map
+ */
 export declare function objectToTitleHtml(neo4jObject: Neo4jTypes.Node<NumberOrInteger> | Neo4jTypes.Relationship<NumberOrInteger>, titleProperties: string[]): HTMLDivElement;
+/**
+ * create string display of the node
+ * @param neo4jObject node to create title string from
+ * @param titleProperties which properties to map
+ */
 export declare function objectToTitleString(neo4jObject: Neo4jTypes.Node<NumberOrInteger> | Neo4jTypes.Relationship<NumberOrInteger>, titleProperties: string[]): string;
 /**
  * @deprecated for migration only
  */
 export interface OldLabelConfig {
-    caption?: string;
-    size?: string;
+    caption?: string | ((node: Neo4jTypes.Node) => string);
+    size?: number;
     community?: string;
     sizeCypher?: string;
     image?: string;
     font?: any;
-    title_properties: string[];
+    title_properties?: string[];
 }
 /**
  * @deprecated for migration only
  */
 export interface OldRelationshipConfig {
-    thickness?: string;
+    thickness?: number;
     caption?: boolean | string;
 }
 /**
@@ -458,11 +441,11 @@ export interface OldNeoVisConfig {
     };
     arrows?: boolean;
     hierarchical?: boolean;
-    hierarchical_sort_method?: "hubsize" | "directed";
+    hierarchical_sort_method?: 'hubsize' | 'directed';
     initial_cypher?: string;
     console_debug?: boolean;
-    encrypted?: "ENCRYPTION_OFF" | "ENCRYPTION_ON";
-    trust?: "TRUST_ALL_CERTIFICATES" | "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES";
+    encrypted?: 'ENCRYPTION_OFF' | 'ENCRYPTION_ON';
+    trust?: 'TRUST_ALL_CERTIFICATES' | 'TRUST_SYSTEM_CA_SIGNED_CERTIFICATES';
 }
 /**
  * @deprecated will be removed in the future

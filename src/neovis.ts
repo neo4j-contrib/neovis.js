@@ -1,12 +1,14 @@
 'use strict';
 
 import Neo4j from 'neo4j-driver';
+import { isNode, isPath, isInt, isRelationship } from 'neo4j-driver-core';
+import type * as Neo4jCore from 'neo4j-driver-core';
 import type * as Neo4jTypes from 'neo4j-driver';
 import * as vis from 'vis-network/standalone';
-import {defaults} from './defaults';
-import {EventController, NeoVisEvents} from './events';
+import { defaults } from './defaults';
+import { EventController, NeoVisEvents } from './events';
 import deepmerge from 'deepmerge';
-import type * as VisNetwork from "vis-network";
+import type * as VisNetwork from 'vis-network';
 
 export const NEOVIS_DEFAULT_CONFIG = Symbol();
 export const NEOVIS_ADVANCED_CONFIG = Symbol();
@@ -54,7 +56,9 @@ export interface NonFlatNeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> extends NeoVisAd
 	property?: RecursiveMapTo<VIS_TYPE, string>;
 }
 
-type NeovisDataConfig<VIS_TYPE, NEO_TYPE> = RecursiveMapTo<VIS_TYPE, string> & { [NEOVIS_ADVANCED_CONFIG]?: NeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> };
+type NeovisDataConfig<VIS_TYPE, NEO_TYPE> =
+	RecursiveMapTo<VIS_TYPE, string>
+	& { [NEOVIS_ADVANCED_CONFIG]?: NeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> };
 
 /**
  * A mapper between neo4j node properties names to vis-network node config
@@ -94,6 +98,10 @@ export interface Neo4jConfig {
 	server_password?: string;
 	/**
 	 * @link https://neo4j.com/docs/api/javascript-driver/current/function/index.html#configuration
+	 */
+	/**
+	 * All view nodes as DataSet
+	 * @link https://visjs.github.io/vis-data/data/dataset.html
 	 */
 	driverConfig?: Neo4jTypes.Config;
 }
@@ -260,6 +268,10 @@ export interface NeovisConfig extends BaseNeovisConfig {
 	};
 }
 
+type NonFlatLabelConfig = NonFlatNeoVisAdvanceConfig<VisNetwork.Node, Neo4jTypes.Node<number>>;
+
+type NonFlatRelationsipConfig = NonFlatNeoVisAdvanceConfig<VisNetwork.Edge, Neo4jTypes.Relationship<number>>;
+
 /**
  * non flat version of the configuration (without Symbols)
  * look at the normal config for more information
@@ -318,10 +330,10 @@ export interface NeovisConfig extends BaseNeovisConfig {
  */
 export interface NonFlatNeovisConfig extends BaseNeovisConfig {
 	nonFlat: true;
-	defaultLabelConfig?: NonFlatNeoVisAdvanceConfig<VisNetwork.Node, Neo4jTypes.Node<number>>;
-	defaultRelationshipsConfig?: NonFlatNeoVisAdvanceConfig<VisNetwork.Edge, Neo4jTypes.Relationship<number>>;
-	labels?: Record<string, NonFlatNeoVisAdvanceConfig<VisNetwork.Node, Neo4jTypes.Node<number>>>
-	relationships?: Record<string, NonFlatNeoVisAdvanceConfig<VisNetwork.Edge, Neo4jTypes.Relationship<number>>>;
+	defaultLabelConfig?: NonFlatLabelConfig;
+	defaultRelationshipsConfig?: NonFlatRelationsipConfig;
+	labels?: Record<string, NonFlatLabelConfig>;
+	relationships?: Record<string, NonFlatRelationsipConfig>;
 }
 
 /**
@@ -352,36 +364,46 @@ function isNeo4jDriver(neo4jConfig: Neo4jTypes.Driver | Neo4jConfig): neo4jConfi
 
 
 export class NeoVis {
-	_data = {
+	#data = {
 		nodes: new vis.DataSet<Node>(),
 		edges: new vis.DataSet<Edge>()
 	};
 	#network: VisNetwork.Network = null;
 	#events = new EventController();
-	private _config: NeovisConfig | NonFlatNeovisConfig;
-	private _driver: Neo4jTypes.Driver;
-	private _database: string;
-	private _query: Cypher;
-	private _container: HTMLElement;
+	#config: NeovisConfig | NonFlatNeovisConfig;
+	#driver: Neo4jTypes.Driver;
+	#database: string;
+	#query: Cypher;
+	#container: HTMLElement;
 
 	/**
-	 * Get current vis nodes from the graph
+	 * All view nodes as DataSet
+	 * @link https://visjs.github.io/vis-data/data/dataset.html
 	 */
 	get nodes(): VisNetwork.DataSet<Node> {
-		return this._data.nodes;
+		return this.#data.nodes;
 	}
 
 	/**
-	 * Get current vis edges from the graph
+	 * All view edges as DataSet
+	 * @link https://visjs.github.io/vis-data/data/dataset.html
 	 */
 	get edges(): VisNetwork.DataSet<Edge> {
-		return this._data.edges;
+		return this.#data.edges;
 	}
 
 	/**
-	 * Get current network
+	 * @ignore for test purposes only
 	 */
-	get network(): VisNetwork.Network | undefined{
+	get _config(): NeovisConfig | NonFlatNeovisConfig {
+		return this.#config;
+	}
+
+	/**
+	 * The vis network object
+	 * @link https://visjs.github.io/vis-network/docs/network/#methods
+	 */
+	get network(): VisNetwork.Network | undefined {
 		return this.#network;
 	}
 
@@ -391,61 +413,87 @@ export class NeoVis {
 	 * @param {object} config - configures the visualization and Neo4j server connection
 	 */
 	constructor(config: NeovisConfig | NonFlatNeovisConfig) {
-		this._init(config);
+		this.#init(config);
 
-		this._consoleLog(config);
-		this._consoleLog(defaults);
+		this.#consoleLog(config);
+		this.#consoleLog(defaults);
 	}
 
-	_consoleLog(message: any, level: string = 'log'): void {
-		if (level !== 'log' || this._config.console_debug) {
+	#consoleLog(message: any, level = 'log'): void {
+		if (level !== 'log' || this.#config.console_debug) {
 			// eslint-disable-next-line no-console
 			console[level](message);
 		}
 	}
 
-	_init(config: NeovisConfig | NonFlatNeovisConfig) {
-		let defaultLabelConfig: NonFlatNeoVisAdvanceConfig<VisNetwork.Node, Neo4jTypes .Node<number>> | LabelConfig
-		if(config.nonFlat && config.defaultLabelConfig) {
+	#init(config: NeovisConfig | NonFlatNeovisConfig): void {
+		let defaultLabelConfig: NonFlatLabelConfig | LabelConfig;
+		let defaultRelationshipConfig: NonFlatRelationsipConfig | RelationshipConfig;
+		if (config.nonFlat && config.defaultLabelConfig) {
 			defaultLabelConfig = config.defaultLabelConfig;
-			if(defaultLabelConfig[NEOVIS_ADVANCED_CONFIG]) {
-				throw new Error("non flat config can't use NEOVIS_ADVANCED_CONFIG, read the doc to see how the config should look");
+			if (defaultLabelConfig[NEOVIS_ADVANCED_CONFIG]) {
+				throw new Error('non flat config can\'t use NEOVIS_ADVANCED_CONFIG, read the doc to see how the config should look');
+			}
+			defaultRelationshipConfig = config.defaultRelationshipsConfig;
+			if (defaultRelationshipConfig[NEOVIS_ADVANCED_CONFIG]) {
+				throw new Error('non flat config can\'t use NEOVIS_ADVANCED_CONFIG, read the doc to see how the config should look');
 			}
 		} else {
 			defaultLabelConfig = (config as NeovisConfig).labels?.[NEOVIS_DEFAULT_CONFIG];
-		}
-		if (defaultLabelConfig) {
-			for (let key of Object.keys(config.labels)) {
-				// getting out of my for not changing the original config object
-				config = {
-					...config,
-					labels: {
-						...config.labels,
-						[key]: deepmerge(defaultLabelConfig, config.labels?.[key]) as any
-					}
-				};
-			}
-		}
-		let defaultRelationshipConfig: NonFlatNeoVisAdvanceConfig<VisNetwork.Edge, Neo4jTypes.Relationship<number>> | RelationshipConfig
-		if(config.nonFlat && config.defaultLabelConfig) {
-			defaultRelationshipConfig = config.defaultRelationshipsConfig;
-		} else {
 			defaultRelationshipConfig = (config as NeovisConfig).relationships?.[NEOVIS_DEFAULT_CONFIG];
 		}
-		if (defaultRelationshipConfig) {
-			// getting out of my for not changing the original config object
-			for (let key of Object.keys(config.relationships)) {
-				config = {
-					...config,
-					relationships: {
-						...config.relationships,
-						[key]: deepmerge(defaultRelationshipConfig, config.relationships[key])
-					}
-				};
+		if (defaultLabelConfig) {
+			for (const key of Object.keys(config.labels)) {
+				// getting out of my for not changing the original config object
+				if (config.nonFlat) {
+					(config as NonFlatNeovisConfig) = {
+						...config as NonFlatNeovisConfig,
+						labels: {
+							...config.labels as Record<string, NonFlatLabelConfig>,
+							[key]: deepmerge(defaultLabelConfig as NonFlatLabelConfig, config.labels?.[key] as NonFlatLabelConfig)
+						},
+					};
+				} else {
+					(config as NeovisConfig) = {
+						...config as NeovisConfig,
+						labels: {
+							...config.labels as Record<string, LabelConfig>,
+							[key]: {
+								...deepmerge(defaultLabelConfig as LabelConfig, config.labels?.[key] as LabelConfig),
+								[NEOVIS_ADVANCED_CONFIG]: deepmerge((defaultLabelConfig as LabelConfig)[NEOVIS_ADVANCED_CONFIG] ?? {}, (config.labels?.[key] as LabelConfig)[NEOVIS_ADVANCED_CONFIG] ?? {}),
+							}
+						}
+					};
+				}
 			}
 		}
-		this._config = config;
-		this._driver = isNeo4jDriver(config.neo4j) ? config.neo4j : Neo4j.driver(
+		if (defaultRelationshipConfig) {
+			for (const key of Object.keys(config.relationships)) {
+				// getting out of my for not changing the original config object
+				if (config.nonFlat) {
+					(config as NonFlatNeovisConfig) = {
+						...config as NonFlatNeovisConfig,
+						relationships: {
+							...config.relationships as Record<string, NonFlatRelationsipConfig>,
+							[key]: deepmerge(defaultRelationshipConfig as NonFlatRelationsipConfig, config.relationships?.[key] as NonFlatRelationsipConfig)
+						},
+					};
+				} else {
+					(config as NeovisConfig) = {
+						...config as NeovisConfig,
+						relationships: {
+							...config.labels as Record<string, RelationshipConfig>,
+							[key]: {
+								...deepmerge(defaultRelationshipConfig as RelationshipConfig, config.relationships?.[key] as RelationshipConfig),
+								[NEOVIS_ADVANCED_CONFIG]: deepmerge((defaultRelationshipConfig as RelationshipConfig)[NEOVIS_ADVANCED_CONFIG] ?? {}, (config.relationships?.[key] as RelationshipConfig)[NEOVIS_ADVANCED_CONFIG] ?? {}),
+							}
+						}
+					};
+				}
+			}
+		}
+		this.#config = config;
+		this.#driver = isNeo4jDriver(config.neo4j) ? config.neo4j : Neo4j.driver(
 			config.neo4j?.server_url ?? defaults.neo4j.neo4jUri,
 			Neo4j.auth.basic(
 				config.neo4j?.server_user ?? defaults.neo4j.neo4jUser,
@@ -453,18 +501,18 @@ export class NeoVis {
 			),
 			deepmerge(defaults.neo4j.driverConfig, config.neo4j?.driverConfig ?? {})
 		);
-		this._database = config.server_database;
-		this._query = config.initial_cypher ?? defaults.neo4j.initialQuery;
-		this._container = document.getElementById(config.container_id);
+		this.#database = config.server_database;
+		this.#query = config.initial_cypher ?? defaults.neo4j.initialQuery;
+		this.#container = document.getElementById(config.container_id);
 	}
 
-	async _runCypher(cypher: Cypher, id: number) {
-		const session = this._driver.session(this._database && { database: this._database });
-		let results: Neo4jTypes.Record[] = [];
+	async #runCypher<T>(cypher: Cypher, id: number): Promise<T | T[]> {
+		const session = this.#driver.session(this.#database && { database: this.#database });
+		const results: T[] = [];
 
 		try {
 			const result = await session.readTransaction(tx => tx.run(cypher, { id }));
-			for (let record of result.records) {
+			for (const record of result.records) {
 				record.forEach((v) => {
 					results.push(v);
 				});
@@ -482,14 +530,14 @@ export class NeoVis {
 		return results;
 	}
 
-	async _runFunction<NEO_TYPE>(func: Function, node: NEO_TYPE): Promise<any> {
+	async #runFunction<NEO_TYPE>(func: Function, node: NEO_TYPE): Promise<any> {
 		if (typeof func === 'function') {
 			return await func(node);
 		}
 		throw new Error('Function type property field must be a function');
 	}
 
-	_buildStaticObject<VIS_TYPE>(staticConfig: VIS_TYPE, object: Node | Edge): void {
+	#buildStaticObject<VIS_TYPE>(staticConfig: VIS_TYPE, object: Node | Edge): void {
 		if (staticConfig && typeof staticConfig === 'object') {
 			for (const prop of Object.keys(staticConfig)) {
 				const value = staticConfig[prop];
@@ -497,7 +545,7 @@ export class NeoVis {
 					if (!object[prop]) {
 						object[prop] = {};
 					}
-					this._buildStaticObject(value, object[prop]);
+					this.#buildStaticObject(value, object[prop]);
 				} else {
 					object[prop] = value;
 				}
@@ -505,7 +553,7 @@ export class NeoVis {
 		}
 	}
 
-	_buildPropertyNameObject<VIS_TYPE, NEO_TYPE>(propertyNameConfig: RecursiveMapTo<VIS_TYPE, string>, object: Node | Edge, neo4jObj: NEO_TYPE): void {
+	#buildPropertyNameObject<VIS_TYPE, NEO_TYPE>(propertyNameConfig: RecursiveMapTo<VIS_TYPE, string>, object: Node | Edge, neo4jObj: NEO_TYPE): void {
 		if (propertyNameConfig && typeof propertyNameConfig === 'object') {
 			for (const prop of Object.keys(propertyNameConfig)) {
 				const value = propertyNameConfig[prop];
@@ -513,7 +561,7 @@ export class NeoVis {
 					if (!object[prop]) {
 						object[prop] = {};
 					}
-					this._buildStaticObject(value, object[prop]);
+					this.#buildStaticObject(value, object[prop]);
 				} else {
 					const value = propertyNameConfig[prop];
 					object[prop] = _retrieveProperty(value, neo4jObj);
@@ -522,7 +570,7 @@ export class NeoVis {
 		}
 	}
 
-	async _buildCypherObject<VIS_TYPE>(cypherConfig: RecursiveMapTo<VIS_TYPE, Cypher>, object: Node | Edge, id: number) {
+	async #buildCypherObject<VIS_TYPE>(cypherConfig: RecursiveMapTo<VIS_TYPE, Cypher>, object: Node | Edge, id: number): Promise<void> {
 		if (cypherConfig && typeof cypherConfig === 'object') {
 			for (const prop of Object.keys(cypherConfig)) {
 				const value = cypherConfig[prop];
@@ -530,15 +578,15 @@ export class NeoVis {
 					if (!object[prop]) {
 						object[prop] = {};
 					}
-					await this._buildCypherObject(value, object[prop], id);
+					await this.#buildCypherObject(value, object[prop], id);
 				} else {
-					object[prop] = await this._runCypher(value, id);
+					object[prop] = await this.#runCypher(value, id);
 				}
 			}
 		}
 	}
 
-	async _buildFunctionObject<VIS_TYPE, NEO_TYPE>(functionConfig: RecursiveMapToFunction<VIS_TYPE, NEO_TYPE>, object: Node | Edge, neo4jObj: NEO_TYPE) {
+	async #buildFunctionObject<VIS_TYPE, NEO_TYPE>(functionConfig: RecursiveMapToFunction<VIS_TYPE, NEO_TYPE>, object: Node | Edge, neo4jObj: NEO_TYPE): Promise<void> {
 		if (functionConfig && typeof functionConfig === 'object') {
 			for (const prop of Object.keys(functionConfig)) {
 				const func = functionConfig[prop];
@@ -546,18 +594,18 @@ export class NeoVis {
 					if (!object[prop]) {
 						object[prop] = {};
 					}
-					await this._buildFunctionObject(func, object[prop], neo4jObj);
+					await this.#buildFunctionObject(func, object[prop], neo4jObj);
 				} else {
-					object[prop] = await this._runFunction(func, neo4jObj);
+					object[prop] = await this.#runFunction(func, neo4jObj);
 				}
 			}
 		}
 	}
 
 	async #buildVisObject<VIS_TYPE, NEO_TYPE>(
-		config: NeovisDataConfig<VIS_TYPE, NEO_TYPE> | NonFlatNeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE>, baseObject: Node | Edge, neo4jObject
-	) {
-		if(!config) {
+		config: NeovisDataConfig<VIS_TYPE, NEO_TYPE> | NonFlatNeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE>, baseObject: Node | Edge, neo4jObject: NEO_TYPE
+	): Promise<void> {
+		if (!config) {
 			return;
 		}
 		let staticConfig: VIS_TYPE;
@@ -565,7 +613,7 @@ export class NeoVis {
 		let propertyConfig: RecursiveMapTo<VIS_TYPE, string>;
 		let functionConfig: RecursiveMapToFunction<VIS_TYPE, NEO_TYPE>;
 
-		if(this._config.nonFlat) {
+		if (this.#config.nonFlat) {
 			if (config[NEOVIS_ADVANCED_CONFIG] !== undefined) {
 				throw new Error('Advanced config and non flat config should not be together');
 			}
@@ -574,7 +622,7 @@ export class NeoVis {
 			cypherConfig = config.cypher;
 			propertyConfig = config.property;
 			functionConfig = config.function;
-		}  else {
+		} else {
 			config = config as NeovisDataConfig<VIS_TYPE, NEO_TYPE>;
 			const advancedConfig = config[NEOVIS_ADVANCED_CONFIG];
 			propertyConfig = config;
@@ -585,30 +633,30 @@ export class NeoVis {
 			staticConfig = advancedConfig?.static;
 			functionConfig = advancedConfig?.function;
 		}
-		this._buildPropertyNameObject(propertyConfig, baseObject, neo4jObject);
-		this._buildStaticObject(staticConfig, baseObject);
-		await this._buildCypherObject(cypherConfig, baseObject, baseObject.id);
-		await this._buildFunctionObject(functionConfig, baseObject, neo4jObject);
+		this.#buildPropertyNameObject(propertyConfig, baseObject, neo4jObject);
+		this.#buildStaticObject(staticConfig, baseObject);
+		await this.#buildCypherObject(cypherConfig, baseObject, baseObject.id);
+		await this.#buildFunctionObject(functionConfig, baseObject, neo4jObject);
 	}
 
 	/**
 	 * Build node object for vis from a neo4j Node
-	 * FIXME: move to private api
 	 * @param neo4jNode
 	 * @returns {{}}
 	 */
-	async buildNodeVisObject(neo4jNode: Neo4jTypes.Node<NumberOrInteger>) {
-		let node: Partial<Node> = {};
-		let label: string = neo4jNode.labels[0];
+	async #buildNodeVisObject(neo4jNode: Neo4jTypes.Node<NumberOrInteger>): Promise<Node> {
+		const node: Partial<Node> = {};
+		const label: string = neo4jNode.labels[0];
 
-		let labelConfig: LabelConfig | NonFlatNeoVisAdvanceConfig<VisNetwork.Node, Neo4jTypes.Node<number>> = this._config?.labels?.[label] ?? this._config?.defaultLabelConfig ?? this._config?.labels?.[NEOVIS_DEFAULT_CONFIG];
+		const labelConfig: LabelConfig | NonFlatLabelConfig = this.#config?.labels?.[label] ?? (this.#config as NonFlatNeovisConfig)?.defaultLabelConfig ??
+			(this.#config as NeovisConfig)?.labels?.[NEOVIS_DEFAULT_CONFIG];
 
-		node.id = Neo4j.isInt(neo4jNode.identity) ? (neo4jNode.identity as Neo4jTypes.Integer).toInt() : neo4jNode.identity as number;
+		node.id = isInt(neo4jNode.identity) ? (neo4jNode.identity as Neo4jTypes.Integer).toInt() : neo4jNode.identity as number;
 		node.raw = neo4jNode;
 
 		await this.#buildVisObject(labelConfig, node as Node, neo4jNode);
 
-		return node;
+		return node as Node;
 	}
 
 
@@ -617,30 +665,31 @@ export class NeoVis {
 	 * @param r
 	 * @returns {{}}
 	 */
-	async buildEdgeVisObject(r: Neo4jTypes.Relationship<NumberOrInteger>) {
-		const relationshipConfig = this._config?.relationships?.[r.type] ?? this._config?.defaultRelationshipConfig ??
-			this._config?.relationships?.[NEOVIS_DEFAULT_CONFIG];
+	async #buildEdgeVisObject(r: Neo4jTypes.Relationship<NumberOrInteger>): Promise<Edge> {
+		const relationshipConfig = this.#config?.relationships?.[r.type] ?? (this.#config as NonFlatNeovisConfig).defaultRelationshipsConfig ??
+			(this.#config as NeovisConfig)?.relationships?.[NEOVIS_DEFAULT_CONFIG];
 
-		let edge: Partial<Edge> = {};
-		edge.id = Neo4j.isInt(r.identity) ? (r.identity as Neo4jTypes.Integer).toInt() : r.identity as number;
-		edge.from = Neo4j.isInt(r.start) ? (r.start as Neo4jTypes.Integer).toInt() : r.start as number;
-		edge.to = Neo4j.isInt(r.end) ? (r.end as Neo4jTypes.Integer).toInt() : r.end as number;
+		const edge: Partial<Edge> = {};
+		edge.id = isInt(r.identity) ? (r.identity as Neo4jTypes.Integer).toInt() : r.identity as number;
+		edge.from = isInt(r.start) ? (r.start as Neo4jTypes.Integer).toInt() : r.start as number;
+		edge.to = isInt(r.end) ? (r.end as Neo4jTypes.Integer).toInt() : r.end as number;
 		edge.raw = r;
 
 		await this.#buildVisObject(relationshipConfig, edge as Edge, r);
 
-		return edge;
+		return edge as Edge;
 	}
 
-	// public API
-
-	render(query?: Cypher) {
+	/**
+	 * Renders the network
+	 */
+	render(query?: Cypher): void {
 
 		// connect to Neo4j instance
 		// run query
 		let recordCount = 0;
-		const _query = query || this._query;
-		const session = this._driver.session(this._database ? { database: this._database } : undefined);
+		const _query = query || this.#query;
+		const session = this.#driver.session(this.#database ? { database: this.#database } : undefined);
 		const dataBuildPromises = [];
 		session
 			.run(_query, { limit: 30 })
@@ -648,52 +697,52 @@ export class NeoVis {
 				onNext: (record: Neo4jTypes.Record) => {
 					recordCount++;
 
-					this._consoleLog('CLASS NAME');
-					this._consoleLog(record?.constructor.name);
-					this._consoleLog(record);
+					this.#consoleLog('CLASS NAME');
+					this.#consoleLog(record?.constructor.name);
+					this.#consoleLog(record);
 
-					const dataPromises = record.map(async (v) => {
-						this._consoleLog('Constructor:');
-						this._consoleLog(v?.constructor.name);
-						if (v instanceof Neo4j.types.Node) {
-							let node = await this.buildNodeVisObject(v);
+					const dataPromises = record.map(async (v: object) => {
+						this.#consoleLog('Constructor:');
+						this.#consoleLog(v?.constructor.name);
+						if ((isNode as unknown as (obj: object) => obj is Neo4jCore.Node)(v)) {
+							const node = await this.#buildNodeVisObject(v);
 							try {
-								this._data.nodes.update(node);
+								this.#data.nodes.update(node);
 							} catch (e) {
-								this._consoleLog(e, 'error');
+								this.#consoleLog(e, 'error');
 							}
 
-						} else if (v instanceof Neo4j.types.Relationship) {
-							let edge = await this.buildEdgeVisObject(v);
-							this._data.edges.update(edge);
+						} else if ((isRelationship as unknown as (obj: object) => obj is Neo4jCore.Relationship)(v)) {
+							const edge = await this.#buildEdgeVisObject(v);
+							this.#data.edges.update(edge);
 
-						} else if (v instanceof Neo4j.types.Path) {
-							this._consoleLog('PATH');
-							this._consoleLog(v);
-							let startNode = await this.buildNodeVisObject(v.start);
-							let endNode = await this.buildNodeVisObject(v.end);
+						} else if ((isPath as unknown as (obj: object) => obj is Neo4jCore.Path)(v)) {
+							this.#consoleLog('PATH');
+							this.#consoleLog(v);
+							const startNode = await this.#buildNodeVisObject(v.start);
+							const endNode = await this.#buildNodeVisObject(v.end);
 
-							this._data.nodes.update(startNode);
-							this._data.nodes.update(endNode);
+							this.#data.nodes.update(startNode);
+							this.#data.nodes.update(endNode);
 
-							for (let obj of v.segments) {
-								this._data.nodes.update(await this.buildNodeVisObject(obj.start));
-								this._data.nodes.update(await this.buildNodeVisObject(obj.end));
-								this._data.edges.update(await this.buildEdgeVisObject(obj.relationship));
+							for (const obj of v.segments) {
+								this.#data.nodes.update(await this.#buildNodeVisObject(obj.start));
+								this.#data.nodes.update(await this.#buildNodeVisObject(obj.end));
+								this.#data.edges.update(await this.#buildEdgeVisObject(obj.relationship));
 							}
 
-						} else if (v instanceof Array) {
-							for (let obj of v) {
-								this._consoleLog('Array element constructor:');
-								this._consoleLog(obj?.constructor.name);
-								if (obj instanceof Neo4j.types.Node) {
-									let node = await this.buildNodeVisObject(obj);
-									this._data.nodes.update(node);
+						} else if (Array.isArray(v)) {
+							for (const obj of v) {
+								this.#consoleLog('Array element constructor:');
+								this.#consoleLog(obj?.constructor.name);
+								if ((isNode as unknown as (obj: object) => obj is Neo4jCore.Node)(obj)) {
+									const node = await this.#buildNodeVisObject(obj);
+									this.#data.nodes.update(node);
 
-								} else if (obj instanceof Neo4j.types.Relationship) {
-									let edge = await this.buildEdgeVisObject(obj);
+								} else if ((isRelationship as unknown as (obj: object) => obj is Neo4jCore.Relationship)(obj)) {
+									const edge = await this.#buildEdgeVisObject(obj);
 
-									this._data.edges.update(edge);
+									this.#data.edges.update(edge);
 								}
 							}
 						}
@@ -705,16 +754,16 @@ export class NeoVis {
 					await session.close();
 
 					if (!this.#network) {
-						let options = deepmerge(defaults.visJs, this._config.visConfig ?? {});
+						const options = deepmerge(defaults.visJs, this.#config.visConfig ?? {});
 
-						const container = this._container;
+						const container = this.#container;
 
-						this._consoleLog(this._data.nodes);
-						this._consoleLog(this._data.edges);
+						this.#consoleLog(this.#data.nodes);
+						this.#consoleLog(this.#data.edges);
 
-						this.#network = new vis.Network(container, this._data, options);
+						this.#network = new vis.Network(container, this.#data, options);
 					}
-					this._consoleLog('completed');
+					this.#consoleLog('completed');
 					setTimeout(
 						() => {
 							this.#network.stopSimulation();
@@ -723,25 +772,26 @@ export class NeoVis {
 					);
 					this.#events.generateEvent(NeoVisEvents.CompletionEvent, { record_count: recordCount });
 
-					let neoVis = this;
+					// eslint-disable-next-line @typescript-eslint/no-this-alias
+					const neoVis = this;
 					this.#network.on('click', function (params) {
 						if (params.nodes.length > 0) {
-							let nodeId = this.getNodeAt(params.pointer.DOM);
+							const nodeId = this.getNodeAt(params.pointer.DOM);
 							neoVis.#events.generateEvent(NeoVisEvents.ClickNodeEvent, {
 								nodeId: nodeId,
-								node: neoVis._data.nodes.get(nodeId)
+								node: neoVis.#data.nodes.get(nodeId)
 							});
 						} else if (params.edges.length > 0) {
-							let edgeId = this.getEdgeAt(params.pointer.DOM);
+							const edgeId = this.getEdgeAt(params.pointer.DOM);
 							neoVis.#events.generateEvent(NeoVisEvents.ClickEdgeEvent, {
 								edgeId: edgeId,
-								edge: neoVis._data.edges.get(edgeId)
+								edge: neoVis.#data.edges.get(edgeId)
 							});
 						}
 					});
 				},
 				onError: (error) => {
-					this._consoleLog(error, 'error');
+					this.#consoleLog(error, 'error');
 					this.#events.generateEvent(NeoVisEvents.ErrorEvent, { error_msg: error });
 				}
 			} as object);
@@ -751,15 +801,15 @@ export class NeoVis {
 	 * Clear the data for the visualization
 	 */
 	clearNetwork(): void {
-		this._data.nodes.clear();
-		this._data.edges.clear();
+		this.#data.nodes.clear();
+		this.#data.edges.clear();
 	}
 
 
 	/**
 	 *
 	 * @param {string} eventType Event type to be handled
-	 * @param {handler} handler Handler to manage the event
+	 * @param {Function} handler Handler to manage the event
 	 */
 	registerOnEvent(eventType: NeoVisEvents, handler: Function): void {
 		this.#events.register(eventType, handler);
@@ -771,7 +821,7 @@ export class NeoVis {
 	 * @param config
 	 */
 	reinit(config: NeovisConfig | NonFlatNeovisConfig): void {
-		this._init(config);
+		this.#init(config);
 		this.render();
 	}
 
@@ -788,7 +838,7 @@ export class NeoVis {
 	 */
 	stabilize(): void {
 		this.#network.stopSimulation();
-		this._consoleLog('Calling stopSimulation');
+		this.#consoleLog('Calling stopSimulation');
 	}
 
 	/**
@@ -798,7 +848,7 @@ export class NeoVis {
 	renderWithCypher(query: Cypher): void {
 		// this._config.initial_cypher = query;
 		this.clearNetwork();
-		this._query = query;
+		this.#query = query;
 		this.render();
 	}
 
@@ -815,7 +865,7 @@ export class NeoVis {
 function _propertyToHtml(key: string, value: any) {
 	if (Array.isArray(value) && value.length > 1) {
 		let out = `<strong>${key}:</strong><br /><ul>`;
-		for (let val of value) {
+		for (const val of value) {
 			out += `<li>${val}</li>`;
 		}
 		return out + '</ul>';
@@ -825,12 +875,17 @@ function _propertyToHtml(key: string, value: any) {
 
 function _retrieveProperty(prop: string, obj: any): any {
 	if (typeof obj?.properties === 'object') {
-		return Neo4j.isInt(obj.properties[prop]) ? obj.properties[prop].toInt() : obj.properties[prop];
+		return isInt(obj.properties[prop]) ? obj.properties[prop].toInt() : obj.properties[prop];
 	}
 	throw new Error('Neo4j object is not properly constructed');
 }
 
-export function objectToTitleHtml(neo4jObject: Neo4jTypes.Node<NumberOrInteger> |  Neo4jTypes.Relationship<NumberOrInteger>, titleProperties: string[]): HTMLDivElement {
+/**
+ * create html display of the node
+ * @param neo4jObject node to create html from
+ * @param titleProperties which properties to map
+ */
+export function objectToTitleHtml(neo4jObject: Neo4jTypes.Node<NumberOrInteger> | Neo4jTypes.Relationship<NumberOrInteger>, titleProperties: string[]): HTMLDivElement {
 	let titleString = '';
 	if (!titleProperties) {
 		titleProperties = Object.keys(neo4jObject.properties);
@@ -846,7 +901,12 @@ export function objectToTitleHtml(neo4jObject: Neo4jTypes.Node<NumberOrInteger> 
 	return title;
 }
 
-export function objectToTitleString(neo4jObject: Neo4jTypes.Node<NumberOrInteger> |  Neo4jTypes.Relationship<NumberOrInteger>, titleProperties: string[]): string {
+/**
+ * create string display of the node
+ * @param neo4jObject node to create title string from
+ * @param titleProperties which properties to map
+ */
+export function objectToTitleString(neo4jObject: Neo4jTypes.Node<NumberOrInteger> | Neo4jTypes.Relationship<NumberOrInteger>, titleProperties: string[]): string {
 	let title = '';
 	if (!titleProperties) {
 		titleProperties = Object.keys(neo4jObject.properties);
@@ -864,20 +924,20 @@ export function objectToTitleString(neo4jObject: Neo4jTypes.Node<NumberOrInteger
  * @deprecated for migration only
  */
 export interface OldLabelConfig {
-	caption?: string;
-	size?: string;
+	caption?: string | ((node: Neo4jTypes.Node) => string);
+	size?: number;
 	community?: string;
 	sizeCypher?: string;
 	image?: string;
 	font?: any;
-	title_properties: string[];
+	title_properties?: string[];
 }
 
 /**
  * @deprecated for migration only
  */
 export interface OldRelationshipConfig {
-	thickness?: string;
+	thickness?: number;
 	caption?: boolean | string;
 }
 
@@ -900,11 +960,11 @@ export interface OldNeoVisConfig {
 	};
 	arrows?: boolean;
 	hierarchical?: boolean;
-	hierarchical_sort_method?: "hubsize" | "directed";
+	hierarchical_sort_method?: 'hubsize' | 'directed';
 	initial_cypher?: string;
 	console_debug?: boolean;
-	encrypted?: "ENCRYPTION_OFF" | "ENCRYPTION_ON";
-	trust?: "TRUST_ALL_CERTIFICATES" | "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES";
+	encrypted?: 'ENCRYPTION_OFF' | 'ENCRYPTION_ON';
+	trust?: 'TRUST_ALL_CERTIFICATES' | 'TRUST_SYSTEM_CA_SIGNED_CERTIFICATES';
 }
 
 /**
@@ -940,7 +1000,7 @@ export function migrateFromOldConfig(oldNeoVisConfig: OldNeoVisConfig): NeovisCo
 				sortMethod: oldNeoVisConfig.hierarchical_sort_method
 			} : undefined
 		} : undefined,
-		labels: oldNeoVisConfig.labels ? (Object.entries(oldNeoVisConfig.labels) as [string | typeof NEOVIS_DEFAULT_CONFIG, OldLabelConfig][] )
+		labels: oldNeoVisConfig.labels ? (Object.entries(oldNeoVisConfig.labels) as [string | typeof NEOVIS_DEFAULT_CONFIG, OldLabelConfig][])
 			.concat(oldNeoVisConfig.labels?.[NEOVIS_DEFAULT_CONFIG] ? [[NEOVIS_DEFAULT_CONFIG, oldNeoVisConfig.labels[NEOVIS_DEFAULT_CONFIG]]] : [])
 			.reduce((newLabelsConfig, [label, oldLabelConfig]) => {
 				newLabelsConfig[label] = {
@@ -953,7 +1013,7 @@ export function migrateFromOldConfig(oldNeoVisConfig: OldNeoVisConfig): NeovisCo
 						} : undefined,
 						function: deepmerge({
 							title: (props) => objectToTitleHtml(props, oldLabelConfig.title_properties)
-						}, typeof oldLabelConfig.caption === 'function' ? { label: oldLabelConfig.caption } : {}) ,
+						}, typeof oldLabelConfig.caption === 'function' ? { label: oldLabelConfig.caption } : {}),
 						static: {
 							font: oldLabelConfig.font,
 							shape: oldLabelConfig.image ? 'image' : 'dot',

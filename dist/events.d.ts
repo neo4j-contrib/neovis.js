@@ -16,7 +16,7 @@ export declare class EventController {
     /**
      *
      * @param {string} eventType - Type of the event generated
-     * @param {object} values - Values associated to the event
+     * @param {any} values - Values associated to the event
      */
     generateEvent(eventType: NeoVisEvents, values: any): void;
 }

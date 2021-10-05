@@ -3,7 +3,7 @@ export enum NeoVisEvents {
 	ClickNodeEvent = 'clickNode',
 	ClickEdgeEvent ='clickEdge',
 	ErrorEvent = 'error'
-};
+}
 
 export class EventController {
 	private readonly _handlers: { [p: string]: Function[] };
@@ -33,7 +33,7 @@ export class EventController {
 	/**
 	 *
 	 * @param {string} eventType - Type of the event generated
-	 * @param {object} values - Values associated to the event
+	 * @param {any} values - Values associated to the event
 	 */
 	generateEvent(eventType: NeoVisEvents, values: any): void {
 		if (this._handlers[eventType] === undefined) {

@@ -2,45 +2,51 @@
 
 # Enumeration: NeoVisEvents
 
-events
-
 ## Table of contents
 
 ### Enumeration members
 
-- [ClickEdgeEvent](neovisevents.md#clickedgeevent)
-- [ClickNodeEvent](neovisevents.md#clicknodeevent)
-- [CompletionEvent](neovisevents.md#completionevent)
-- [ErrorEvent](neovisevents.md#errorevent)
+- [ClickEdgeEvent](NeoVisEvents.md#clickedgeevent)
+- [ClickNodeEvent](NeoVisEvents.md#clicknodeevent)
+- [CompletionEvent](NeoVisEvents.md#completionevent)
+- [ErrorEvent](NeoVisEvents.md#errorevent)
 
 ## Enumeration members
 
 ### ClickEdgeEvent
 
-• **ClickEdgeEvent**: = "clickEdge"
+• **ClickEdgeEvent** = `"clickEdge"`
 
-Defined in: [index.d.ts:13](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L13)
+#### Defined in
+
+[src/events.ts:4](https://github.com/thebestnom/neovis.js/blob/710afe0/src/events.ts#L4)
 
 ___
 
 ### ClickNodeEvent
 
-• **ClickNodeEvent**: = "clickNode"
+• **ClickNodeEvent** = `"clickNode"`
 
-Defined in: [index.d.ts:12](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L12)
+#### Defined in
+
+[src/events.ts:3](https://github.com/thebestnom/neovis.js/blob/710afe0/src/events.ts#L3)
 
 ___
 
 ### CompletionEvent
 
-• **CompletionEvent**: = "completed"
+• **CompletionEvent** = `"completed"`
 
-Defined in: [index.d.ts:11](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L11)
+#### Defined in
+
+[src/events.ts:2](https://github.com/thebestnom/neovis.js/blob/710afe0/src/events.ts#L2)
 
 ___
 
 ### ErrorEvent
 
-• **ErrorEvent**: = "error"
+• **ErrorEvent** = `"error"`
 
-Defined in: [index.d.ts:14](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L14)
+#### Defined in
+
+[src/events.ts:5](https://github.com/thebestnom/neovis.js/blob/710afe0/src/events.ts#L5)

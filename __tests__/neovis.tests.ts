@@ -1,9 +1,22 @@
-import Neo4j, * as Neo4jMock from 'neo4j-driver';
-import Neovis, { NEOVIS_DEFAULT_CONFIG, NEOVIS_ADVANCED_CONFIG, migrateFromOldConfig } from '../src/neovis';
+import Neo4j, * as Neo4jMockImport from 'neo4j-driver';
+import Neovis, {
+	NEOVIS_DEFAULT_CONFIG,
+	NEOVIS_ADVANCED_CONFIG,
+	migrateFromOldConfig,
+	NeovisConfig, NonFlatNeovisConfig, OldNeoVisConfig
+} from '../src/neovis';
 import { NeoVisEvents } from '../src/events';
 import * as testUtils from './testUtils';
 
+// eslint-disable-next-line jest/no-mocks-import
+import type * as Neo4jMockType from '../__mocks__/neo4j-driver';
+import type NeoVis from '../src/neovis';
+import type VisNetwork from 'vis-network';
+
 jest.mock('neo4j-driver');
+
+const Neo4jMock = Neo4jMockImport as unknown as typeof Neo4jMockType;
+
 
 describe('Neovis', () => {
 	const container_id = 'randomId';
@@ -11,7 +24,7 @@ describe('Neovis', () => {
 	const label1 = 'label1';
 	const label2 = 'label2';
 	const relationshipType = 'TEST';
-	let neovis;
+	let neovis: NeoVis; 
 
 	beforeEach(() => Neo4jMock.clearAllMocks());
 	beforeEach(() => {
@@ -20,87 +33,87 @@ describe('Neovis', () => {
 	});
 
 	describe('NeoVis config defaults behavior', () => {
-		let config = {};
+		let config: Partial<NeovisConfig> = {};
 		beforeEach(() => {
 			config = {};
 		});
 		it('should merge default symbol for each label config', () => {
 			config.labels = {
 				a: {
-					caption: 'name'
+					label: 'name'
 				},
 				[NEOVIS_DEFAULT_CONFIG]: {
-					test: 'test'
+					chosen: 'test'
 				}
 			};
-			const neovis = new Neovis(config);
-			expect(neovis._config.labels.a).toMatchObject({ caption: 'name', test: 'test' });
+			const neovis = new Neovis(config as NeovisConfig);
+			expect(neovis._config.labels.a).toMatchObject({ label: 'name', chosen: 'test' });
 		});
 		it('should not change the config sent', () => {
 			config = {
 				labels: {
 					a: {
-						caption: 'name'
+						label: 'name'
 					},
 					[NEOVIS_DEFAULT_CONFIG]: {
-						test: 'test'
+						chosen: 'test'
 					}
 				},
 				relationships: {
 					a: {
-						thickness: 0.1
+						value: 'test'
 					},
 					[NEOVIS_DEFAULT_CONFIG]: {
-						test: 'test'
+						chosen: 'test'
 					}
 				}
 			};
 			const configTemp = { ...config };
-			new Neovis(config);
+			new Neovis(config as NeovisConfig);
 			expect(config).toMatchObject(configTemp);
 		});
 		it('should override default config if specific label have one', () => {
 			config.relationships = {
 				a: {
-					caption: 'name',
-					overrideThis: 'overridden'
+					label: 'name',
+					chosen: 'overridden'
 				},
 				[NEOVIS_DEFAULT_CONFIG]: {
-					test: 'test',
-					overrideThis: 'override'
+					color: 'test',
+					chosen: 'override'
 				}
 			};
-			const neovis = new Neovis(config);
+			const neovis = new Neovis(config as NeovisConfig);
 			expect(neovis._config.relationships.a).toMatchObject({
-				caption: 'name', test: 'test', overrideThis: 'overridden'
+				label: 'name', color: 'test', chosen: 'overridden'
 			});
 		});
 		it('should merge default symbol for each relationship config', () => {
 			config.labels = {
 				a: {
-					caption: 'name'
+					label: 'name'
 				},
 				[NEOVIS_DEFAULT_CONFIG]: {
-					test: 'test'
+					chosen: 'test'
 				}
 			};
-			const neovis = new Neovis(config);
-			expect(neovis._config.labels.a).toMatchObject({ caption: 'name', test: 'test' });
+			const neovis = new Neovis(config as NeovisConfig);
+			expect(neovis._config.labels.a).toMatchObject({ label: 'name', chosen: 'test' });
 		});
 		it('should override default config if specific relationship have one', () => {
 			config.relationships = {
 				a: {
-					caption: 'name',
-					overrideThis: 'overridden'
+					label: 'name',
+					chosen: 'overridden'
 				},
 				[NEOVIS_DEFAULT_CONFIG]: {
-					test: 'test',
-					overrideThis: 'override'
+					value: 'test',
+					chosen: 'override'
 				}
 			};
-			const neovis = new Neovis(config);
+			const neovis = new Neovis(config as NeovisConfig);
 			expect(neovis._config.relationships.a).toMatchObject({
-				caption: 'name', test: 'test', overrideThis: 'overridden'
+				label: 'name', value: 'test', chosen: 'overridden'
 			});
 		});
 	});
@@ -115,7 +128,7 @@ describe('Neovis', () => {
 			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledWith(initial_cypher, { limit: 30 });
 		});
 
-		it('should call completed when complete', () => new Promise(done => {
+		it('should call completed when complete', () => new Promise<void>(done => {
 			testUtils.mockNormalRunSubscribe();
 			neovis.render();
 			neovis.registerOnEvent(NeoVisEvents.CompletionEvent, () => {
@@ -130,7 +143,7 @@ describe('Neovis', () => {
 			]);
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
-			expect(neovis._data.nodes.get(1)).toBeDefined();
+			expect(neovis.nodes.get(1)).toBeDefined();
 		});
 
 		it('should save paths to dataset', async () => {
@@ -142,8 +155,8 @@ describe('Neovis', () => {
 			]);
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
-			expect(neovis._data.nodes.length).toBe(2);
-			expect(neovis._data.edges.length).toBe(1);
+			expect(neovis.nodes.length).toBe(2);
+			expect(neovis.edges.length).toBe(1);
 		});
 
 		it('should save record with multiple parameters', async () => {
@@ -155,9 +168,9 @@ describe('Neovis', () => {
 			]);
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
-			expect(neovis._data.nodes.length).toBe(2);
 			expect(neovis.nodes.length).toBe(2);
-			expect(neovis._data.edges.length).toBe(1);
+			expect(neovis.nodes.length).toBe(2);
+			expect(neovis.edges.length).toBe(1);
 			expect(neovis.edges.length).toBe(1);
 		});
 
@@ -175,9 +188,9 @@ describe('Neovis', () => {
 			]);
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
-			expect(neovis._data.nodes.length).toBe(5);
 			expect(neovis.nodes.length).toBe(5);
-			expect(neovis._data.edges.length).toBe(2);
+			expect(neovis.nodes.length).toBe(5);
+			expect(neovis.edges.length).toBe(2);
 			expect(neovis.edges.length).toBe(2);
 		});
 
@@ -190,9 +203,9 @@ describe('Neovis', () => {
 			]);
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
-			expect(neovis._data.nodes.get(1).raw).toBeDefined();
-			expect(neovis._data.nodes.get(2).raw).toBeDefined();
-			expect(neovis._data.edges.get(3).raw).toBeDefined();
+			expect(neovis.nodes.get(1).raw).toBeDefined();
+			expect(neovis.nodes.get(2).raw).toBeDefined();
+			expect(neovis.edges.get(3).raw).toBeDefined();
 		});
 	});
 
@@ -229,7 +242,7 @@ describe('Neovis', () => {
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1 + 1); // once for initial cypher and once for the sizeCypher
-			expect(neovis._data.nodes.get(1)).toHaveProperty('value', 1);
+			expect(neovis.nodes.get(1)).toHaveProperty('value', 1);
 		});
 	});
 
@@ -254,11 +267,11 @@ describe('Neovis', () => {
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1);
-			expect(neovis._data.nodes.length).toBe(1); // 1 node before update with cypher
+			expect(neovis.nodes.length).toBe(1); // 1 node before update with cypher
 			neovis.updateWithCypher(updateWithCypher); // do the update
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1 + 1); // once for initial cypher and once for the update
-			expect(neovis._data.nodes.length).toBe(2); // 2 node after update with cypher
+			expect(neovis.nodes.length).toBe(2); // 2 node after update with cypher
 		});
 
 		it('call updateWithCypher with same init query should not create duplicate nodes', async () => {
@@ -272,11 +285,11 @@ describe('Neovis', () => {
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1);
-			expect(neovis._data.nodes.length).toBe(1); // 1 node before update with cypher
+			expect(neovis.nodes.length).toBe(1); // 1 node before update with cypher
 			neovis.updateWithCypher(initial_cypher); // do the update
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1 + 1); // once for initial cypher and once for the update
-			expect(neovis._data.nodes.length).toBe(1); // 1 node after update with cypher
+			expect(neovis.nodes.length).toBe(1); // 1 node after update with cypher
 		});
 	});
 
@@ -299,7 +312,7 @@ describe('Neovis', () => {
 			}
 		},
 		initial_cypher: initial_cypher
-	}], ['non flat config', {
+	} as Partial<NeovisConfig>], ['non flat config', {
 		container_id,
 		nonFlat: true,
 		labels: {
@@ -314,9 +327,9 @@ describe('Neovis', () => {
 			}
 		},
 		initial_cypher: initial_cypher
-	}]])('neovis advance %s test', (configName, config) => {
+	} as Partial<NonFlatNeovisConfig>]])('neovis advance %s test', (configName: string, config) => {
 		beforeEach(() => {
-			neovis = new Neovis(config);
+			neovis = new Neovis(config as NonFlatNeovisConfig | NeovisConfig);
 		});
 
 		it('image field in config should reflect in node data', async () => {
@@ -329,7 +342,7 @@ describe('Neovis', () => {
 
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
-			expect(neovis._data.nodes.get(1)).toHaveProperty('image', imageUrl);
+			expect(neovis.nodes.get(1)).toHaveProperty('image', imageUrl);
 		});
 
 		it('image field for type not specified in config should not reflect in node data', async () => {
@@ -342,7 +355,7 @@ describe('Neovis', () => {
 
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
-			expect(neovis._data.nodes.get(1)).toHaveProperty('image', undefined);
+			expect(neovis.nodes.get(1)).toHaveProperty('image', undefined);
 		});
 
 		it('font field in config should reflect in node data', async () => {
@@ -355,9 +368,9 @@ describe('Neovis', () => {
 
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
-			expect(neovis._data.nodes.get(1).font).toBeDefined();
-			expect(neovis._data.nodes.get(1).font.size).toBe(fontSize);
-			expect(neovis._data.nodes.get(1).font.color).toBe(fontColor);
+			expect(neovis.nodes.get(1).font).toBeDefined();
+			expect((neovis.nodes.get(1).font as VisNetwork.Font).size).toBe(fontSize);
+			expect((neovis.nodes.get(1).font as VisNetwork.Font).color).toBe(fontColor);
 		});
 
 		it('font field for type not specified in config should not reflect in node data', async () => {
@@ -370,28 +383,28 @@ describe('Neovis', () => {
 
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
-			expect(neovis._data.nodes.get(1)).toHaveProperty('font', undefined);
+			expect(neovis.nodes.get(1)).toHaveProperty('font', undefined);
 		});
 	});
 
 	// TODO: After upgrading to merge config, type casting is failing due to not able to detect target type. A proper way
 	// 			either let the user to define type casting or do it automaticlly need to be implemented.
 	describe('neovis type casting test', () => {
-		const intProperity = 'intProperity';
-		const intProperityValue = 40;
+		const intProperty = 'intProperity';
+		const intPropertyValue = 40;
 
 		it('should merge property name type to vis.js config properly', async () => {
-			let config = {
+			const config = {
 				container_id: container_id,
 				labels: {
 					[label1]: {
-						'label': intProperity
+						'label': intProperty
 					}
 				},
 				initial_cypher: initial_cypher
 			};
 			neovis = new Neovis(config);
-			const node1 = testUtils.makeNode([label1], { [intProperity]: intProperityValue });
+			const node1 = testUtils.makeNode([label1], { [intProperty]: intPropertyValue });
 			testUtils.mockFullRunSubscribe({
 				[initial_cypher]: {
 					default: [testUtils.makeRecord([node1])]
@@ -400,25 +413,25 @@ describe('Neovis', () => {
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1);
-			expect(neovis._data.nodes.get(1)).toHaveProperty('label', intProperityValue);
+			expect(neovis.nodes.get(1)).toHaveProperty('label', intPropertyValue);
 		});
 
 		it('should merge static type to vis.js config properly', async () => {
-			let config = {
-				container_id: container_id,
+			const config: Partial<NeovisConfig> = {
+				container_id,
 				labels: {
 					[label1]: {
 						[NEOVIS_ADVANCED_CONFIG]: {
 							'static': {
-								'label': intProperityValue
+								value: intPropertyValue
 							}
 						}
 					}
 				},
-				initial_cypher: initial_cypher
+				initial_cypher
 			};
-			neovis = new Neovis(config);
-			const node1 = testUtils.makeNode([label1], { [intProperity]: intProperityValue });
+			neovis = new Neovis(config as NeovisConfig);
+			const node1 = testUtils.makeNode([label1], { [intProperty]: intPropertyValue });
 			testUtils.mockFullRunSubscribe({
 				[initial_cypher]: {
 					default: [testUtils.makeRecord([node1])]
@@ -427,25 +440,25 @@ describe('Neovis', () => {
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1);
-			expect(neovis._data.nodes.get(1)).toHaveProperty('label', intProperityValue);
+			expect(neovis.nodes.get(1)).toHaveProperty('value', intPropertyValue);
 		});
 
 		it('should merge function type to vis.js config properly', async () => {
-			let config = {
+			const config: Partial<NeovisConfig> = {
 				container_id: container_id,
 				labels: {
 					[label1]: {
 						[NEOVIS_ADVANCED_CONFIG]: {
-							'function': {
-								'label': () => intProperityValue
+							function: {
+								value: () => intPropertyValue
 							}
 						}
 					}
 				},
 				initial_cypher: initial_cypher
 			};
-			neovis = new Neovis(config);
-			const node1 = testUtils.makeNode([label1], { [intProperity]: intProperityValue });
+			neovis = new Neovis(config as NeovisConfig);
+			const node1 = testUtils.makeNode([label1], { [intProperty]: intPropertyValue });
 			testUtils.mockFullRunSubscribe({
 				[initial_cypher]: {
 					default: [testUtils.makeRecord([node1])]
@@ -454,44 +467,44 @@ describe('Neovis', () => {
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1);
-			expect(neovis._data.nodes.get(1)).toHaveProperty('label', intProperityValue);
+			expect(neovis.nodes.get(1)).toHaveProperty('value', intPropertyValue);
 		});
 
 		it('should merge cypher type to vis.js config properly', async () => {
 			const sizeCypher = 'sizeCypher';
-			let config = {
-				container_id: container_id,
+			const config: Partial<NeovisConfig> = {
+				container_id,
 				labels: {
 					[label1]: {
 						[NEOVIS_ADVANCED_CONFIG]: {
 							cypher: {
-								label: sizeCypher
+								value: sizeCypher
 							}
 						}
 					}
 				},
 				initial_cypher: initial_cypher
 			};
-			neovis = new Neovis(config);
-			const node1 = testUtils.makeNode([label1], { [intProperity]: intProperityValue });
+			neovis = new Neovis(config as NeovisConfig);
+			const node1 = testUtils.makeNode([label1], { [intProperty]: intPropertyValue });
 			testUtils.mockFullRunSubscribe({
 				[initial_cypher]: {
 					default: [testUtils.makeRecord([node1])]
 				},
 				[sizeCypher]: {
-					[node1.identity]: [testUtils.makeRecord([intProperityValue])]
+					[node1.identity]: [testUtils.makeRecord([intPropertyValue])]
 				}
 			});
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(2);
-			expect(neovis._data.nodes.get(1)).toHaveProperty('label', intProperityValue);
+			expect(neovis.nodes.get(1)).toHaveProperty('value', intPropertyValue);
 		});
 
 	});
 
 	describe('neovis config migration', () => {
-		const oldConfig = {
+		const oldConfig: Partial<OldNeoVisConfig> = {
 			initial_cypher,
 			container_id,
 			labels: {
@@ -499,7 +512,7 @@ describe('Neovis', () => {
 					caption: 'name'
 				},
 				[NEOVIS_DEFAULT_CONFIG]: {
-					test: 'test'
+					community: 'test'
 				}
 			},
 			relationships: {
@@ -507,18 +520,18 @@ describe('Neovis', () => {
 					thickness: 0.1
 				},
 				[NEOVIS_DEFAULT_CONFIG]: {
-					test: 'test'
+					caption: 'test'
 				}
 			}
 		};
 		it('should work after full old config migration', async () => {
-			const neovis = new Neovis(migrateFromOldConfig(oldConfig));
+			const neovis = new Neovis(migrateFromOldConfig(oldConfig as OldNeoVisConfig));
 			testUtils.mockNormalRunSubscribe([
 				testUtils.makeRecord([testUtils.makeNode([label1])]),
 			]);
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
-			expect(neovis._data.nodes.get(1)).toBeDefined();
+			expect(neovis.nodes.get(1)).toBeDefined();
 		});
 	});
 });

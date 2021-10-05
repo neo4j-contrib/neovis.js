@@ -8,48 +8,80 @@
 
 ### Properties
 
-- [caption](oldlabelconfig.md#caption)
-- [community](oldlabelconfig.md#community)
-- [image](oldlabelconfig.md#image)
-- [size](oldlabelconfig.md#size)
-- [sizeCypher](oldlabelconfig.md#sizecypher)
+- [caption](OldLabelConfig.md#caption)
+- [community](OldLabelConfig.md#community)
+- [font](OldLabelConfig.md#font)
+- [image](OldLabelConfig.md#image)
+- [size](OldLabelConfig.md#size)
+- [sizeCypher](OldLabelConfig.md#sizecypher)
+- [title\_properties](OldLabelConfig.md#title_properties)
 
 ## Properties
 
 ### caption
 
-• `Optional` **caption**: *string*
+• `Optional` **caption**: `string` \| (`node`: `Node`<`Integer`\>) => `string`
 
-Defined in: [index.d.ts:433](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L433)
+#### Defined in
+
+[src/neovis.ts:923](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L923)
 
 ___
 
 ### community
 
-• `Optional` **community**: *string*
+• `Optional` **community**: `string`
 
-Defined in: [index.d.ts:435](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L435)
+#### Defined in
+
+[src/neovis.ts:925](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L925)
+
+___
+
+### font
+
+• `Optional` **font**: `any`
+
+#### Defined in
+
+[src/neovis.ts:928](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L928)
 
 ___
 
 ### image
 
-• `Optional` **image**: *string*
+• `Optional` **image**: `string`
 
-Defined in: [index.d.ts:437](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L437)
+#### Defined in
+
+[src/neovis.ts:927](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L927)
 
 ___
 
 ### size
 
-• `Optional` **size**: *string*
+• `Optional` **size**: `number`
 
-Defined in: [index.d.ts:434](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L434)
+#### Defined in
+
+[src/neovis.ts:924](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L924)
 
 ___
 
 ### sizeCypher
 
-• `Optional` **sizeCypher**: *string*
+• `Optional` **sizeCypher**: `string`
 
-Defined in: [index.d.ts:436](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L436)
+#### Defined in
+
+[src/neovis.ts:926](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L926)
+
+___
+
+### title\_properties
+
+• `Optional` **title\_properties**: `string`[]
+
+#### Defined in
+
+[src/neovis.ts:929](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L929)
