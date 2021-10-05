@@ -8,359 +8,481 @@ A mapper between neo4j node properties names to vis-network node config
 
 ## Hierarchy
 
-- [*RecursiveMapTo*](../README.md#recursivemapto)<VisNetwork.Node, string\>
+- [`RecursiveMapTo`](../README.md#recursivemapto)<`VisNetwork.Node`, `string`\>
 
-  ↳ **LabelConfig**
+  ↳ **`LabelConfig`**
 
 ## Table of contents
 
 ### Properties
 
-- [[NEOVIS\_ADVANCED\_CONFIG]](labelconfig.md#[neovis_advanced_config])
-- [borderWidth](labelconfig.md#borderwidth)
-- [borderWidthSelected](labelconfig.md#borderwidthselected)
-- [brokenImage](labelconfig.md#brokenimage)
-- [chosen](labelconfig.md#chosen)
-- [color](labelconfig.md#color)
-- [fixed](labelconfig.md#fixed)
-- [font](labelconfig.md#font)
-- [group](labelconfig.md#group)
-- [hidden](labelconfig.md#hidden)
-- [icon](labelconfig.md#icon)
-- [id](labelconfig.md#id)
-- [image](labelconfig.md#image)
-- [imagePadding](labelconfig.md#imagepadding)
-- [label](labelconfig.md#label)
-- [labelHighlightBold](labelconfig.md#labelhighlightbold)
-- [level](labelconfig.md#level)
-- [margin](labelconfig.md#margin)
-- [mass](labelconfig.md#mass)
-- [opacity](labelconfig.md#opacity)
-- [physics](labelconfig.md#physics)
-- [scaling](labelconfig.md#scaling)
-- [shadow](labelconfig.md#shadow)
-- [shape](labelconfig.md#shape)
-- [shapeProperties](labelconfig.md#shapeproperties)
-- [size](labelconfig.md#size)
-- [title](labelconfig.md#title)
-- [value](labelconfig.md#value)
-- [widthConstraint](labelconfig.md#widthconstraint)
-- [x](labelconfig.md#x)
-- [y](labelconfig.md#y)
+- [[NEOVIS\_ADVANCED\_CONFIG]](LabelConfig.md#[neovis_advanced_config])
+- [borderWidth](LabelConfig.md#borderwidth)
+- [borderWidthSelected](LabelConfig.md#borderwidthselected)
+- [brokenImage](LabelConfig.md#brokenimage)
+- [chosen](LabelConfig.md#chosen)
+- [color](LabelConfig.md#color)
+- [fixed](LabelConfig.md#fixed)
+- [font](LabelConfig.md#font)
+- [group](LabelConfig.md#group)
+- [hidden](LabelConfig.md#hidden)
+- [icon](LabelConfig.md#icon)
+- [id](LabelConfig.md#id)
+- [image](LabelConfig.md#image)
+- [imagePadding](LabelConfig.md#imagepadding)
+- [label](LabelConfig.md#label)
+- [labelHighlightBold](LabelConfig.md#labelhighlightbold)
+- [level](LabelConfig.md#level)
+- [margin](LabelConfig.md#margin)
+- [mass](LabelConfig.md#mass)
+- [opacity](LabelConfig.md#opacity)
+- [physics](LabelConfig.md#physics)
+- [scaling](LabelConfig.md#scaling)
+- [shadow](LabelConfig.md#shadow)
+- [shape](LabelConfig.md#shape)
+- [shapeProperties](LabelConfig.md#shapeproperties)
+- [size](LabelConfig.md#size)
+- [title](LabelConfig.md#title)
+- [value](LabelConfig.md#value)
+- [widthConstraint](LabelConfig.md#widthconstraint)
+- [x](LabelConfig.md#x)
+- [y](LabelConfig.md#y)
 
 ## Properties
 
 ### [NEOVIS\_ADVANCED\_CONFIG]
 
-• `Optional` **[NEOVIS\_ADVANCED\_CONFIG]**: [*NeoVisAdvanceConfig*](neovisadvanceconfig.md)<Node, Node<number\>\>
+• `Optional` **[NEOVIS\_ADVANCED\_CONFIG]**: [`NeoVisAdvanceConfig`](NeoVisAdvanceConfig.md)<`Node`, `Node`<`number`\>\>
 
 advance options which allow for:
 mapping static options to each node
 mapping cypher to run for each node to determine vis-network node option
 mapping function that gets the neo4j node and returns vis-network node option
 
-Defined in: [index.d.ts:68](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L68)
+#### Defined in
+
+[src/neovis.ts:72](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L72)
 
 ___
 
 ### borderWidth
 
-• `Optional` **borderWidth**: *string*
+• `Optional` **borderWidth**: `string`
 
-Inherited from: RecursiveMapTo.borderWidth
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:897
+RecursiveMapTo.borderWidth
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:897
 
 ___
 
 ### borderWidthSelected
 
-• `Optional` **borderWidthSelected**: *string*
+• `Optional` **borderWidthSelected**: `string`
 
-Inherited from: RecursiveMapTo.borderWidthSelected
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:899
+RecursiveMapTo.borderWidthSelected
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:899
 
 ___
 
 ### brokenImage
 
-• `Optional` **brokenImage**: *string*
+• `Optional` **brokenImage**: `string`
 
-Inherited from: RecursiveMapTo.brokenImage
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:901
+RecursiveMapTo.brokenImage
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:901
 
 ___
 
 ### chosen
 
-• `Optional` **chosen**: *string*
+• `Optional` **chosen**: `string`
 
-Inherited from: RecursiveMapTo.chosen
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:905
+RecursiveMapTo.chosen
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:905
 
 ___
 
 ### color
 
-• `Optional` **color**: *string*
+• `Optional` **color**: `string`
 
-Inherited from: RecursiveMapTo.color
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:903
+RecursiveMapTo.color
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:903
 
 ___
 
 ### fixed
 
-• `Optional` **fixed**: *string*
+• `Optional` **fixed**: `string`
 
-Inherited from: RecursiveMapTo.fixed
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:909
+RecursiveMapTo.fixed
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:909
 
 ___
 
 ### font
 
-• `Optional` **font**: *string*
+• `Optional` **font**: `string`
 
-Inherited from: RecursiveMapTo.font
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:914
+RecursiveMapTo.font
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:914
 
 ___
 
 ### group
 
-• `Optional` **group**: *string*
+• `Optional` **group**: `string`
 
-Inherited from: RecursiveMapTo.group
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:916
+RecursiveMapTo.group
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:916
 
 ___
 
 ### hidden
 
-• `Optional` **hidden**: *string*
+• `Optional` **hidden**: `string`
 
-Inherited from: RecursiveMapTo.hidden
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:918
+RecursiveMapTo.hidden
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:918
 
 ___
 
 ### icon
 
-• `Optional` **icon**: [*RecursiveMapTo*](../README.md#recursivemapto)<{ `code?`: *string* ; `color?`: *string* ; `face?`: *string* ; `size?`: *number* ; `weight?`: *string* \| *number*  }, string\>
+• `Optional` **icon**: [`RecursiveMapTo`](../README.md#recursivemapto)<`Object`, `string`\>
 
-Inherited from: RecursiveMapTo.icon
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:920
+RecursiveMapTo.icon
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:920
 
 ___
 
 ### id
 
-• `Optional` **id**: *string*
+• `Optional` **id**: `string`
 
-Inherited from: RecursiveMapTo.id
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:760
+RecursiveMapTo.id
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:760
 
 ___
 
 ### image
 
-• `Optional` **image**: *string*
+• `Optional` **image**: `string`
 
-Inherited from: RecursiveMapTo.image
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:928
+RecursiveMapTo.image
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:928
 
 ___
 
 ### imagePadding
 
-• `Optional` **imagePadding**: *string*
+• `Optional` **imagePadding**: `string`
 
-Inherited from: RecursiveMapTo.imagePadding
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:930
+RecursiveMapTo.imagePadding
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:930
 
 ___
 
 ### label
 
-• `Optional` **label**: *string*
+• `Optional` **label**: `string`
 
-Inherited from: RecursiveMapTo.label
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:932
+RecursiveMapTo.label
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:932
 
 ___
 
 ### labelHighlightBold
 
-• `Optional` **labelHighlightBold**: *string*
+• `Optional` **labelHighlightBold**: `string`
 
-Inherited from: RecursiveMapTo.labelHighlightBold
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:934
+RecursiveMapTo.labelHighlightBold
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:934
 
 ___
 
 ### level
 
-• `Optional` **level**: *string*
+• `Optional` **level**: `string`
 
-Inherited from: RecursiveMapTo.level
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:936
+RecursiveMapTo.level
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:936
 
 ___
 
 ### margin
 
-• `Optional` **margin**: [*RecursiveMapTo*](../README.md#recursivemapto)<{ `bottom?`: *number* ; `left?`: *number* ; `right?`: *number* ; `top?`: *number*  }, string\>
+• `Optional` **margin**: [`RecursiveMapTo`](../README.md#recursivemapto)<`Object`, `string`\>
 
-Inherited from: RecursiveMapTo.margin
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:938
+RecursiveMapTo.margin
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:938
 
 ___
 
 ### mass
 
-• `Optional` **mass**: *string*
+• `Optional` **mass**: `string`
 
-Inherited from: RecursiveMapTo.mass
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:945
+RecursiveMapTo.mass
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:945
 
 ___
 
 ### opacity
 
-• `Optional` **opacity**: *string*
+• `Optional` **opacity**: `string`
 
-Inherited from: RecursiveMapTo.opacity
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:907
+RecursiveMapTo.opacity
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:907
 
 ___
 
 ### physics
 
-• `Optional` **physics**: *string*
+• `Optional` **physics**: `string`
 
-Inherited from: RecursiveMapTo.physics
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:947
+RecursiveMapTo.physics
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:947
 
 ___
 
 ### scaling
 
-• `Optional` **scaling**: [*RecursiveMapTo*](../README.md#recursivemapto)<OptionsScaling, string\>
+• `Optional` **scaling**: [`RecursiveMapTo`](../README.md#recursivemapto)<`OptionsScaling`, `string`\>
 
-Inherited from: RecursiveMapTo.scaling
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:949
+RecursiveMapTo.scaling
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:949
 
 ___
 
 ### shadow
 
-• `Optional` **shadow**: *string*
+• `Optional` **shadow**: `string`
 
-Inherited from: RecursiveMapTo.shadow
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:951
+RecursiveMapTo.shadow
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:951
 
 ___
 
 ### shape
 
-• `Optional` **shape**: *string*
+• `Optional` **shape**: `string`
 
-Inherited from: RecursiveMapTo.shape
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:953
+RecursiveMapTo.shape
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:953
 
 ___
 
 ### shapeProperties
 
-• `Optional` **shapeProperties**: [*RecursiveMapTo*](../README.md#recursivemapto)<{ `borderDashes?`: *boolean* \| *number*[] ; `borderRadius?`: *number* ; `coordinateOrigin?`: *string* ; `interpolation?`: *boolean* ; `useBorderWithImage?`: *boolean* ; `useImageSize?`: *boolean*  }, string\>
+• `Optional` **shapeProperties**: [`RecursiveMapTo`](../README.md#recursivemapto)<`Object`, `string`\>
 
-Inherited from: RecursiveMapTo.shapeProperties
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:955
+RecursiveMapTo.shapeProperties
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:955
 
 ___
 
 ### size
 
-• `Optional` **size**: *string*
+• `Optional` **size**: `string`
 
-Inherited from: RecursiveMapTo.size
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:964
+RecursiveMapTo.size
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:964
 
 ___
 
 ### title
 
-• `Optional` **title**: *string*
+• `Optional` **title**: `string`
 
-Inherited from: RecursiveMapTo.title
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:966
+RecursiveMapTo.title
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:966
 
 ___
 
 ### value
 
-• `Optional` **value**: *string*
+• `Optional` **value**: `string`
 
-Inherited from: RecursiveMapTo.value
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:968
+RecursiveMapTo.value
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:968
 
 ___
 
 ### widthConstraint
 
-• `Optional` **widthConstraint**: *string*
+• `Optional` **widthConstraint**: `string`
 
 If false, no widthConstraint is applied. If a number is specified, the minimum and maximum widths of the node are set to the value.
 The node's label's lines will be broken on spaces to stay below the maximum and the node's width
 will be set to the minimum if less than the value.
 
-Inherited from: RecursiveMapTo.widthConstraint
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:975
+RecursiveMapTo.widthConstraint
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:975
 
 ___
 
 ### x
 
-• `Optional` **x**: *string*
+• `Optional` **x**: `string`
 
-Inherited from: RecursiveMapTo.x
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:977
+RecursiveMapTo.x
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:977
 
 ___
 
 ### y
 
-• `Optional` **y**: *string*
+• `Optional` **y**: `string`
 
-Inherited from: RecursiveMapTo.y
+#### Inherited from
 
-Defined in: node_modules/vis-network/declarations/network/Network.d.ts:979
+RecursiveMapTo.y
+
+#### Defined in
+
+node_modules/vis-network/declarations/network/Network.d.ts:979

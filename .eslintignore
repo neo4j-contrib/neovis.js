@@ -4,5 +4,5 @@ examples
 doc
 dist
 webpack.config.js
-*.ts
+*.d.ts
 babel.config.js

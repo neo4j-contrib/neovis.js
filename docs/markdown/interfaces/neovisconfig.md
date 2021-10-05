@@ -48,7 +48,7 @@
      	Character: {
      		label: 'pagerank',
      		group: 'community',
-     		[NeoVis.NEOVIS_ADVANCED_CONFIG]: {
+     		[Neovis.NEOVIS_ADVANCED_CONFIG]: {
      			cypher: {
      				value: "MATCH (n) WHERE id(n) = $id RETURN n.size"
      			},
@@ -63,7 +63,7 @@
      relationships: {
      	INTERACTS: {
      		value: 'weight',
-     		[NeoVis.NEOVIS_ADVANCED_CONFIG]: {
+     		[Neovis.NEOVIS_ADVANCED_CONFIG]: {
      			function: {
      				title: (edge) => {
      					return viz.nodeToHtml(edge, undefined);
@@ -78,74 +78,86 @@
 
 ## Hierarchy
 
-- [*BaseNeovisConfig*](baseneovisconfig.md)
+- [`BaseNeovisConfig`](BaseNeovisConfig.md)
 
-  ↳ **NeovisConfig**
+  ↳ **`NeovisConfig`**
 
 ## Table of contents
 
 ### Properties
 
-- [console\_debug](neovisconfig.md#console_debug)
-- [container\_id](neovisconfig.md#container_id)
-- [initial\_cypher](neovisconfig.md#initial_cypher)
-- [labels](neovisconfig.md#labels)
-- [neo4j](neovisconfig.md#neo4j)
-- [nonFlat](neovisconfig.md#nonflat)
-- [relationships](neovisconfig.md#relationships)
-- [server\_database](neovisconfig.md#server_database)
-- [visConfig](neovisconfig.md#visconfig)
+- [console\_debug](NeovisConfig.md#console_debug)
+- [container\_id](NeovisConfig.md#container_id)
+- [initial\_cypher](NeovisConfig.md#initial_cypher)
+- [labels](NeovisConfig.md#labels)
+- [neo4j](NeovisConfig.md#neo4j)
+- [nonFlat](NeovisConfig.md#nonflat)
+- [relationships](NeovisConfig.md#relationships)
+- [server\_database](NeovisConfig.md#server_database)
+- [visConfig](NeovisConfig.md#visconfig)
 
 ## Properties
 
 ### console\_debug
 
-• `Optional` **console\_debug**: *boolean*
+• `Optional` **console\_debug**: `boolean`
 
 Should output debug messages to console
 
 **`default`** false
 
-Inherited from: [BaseNeovisConfig](baseneovisconfig.md).[console_debug](baseneovisconfig.md#console_debug)
+#### Inherited from
 
-Defined in: [index.d.ts:127](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L127)
+[BaseNeovisConfig](BaseNeovisConfig.md).[console_debug](BaseNeovisConfig.md#console_debug)
+
+#### Defined in
+
+[src/neovis.ts:134](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L134)
 
 ___
 
 ### container\_id
 
-• **container\_id**: *string*
+• **container\_id**: `string`
 
-Html id of the element you want NeoVis to render on
+Html id of the element you want Neovis to render on
 
-Inherited from: [BaseNeovisConfig](baseneovisconfig.md).[container_id](baseneovisconfig.md#container_id)
+#### Inherited from
 
-Defined in: [index.d.ts:103](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L103)
+[BaseNeovisConfig](BaseNeovisConfig.md).[container_id](BaseNeovisConfig.md#container_id)
+
+#### Defined in
+
+[src/neovis.ts:110](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L110)
 
 ___
 
 ### initial\_cypher
 
-• `Optional` **initial\_cypher**: *string*
+• `Optional` **initial\_cypher**: `string`
 
 The Cypher query that will get the data
 
-Inherited from: [BaseNeovisConfig](baseneovisconfig.md).[initial_cypher](baseneovisconfig.md#initial_cypher)
+#### Inherited from
 
-Defined in: [index.d.ts:122](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L122)
+[BaseNeovisConfig](BaseNeovisConfig.md).[initial_cypher](BaseNeovisConfig.md#initial_cypher)
+
+#### Defined in
+
+[src/neovis.ts:129](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L129)
 
 ___
 
 ### labels
 
-• `Optional` **labels**: *object*
+• `Optional` **labels**: `Object`
 
 **`example`** ```javascript
 {
 	Character: {
 	label: 'pagerank',
 		group: 'community',
-		[NeoVis.NEOVIS_ADVANCED_CONFIG]: {
+		[Neovis.NEOVIS_ADVANCED_CONFIG]: {
 			cypher: {
 				value: "MATCH (n) WHERE id(n) = $id RETURN n.size"
 			},
@@ -159,25 +171,35 @@ ___
 }
 ```
 
+#### Index signature
+
+▪ [label: `string`]: [`LabelConfig`](LabelConfig.md)
+
 #### Type declaration
 
 | Name | Type |
 | :------ | :------ |
-| `[NEOVIS_DEFAULT_CONFIG]?` | [*LabelConfig*](labelconfig.md) |
+| `[NEOVIS_DEFAULT_CONFIG]?` | [`LabelConfig`](LabelConfig.md) |
 
-Defined in: [index.d.ts:234](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L234)
+#### Defined in
+
+[src/neovis.ts:241](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L241)
 
 ___
 
 ### neo4j
 
-• `Optional` **neo4j**: [*Neo4jConfig*](neo4jconfig.md) \| Driver
+• `Optional` **neo4j**: [`Neo4jConfig`](Neo4jConfig.md) \| `Driver`
 
 Neo4j Driver instance or configuration to make one
 
-Inherited from: [BaseNeovisConfig](baseneovisconfig.md).[neo4j](baseneovisconfig.md#neo4j)
+#### Inherited from
 
-Defined in: [index.d.ts:112](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L112)
+[BaseNeovisConfig](BaseNeovisConfig.md).[neo4j](BaseNeovisConfig.md#neo4j)
+
+#### Defined in
+
+[src/neovis.ts:119](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L119)
 
 ___
 
@@ -187,22 +209,26 @@ ___
 
 Tells Neovis is the config is flat or not
 
-Overrides: [BaseNeovisConfig](baseneovisconfig.md).[nonFlat](baseneovisconfig.md#nonflat)
+#### Overrides
 
-Defined in: [index.d.ts:213](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L213)
+[BaseNeovisConfig](BaseNeovisConfig.md).[nonFlat](BaseNeovisConfig.md#nonflat)
+
+#### Defined in
+
+[src/neovis.ts:220](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L220)
 
 ___
 
 ### relationships
 
-• `Optional` **relationships**: *object*
+• `Optional` **relationships**: `Object`
 
 **`example`**
 ``` js
 {
      INTERACTS: {
  	    value: 'weight',
- 	    [NeoVis.NEOVIS_ADVANCED_CONFIG]: {
+ 	    [Neovis.NEOVIS_ADVANCED_CONFIG]: {
  	    	function: {
  	    		title: (edge) => {
  	    			return viz.nodeToHtml(edge, undefined);
@@ -213,38 +239,52 @@ ___
 }
 ```
 
+#### Index signature
+
+▪ [relationship: `string`]: [`RelationshipConfig`](RelationshipConfig.md)
+
 #### Type declaration
 
 | Name | Type |
 | :------ | :------ |
-| `[NEOVIS_DEFAULT_CONFIG]?` | [*RelationshipConfig*](relationshipconfig.md) |
+| `[NEOVIS_DEFAULT_CONFIG]?` | [`RelationshipConfig`](RelationshipConfig.md) |
 
-Defined in: [index.d.ts:255](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L255)
+#### Defined in
+
+[src/neovis.ts:262](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L262)
 
 ___
 
 ### server\_database
 
-• `Optional` **server\_database**: *string*
+• `Optional` **server\_database**: `string`
 
 database name you want to connect to
 
 **`default`** neo4j
 
-Inherited from: [BaseNeovisConfig](baseneovisconfig.md).[server_database](baseneovisconfig.md#server_database)
+#### Inherited from
 
-Defined in: [index.d.ts:108](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L108)
+[BaseNeovisConfig](BaseNeovisConfig.md).[server_database](BaseNeovisConfig.md#server_database)
+
+#### Defined in
+
+[src/neovis.ts:115](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L115)
 
 ___
 
 ### visConfig
 
-• `Optional` **visConfig**: Options
+• `Optional` **visConfig**: `Options`
 
 Vis network config to override neovis defaults
 
 **`link`** https://visjs.github.io/vis-network/docs/network/#options
 
-Inherited from: [BaseNeovisConfig](baseneovisconfig.md).[visConfig](baseneovisconfig.md#visconfig)
+#### Inherited from
 
-Defined in: [index.d.ts:117](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L117)
+[BaseNeovisConfig](BaseNeovisConfig.md).[visConfig](BaseNeovisConfig.md#visconfig)
+
+#### Defined in
+
+[src/neovis.ts:124](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L124)
