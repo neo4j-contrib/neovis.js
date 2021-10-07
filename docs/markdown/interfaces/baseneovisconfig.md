@@ -34,7 +34,7 @@ Should output debug messages to console
 
 #### Defined in
 
-[src/neovis.ts:134](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L134)
+[src/types.ts:128](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L128)
 
 ___
 
@@ -46,7 +46,7 @@ Html id of the element you want Neovis to render on
 
 #### Defined in
 
-[src/neovis.ts:110](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L110)
+[src/types.ts:104](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L104)
 
 ___
 
@@ -58,19 +58,19 @@ The Cypher query that will get the data
 
 #### Defined in
 
-[src/neovis.ts:129](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L129)
+[src/types.ts:123](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L123)
 
 ___
 
 ### neo4j
 
-• `Optional` **neo4j**: [`Neo4jConfig`](Neo4jConfig.md) \| `Driver`
+• `Optional` **neo4j**: `Driver` \| [`Neo4jConfig`](Neo4jConfig.md)
 
 Neo4j Driver instance or configuration to make one
 
 #### Defined in
 
-[src/neovis.ts:119](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L119)
+[src/types.ts:113](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L113)
 
 ___
 
@@ -84,7 +84,7 @@ Tells Neovis is the config is flat or not
 
 #### Defined in
 
-[src/neovis.ts:141](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L141)
+[src/types.ts:135](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L135)
 
 ___
 
@@ -98,7 +98,7 @@ database name you want to connect to
 
 #### Defined in
 
-[src/neovis.ts:115](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L115)
+[src/types.ts:109](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L109)
 
 ___
 
@@ -112,4 +112,4 @@ Vis network config to override neovis defaults
 
 #### Defined in
 
-[src/neovis.ts:124](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L124)
+[src/types.ts:118](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L118)

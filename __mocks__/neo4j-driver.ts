@@ -24,7 +24,7 @@ export const mockSession: jest.Mock<Partial<Neo4jType.Session>> = jest.fn().mock
 }));
 
 export const mockDriver = jest.spyOn(Neo4j, 'driver').mockImplementation(() => ({
-	session: mockSession as any
+	session: mockSession as unknown as (...args: unknown[]) => Neo4jType.Session
 }) as Neo4jType.Driver);
 
 export function clearAllMocks(): void {

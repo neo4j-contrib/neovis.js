@@ -397,7 +397,10 @@ describe('Neovis', () => {
 				container_id: container_id,
 				labels: {
 					[label1]: {
-
+						font: {
+							size: intProperty,
+							color: intProperty
+						},
 					}
 				},
 				initial_cypher: initial_cypher
@@ -423,7 +426,7 @@ describe('Neovis', () => {
 				labels: {
 					[label1]: {
 						[NEOVIS_ADVANCED_CONFIG]: {
-							'static': {
+							static: {
 								value: intPropertyValue
 							}
 						}

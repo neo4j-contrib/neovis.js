@@ -25,8 +25,8 @@
     "build:dev:with-dependencies": "cross-env BUILD_WITH_DEPENDENCIES=true webpack --mode=development",
     "build:dev:without-dependencies": "webpack --mode=development",
     "typedoc": "run-p typedoc:*",
-    "typedoc:html": "typedoc src/neovis.ts --out docs/html --plugin none",
-    "typedoc:markdown": "typedoc src/neovis.ts --out docs/markdown --plugin typedoc-plugin-markdown --readme none"
+    "typedoc:html": "typedoc src/neovis.ts --out docs/html --plugin none --excludePrivate",
+    "typedoc:markdown": "typedoc src/neovis.ts --out docs/markdown --plugin typedoc-plugin-markdown --readme none --excludePrivate"
   },
   "repository": {
     "type": "git",
@@ -42,8 +42,6 @@
   "devDependencies": {
     "@babel/cli": "^7.12.13",
     "@babel/core": "^7.12.13",
-    "@babel/eslint-parser": "^7.12.13",
-    "@babel/plugin-proposal-class-properties": "^7.12.13",
     "@babel/plugin-transform-runtime": "^7.12.15",
     "@babel/preset-env": "^7.12.13",
     "@babel/preset-typescript": "^7.15.0",

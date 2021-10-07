@@ -14,12 +14,14 @@ neovis.js
 
 ### Classes
 
+- [EventController](classes/EventController.md)
 - [NeoVis](classes/NeoVis.md)
 
 ### Interfaces
 
 - [BaseNeovisConfig](interfaces/BaseNeovisConfig.md)
 - [Edge](interfaces/Edge.md)
+- [EventFunctionTypes](interfaces/EventFunctionTypes.md)
 - [LabelConfig](interfaces/LabelConfig.md)
 - [Neo4jConfig](interfaces/Neo4jConfig.md)
 - [NeoVisAdvanceConfig](interfaces/NeoVisAdvanceConfig.md)
@@ -35,8 +37,14 @@ neovis.js
 ### Type aliases
 
 - [Cypher](README.md#cypher)
+- [NeovisDataConfig](README.md#neovisdataconfig)
+- [NonFlatLabelConfig](README.md#nonflatlabelconfig)
+- [NonFlatRelationsipConfig](README.md#nonflatrelationsipconfig)
+- [NumberOrInteger](README.md#numberorinteger)
 - [RecursiveMapTo](README.md#recursivemapto)
+- [RecursiveMapToDist](README.md#recursivemaptodist)
 - [RecursiveMapToFunction](README.md#recursivemaptofunction)
+- [RecursiveMapToFunctionDist](README.md#recursivemaptofunctiondist)
 
 ### Variables
 
@@ -65,13 +73,60 @@ Cypher quarry
 
 #### Defined in
 
-[src/neovis.ts:41](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L41)
+[src/types.ts:32](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L32)
+
+___
+
+### NeovisDataConfig
+
+Ƭ **NeovisDataConfig**<`VIS_TYPE`, `NEO_TYPE`\>: [`RecursiveMapTo`](README.md#recursivemapto)<`VIS_TYPE`, `string`\> & { `[NEOVIS_ADVANCED_CONFIG]?`: [`NeoVisAdvanceConfig`](interfaces/NeoVisAdvanceConfig.md)<`VIS_TYPE`, `NEO_TYPE`\>  }
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `VIS_TYPE` |
+| `NEO_TYPE` |
+
+#### Defined in
+
+[src/types.ts:50](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L50)
+
+___
+
+### NonFlatLabelConfig
+
+Ƭ **NonFlatLabelConfig**: [`NonFlatNeoVisAdvanceConfig`](interfaces/NonFlatNeoVisAdvanceConfig.md)<`VisNetwork.Node`, `Neo4jTypes.Node`<`number`\>\>
+
+#### Defined in
+
+[src/types.ts:262](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L262)
+
+___
+
+### NonFlatRelationsipConfig
+
+Ƭ **NonFlatRelationsipConfig**: [`NonFlatNeoVisAdvanceConfig`](interfaces/NonFlatNeoVisAdvanceConfig.md)<`VisNetwork.Edge`, `Neo4jTypes.Relationship`<`number`\>\>
+
+#### Defined in
+
+[src/types.ts:263](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L263)
+
+___
+
+### NumberOrInteger
+
+Ƭ **NumberOrInteger**: `number` \| `Neo4jTypes.Integer`
+
+#### Defined in
+
+[src/types.ts:7](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L7)
 
 ___
 
 ### RecursiveMapTo
 
-Ƭ **RecursiveMapTo**<`T`, `New`\>: { [P in keyof T]: T[P] extends object ? RecursiveMapTo<T[P], New\> : New }
+Ƭ **RecursiveMapTo**<`T`, `New`\>: { [P in keyof T]: RecursiveMapToDist<T[P], New\> }
 
 Maps a type recursively and replace each non object type with the new type
 
@@ -88,13 +143,30 @@ Maps a type recursively and replace each non object type with the new type
 
 #### Defined in
 
-[src/neovis.ts:24](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L24)
+[src/types.ts:16](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L16)
+
+___
+
+### RecursiveMapToDist
+
+Ƭ **RecursiveMapToDist**<`T`, `New`\>: `T` extends `object` ? [`RecursiveMapTo`](README.md#recursivemapto)<`T`, `New`\> : `New`
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `T` |
+| `New` |
+
+#### Defined in
+
+[src/types.ts:9](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L9)
 
 ___
 
 ### RecursiveMapToFunction
 
-Ƭ **RecursiveMapToFunction**<`T`, `PARAM_TYPE`\>: { [P in keyof T]: T[P] extends object ? Function \| RecursiveMapToFunction<T[P], PARAM\_TYPE\> : Function }
+Ƭ **RecursiveMapToFunction**<`T`, `PARAM_TYPE`\>: { [P in keyof T]: RecursiveMapToFunctionDist<T[P], PARAM\_TYPE\> }
 
 Maps a type recursively and adds the ability for each object property to be a function that returns the same type
 but replace each non object type with a function that returns the same type
@@ -112,7 +184,24 @@ but replace each non object type with a function that returns the same type
 
 #### Defined in
 
-[src/neovis.ts:34](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L34)
+[src/types.ts:25](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L25)
+
+___
+
+### RecursiveMapToFunctionDist
+
+Ƭ **RecursiveMapToFunctionDist**<`T`, `PARAM_TYPE`\>: `T` extends `object` ? (`param`: `PARAM_TYPE`) => `T` \| [`RecursiveMapToFunction`](README.md#recursivemaptofunction)<`T`, `PARAM_TYPE`\> : (`param`: `PARAM_TYPE`) => `T`
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `T` |
+| `PARAM_TYPE` |
+
+#### Defined in
+
+[src/types.ts:18](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L18)
 
 ## Variables
 
@@ -122,7 +211,7 @@ but replace each non object type with a function that returns the same type
 
 #### Defined in
 
-[src/neovis.ts:14](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L14)
+[src/types.ts:6](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L6)
 
 ___
 
@@ -132,7 +221,7 @@ ___
 
 #### Defined in
 
-[src/neovis.ts:13](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L13)
+[src/types.ts:5](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L5)
 
 ## Functions
 
@@ -155,7 +244,7 @@ migrate old config to the new one
 
 #### Defined in
 
-[src/neovis.ts:971](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L971)
+[src/neovis.ts:650](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L650)
 
 ___
 
@@ -169,7 +258,7 @@ create html display of the node
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `neo4jObject` | `Node`<`NumberOrInteger`\> \| `Relationship`<`NumberOrInteger`\> | node to create html from |
+| `neo4jObject` | `Node`<[`NumberOrInteger`](README.md#numberorinteger)\> \| `Relationship`<[`NumberOrInteger`](README.md#numberorinteger)\> | node to create html from |
 | `titleProperties` | `string`[] | which properties to map |
 
 #### Returns
@@ -178,7 +267,7 @@ create html display of the node
 
 #### Defined in
 
-[src/neovis.ts:884](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L884)
+[src/neovis.ts:563](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L563)
 
 ___
 
@@ -192,7 +281,7 @@ create string display of the node
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `neo4jObject` | `Node`<`NumberOrInteger`\> \| `Relationship`<`NumberOrInteger`\> | node to create title string from |
+| `neo4jObject` | `Node`<[`NumberOrInteger`](README.md#numberorinteger)\> \| `Relationship`<[`NumberOrInteger`](README.md#numberorinteger)\> | node to create title string from |
 | `titleProperties` | `string`[] | which properties to map |
 
 #### Returns
@@ -201,4 +290,4 @@ create string display of the node
 
 #### Defined in
 
-[src/neovis.ts:905](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L905)
+[src/neovis.ts:584](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L584)

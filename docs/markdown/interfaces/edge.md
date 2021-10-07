@@ -181,7 +181,7 @@ VisNetwork.Edge.id
 
 #### Defined in
 
-[src/neovis.ts:354](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L354)
+[src/types.ts:347](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L347)
 
 ___
 
@@ -243,11 +243,11 @@ ___
 
 ### raw
 
-• **raw**: `Relationship`<`NumberOrInteger`\>
+• **raw**: `Relationship`<[`NumberOrInteger`](../README.md#numberorinteger)\>
 
 #### Defined in
 
-[src/neovis.ts:355](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L355)
+[src/types.ts:348](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L348)
 
 ___
 
