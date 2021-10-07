@@ -1,9 +1,7 @@
 import Neo4j, * as Neo4jMockImport from 'neo4j-driver';
 import Neovis, {
-	NEOVIS_DEFAULT_CONFIG,
-	NEOVIS_ADVANCED_CONFIG,
 	migrateFromOldConfig,
-	NeovisConfig, NonFlatNeovisConfig, OldNeoVisConfig
+	OldNeoVisConfig
 } from '../src/neovis';
 import { NeoVisEvents } from '../src/events';
 import * as testUtils from './testUtils';
@@ -12,6 +10,7 @@ import * as testUtils from './testUtils';
 import type * as Neo4jMockType from '../__mocks__/neo4j-driver';
 import type NeoVis from '../src/neovis';
 import type VisNetwork from 'vis-network';
+import { NEOVIS_ADVANCED_CONFIG, NEOVIS_DEFAULT_CONFIG, NeovisConfig, NonFlatNeovisConfig } from '../src/types';
 
 jest.mock('neo4j-driver');
 
@@ -390,15 +389,15 @@ describe('Neovis', () => {
 	// TODO: After upgrading to merge config, type casting is failing due to not able to detect target type. A proper way
 	// 			either let the user to define type casting or do it automaticlly need to be implemented.
 	describe('neovis type casting test', () => {
-		const intProperty = 'intProperity';
+		const intProperty = 'intProperty';
 		const intPropertyValue = 40;
 
 		it('should merge property name type to vis.js config properly', async () => {
-			const config = {
+			const config: NeovisConfig = {
 				container_id: container_id,
 				labels: {
 					[label1]: {
-						'label': intProperty
+
 					}
 				},
 				initial_cypher: initial_cypher
@@ -413,7 +412,9 @@ describe('Neovis', () => {
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1);
-			expect(neovis.nodes.get(1)).toHaveProperty('label', intPropertyValue);
+			expect(neovis.nodes.get(1)).toHaveProperty('font');
+			expect(neovis.nodes.get(1).font).toHaveProperty('size', intPropertyValue);
+			expect(neovis.nodes.get(1).font).toHaveProperty('color', intPropertyValue);
 		});
 
 		it('should merge static type to vis.js config properly', async () => {
