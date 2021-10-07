@@ -1,8 +1,17 @@
+import { Edge, Node } from './types';
+
 export enum NeoVisEvents {
 	CompletionEvent = 'completed',
 	ClickNodeEvent = 'clickNode',
-	ClickEdgeEvent ='clickEdge',
+	ClickEdgeEvent = 'clickEdge',
 	ErrorEvent = 'error'
+}
+
+export interface EventFunctionTypes {
+	[NeoVisEvents.CompletionEvent]: (event: { recordCount: number }) => void;
+	[NeoVisEvents.ClickNodeEvent]: (event: { nodeId: number, node: Node }) => void;
+	[NeoVisEvents.ClickEdgeEvent]: (event: { edgeId: number, edge: Edge }) => void;
+	[NeoVisEvents.ErrorEvent]: (event: { error: Error }) => void;
 }
 
 export class EventController {
@@ -19,10 +28,10 @@ export class EventController {
 
 	/**
 	 *
-	 * @param {string} eventType - Type of the event to be handled
-	 * @param {callback} handler - Handler to manage the event
+	 * @param eventType - Type of the event to be handled
+	 * @param handler - Handler to manage the event
 	 */
-	register(eventType: NeoVisEvents, handler: Function): void {
+	register<T extends NeoVisEvents>(eventType: T, handler: EventFunctionTypes[T]): void {
 		if (this._handlers[eventType] === undefined) {
 			throw new Error('Unknown event: ' + eventType);
 		}
@@ -35,7 +44,7 @@ export class EventController {
 	 * @param {string} eventType - Type of the event generated
 	 * @param {any} values - Values associated to the event
 	 */
-	generateEvent(eventType: NeoVisEvents, values: any): void {
+	generateEvent<T extends NeoVisEvents>(eventType: T, values: Parameters<EventFunctionTypes[T]>[0]): void {
 		if (this._handlers[eventType] === undefined) {
 			throw new Error('Unknown event: ' + eventType);
 		}

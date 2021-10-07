@@ -3,7 +3,7 @@ import { ObservablePromise } from '../__tests__/testUtils';
 const Neo4j: typeof Neo4jType = jest.requireActual('neo4j-driver');
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const mockSessionRun: jest.Mock<ObservablePromise<any>, [cypher: string, b: Record<string, any>]> = jest.fn((..._) => {
+export const mockSessionRun: jest.Mock<ObservablePromise<unknown>, [cypher: string, b: Record<string, unknown>]> = jest.fn((..._) => {
 	const observablePromise: Partial<ObservablePromise<void>> = Promise.resolve();
 	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	observablePromise.subscribe = jest.fn(() => {});
