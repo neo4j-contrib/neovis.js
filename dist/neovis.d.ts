@@ -2,7 +2,9 @@ import type * as Neo4jTypes from 'neo4j-driver';
 import { EventFunctionTypes, NeoVisEvents } from './events';
 import type * as VisNetwork from 'vis-network';
 import { Cypher, Edge, NEOVIS_DEFAULT_CONFIG, NeovisConfig, Node, NonFlatNeovisConfig, NumberOrInteger } from './types';
-export { NeoVisEvents } from './events';
+import { Font } from 'vis-network';
+export * from './events';
+export * from './types';
 export declare class NeoVis {
     #private;
     /**
@@ -90,7 +92,7 @@ export interface OldLabelConfig {
     community?: string;
     sizeCypher?: string;
     image?: string;
-    font?: any;
+    font?: string | Font;
     title_properties?: string[];
 }
 /**

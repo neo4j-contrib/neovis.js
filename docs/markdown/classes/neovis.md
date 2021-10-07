@@ -8,17 +8,6 @@
 
 - [constructor](NeoVis.md#constructor)
 
-### Properties
-
-- [#config](NeoVis.md##config)
-- [#container](NeoVis.md##container)
-- [#data](NeoVis.md##data)
-- [#database](NeoVis.md##database)
-- [#driver](NeoVis.md##driver)
-- [#events](NeoVis.md##events)
-- [#network](NeoVis.md##network)
-- [#query](NeoVis.md##query)
-
 ### Accessors
 
 - [edges](NeoVis.md#edges)
@@ -27,17 +16,6 @@
 
 ### Methods
 
-- [#buildCypherObject](NeoVis.md##buildcypherobject)
-- [#buildEdgeVisObject](NeoVis.md##buildedgevisobject)
-- [#buildFunctionObject](NeoVis.md##buildfunctionobject)
-- [#buildNodeVisObject](NeoVis.md##buildnodevisobject)
-- [#buildPropertyNameObject](NeoVis.md##buildpropertynameobject)
-- [#buildStaticObject](NeoVis.md##buildstaticobject)
-- [#buildVisObject](NeoVis.md##buildvisobject)
-- [#consoleLog](NeoVis.md##consolelog)
-- [#init](NeoVis.md##init)
-- [#runCypher](NeoVis.md##runcypher)
-- [#runFunction](NeoVis.md##runfunction)
 - [clearNetwork](NeoVis.md#clearnetwork)
 - [registerOnEvent](NeoVis.md#registeronevent)
 - [reinit](NeoVis.md#reinit)
@@ -61,94 +39,7 @@
 
 #### Defined in
 
-[src/neovis.ts:412](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L412)
-
-## Properties
-
-### #config
-
-• `Private` **#config**: [`NeovisConfig`](../interfaces/NeovisConfig.md) \| [`NonFlatNeovisConfig`](../interfaces/NonFlatNeovisConfig.md)
-
-#### Defined in
-
-[src/neovis.ts:370](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L370)
-
-___
-
-### #container
-
-• `Private` **#container**: `HTMLElement`
-
-#### Defined in
-
-[src/neovis.ts:374](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L374)
-
-___
-
-### #data
-
-• `Private` **#data**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `edges` | `DataSet`<[`Edge`](../interfaces/Edge.md), ``"id"``\> |
-| `nodes` | `DataSet`<[`Node`](../interfaces/Node.md), ``"id"``\> |
-
-#### Defined in
-
-[src/neovis.ts:364](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L364)
-
-___
-
-### #database
-
-• `Private` **#database**: `string`
-
-#### Defined in
-
-[src/neovis.ts:372](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L372)
-
-___
-
-### #driver
-
-• `Private` **#driver**: `Driver`
-
-#### Defined in
-
-[src/neovis.ts:371](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L371)
-
-___
-
-### #events
-
-• `Private` **#events**: `EventController`
-
-#### Defined in
-
-[src/neovis.ts:369](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L369)
-
-___
-
-### #network
-
-• `Private` **#network**: `Network` = `null`
-
-#### Defined in
-
-[src/neovis.ts:368](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L368)
-
-___
-
-### #query
-
-• `Private` **#query**: `string`
-
-#### Defined in
-
-[src/neovis.ts:373](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L373)
+[src/neovis.ts:89](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L89)
 
 ## Accessors
 
@@ -166,7 +57,7 @@ All view edges as DataSet
 
 #### Defined in
 
-[src/neovis.ts:388](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L388)
+[src/neovis.ts:65](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L65)
 
 ___
 
@@ -184,7 +75,7 @@ The vis network object
 
 #### Defined in
 
-[src/neovis.ts:403](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L403)
+[src/neovis.ts:80](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L80)
 
 ___
 
@@ -202,284 +93,9 @@ All view nodes as DataSet
 
 #### Defined in
 
-[src/neovis.ts:380](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L380)
+[src/neovis.ts:57](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L57)
 
 ## Methods
-
-### #buildCypherObject
-
-▸ `Private` **#buildCypherObject**<`VIS_TYPE`\>(`cypherConfig`, `object`, `id`): `Promise`<`void`\>
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `VIS_TYPE` |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `cypherConfig` | [`RecursiveMapTo`](../README.md#recursivemapto)<`VIS_TYPE`, `string`\> |
-| `object` | [`Node`](../interfaces/Node.md) \| [`Edge`](../interfaces/Edge.md) |
-| `id` | `number` |
-
-#### Returns
-
-`Promise`<`void`\>
-
-#### Defined in
-
-[src/neovis.ts:570](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L570)
-
-___
-
-### #buildEdgeVisObject
-
-▸ `Private` **#buildEdgeVisObject**(`r`): `Promise`<`Partial`<[`Edge`](../interfaces/Edge.md)\>\>
-
-Build edge object for vis from a neo4j Relationship
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `r` | `Relationship`<`NumberOrInteger`\> |
-
-#### Returns
-
-`Promise`<`Partial`<[`Edge`](../interfaces/Edge.md)\>\>
-
-#### Defined in
-
-[src/neovis.ts:665](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L665)
-
-___
-
-### #buildFunctionObject
-
-▸ `Private` **#buildFunctionObject**<`VIS_TYPE`, `NEO_TYPE`\>(`functionConfig`, `object`, `neo4jObj`): `Promise`<`void`\>
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `VIS_TYPE` |
-| `NEO_TYPE` |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `functionConfig` | [`RecursiveMapToFunction`](../README.md#recursivemaptofunction)<`VIS_TYPE`, `NEO_TYPE`\> |
-| `object` | [`Node`](../interfaces/Node.md) \| [`Edge`](../interfaces/Edge.md) |
-| `neo4jObj` | `NEO_TYPE` |
-
-#### Returns
-
-`Promise`<`void`\>
-
-#### Defined in
-
-[src/neovis.ts:586](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L586)
-
-___
-
-### #buildNodeVisObject
-
-▸ `Private` **#buildNodeVisObject**(`neo4jNode`): `Promise`<`Partial`<[`Node`](../interfaces/Node.md)\>\>
-
-Build node object for vis from a neo4j Node
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `neo4jNode` | `Node`<`NumberOrInteger`\> |
-
-#### Returns
-
-`Promise`<`Partial`<[`Node`](../interfaces/Node.md)\>\>
-
-#### Defined in
-
-[src/neovis.ts:644](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L644)
-
-___
-
-### #buildPropertyNameObject
-
-▸ `Private` **#buildPropertyNameObject**<`VIS_TYPE`, `NEO_TYPE`\>(`propertyNameConfig`, `object`, `neo4jObj`): `void`
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `VIS_TYPE` |
-| `NEO_TYPE` |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `propertyNameConfig` | [`RecursiveMapTo`](../README.md#recursivemapto)<`VIS_TYPE`, `string`\> |
-| `object` | [`Node`](../interfaces/Node.md) \| [`Edge`](../interfaces/Edge.md) |
-| `neo4jObj` | `NEO_TYPE` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/neovis.ts:553](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L553)
-
-___
-
-### #buildStaticObject
-
-▸ `Private` **#buildStaticObject**<`VIS_TYPE`\>(`staticConfig`, `object`): `void`
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `VIS_TYPE` |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `staticConfig` | `VIS_TYPE` |
-| `object` | [`Node`](../interfaces/Node.md) \| [`Edge`](../interfaces/Edge.md) |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/neovis.ts:537](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L537)
-
-___
-
-### #buildVisObject
-
-▸ `Private` **#buildVisObject**<`VIS_TYPE`, `NEO_TYPE`\>(`config`, `baseObject`, `neo4jObject`): `Promise`<`void`\>
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `VIS_TYPE` |
-| `NEO_TYPE` |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `config` | `NeovisDataConfig`<`VIS_TYPE`, `NEO_TYPE`\> \| [`NonFlatNeoVisAdvanceConfig`](../interfaces/NonFlatNeoVisAdvanceConfig.md)<`VIS_TYPE`, `NEO_TYPE`\> |
-| `baseObject` | [`Node`](../interfaces/Node.md) \| [`Edge`](../interfaces/Edge.md) |
-| `neo4jObject` | `any` |
-
-#### Returns
-
-`Promise`<`void`\>
-
-#### Defined in
-
-[src/neovis.ts:602](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L602)
-
-___
-
-### #consoleLog
-
-▸ `Private` **#consoleLog**(`message`, `level?`): `void`
-
-#### Parameters
-
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `message` | `any` | `undefined` |
-| `level` | `string` | `'log'` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/neovis.ts:419](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L419)
-
-___
-
-### #init
-
-▸ `Private` **#init**(`config`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `config` | [`NeovisConfig`](../interfaces/NeovisConfig.md) \| [`NonFlatNeovisConfig`](../interfaces/NonFlatNeovisConfig.md) |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/neovis.ts:426](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L426)
-
-___
-
-### #runCypher
-
-▸ `Private` **#runCypher**(`cypher`, `id`): `Promise`<`Record`<`Dict`<`PropertyKey`, `any`\>, `PropertyKey`, `Dict`<`string`, `number`\>\> \| `Record`<`Dict`<`PropertyKey`, `any`\>, `PropertyKey`, `Dict`<`string`, `number`\>\>[]\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `cypher` | `string` |
-| `id` | `number` |
-
-#### Returns
-
-`Promise`<`Record`<`Dict`<`PropertyKey`, `any`\>, `PropertyKey`, `Dict`<`string`, `number`\>\> \| `Record`<`Dict`<`PropertyKey`, `any`\>, `PropertyKey`, `Dict`<`string`, `number`\>\>[]\>
-
-#### Defined in
-
-[src/neovis.ts:506](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L506)
-
-___
-
-### #runFunction
-
-▸ `Private` **#runFunction**<`NEO_TYPE`\>(`func`, `node`): `Promise`<`any`\>
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `NEO_TYPE` |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `func` | `Function` |
-| `node` | `NEO_TYPE` |
-
-#### Returns
-
-`Promise`<`any`\>
-
-#### Defined in
-
-[src/neovis.ts:530](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L530)
-
-___
 
 ### clearNetwork
 
@@ -493,20 +109,26 @@ Clear the data for the visualization
 
 #### Defined in
 
-[src/neovis.ts:799](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L799)
+[src/neovis.ts:477](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L477)
 
 ___
 
 ### registerOnEvent
 
-▸ **registerOnEvent**(`eventType`, `handler`): `void`
+▸ **registerOnEvent**<`T`\>(`eventType`, `handler`): `void`
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends [`NeoVisEvents`](../enums/NeoVisEvents.md) |
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `eventType` | [`NeoVisEvents`](../enums/NeoVisEvents.md) | Event type to be handled |
-| `handler` | `Function` | Handler to manage the event |
+| `eventType` | `T` | Event type to be handled |
+| `handler` | [`EventFunctionTypes`](../interfaces/EventFunctionTypes.md)[`T`] | Handler to manage the event |
 
 #### Returns
 
@@ -514,7 +136,7 @@ ___
 
 #### Defined in
 
-[src/neovis.ts:810](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L810)
+[src/neovis.ts:488](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L488)
 
 ___
 
@@ -536,7 +158,7 @@ Reset the config object and reload data
 
 #### Defined in
 
-[src/neovis.ts:819](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L819)
+[src/neovis.ts:497](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L497)
 
 ___
 
@@ -552,7 +174,7 @@ Clear the network and fetch live data form the server and reload the visualizati
 
 #### Defined in
 
-[src/neovis.ts:827](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L827)
+[src/neovis.ts:505](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L505)
 
 ___
 
@@ -574,7 +196,7 @@ Renders the network
 
 #### Defined in
 
-[src/neovis.ts:683](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L683)
+[src/neovis.ts:360](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L360)
 
 ___
 
@@ -596,7 +218,7 @@ Execute an arbitrary Cypher query and re-render the visualization
 
 #### Defined in
 
-[src/neovis.ts:844](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L844)
+[src/neovis.ts:522](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L522)
 
 ___
 
@@ -612,7 +234,7 @@ Stabilize the visualization
 
 #### Defined in
 
-[src/neovis.ts:835](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L835)
+[src/neovis.ts:513](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L513)
 
 ___
 
@@ -635,4 +257,4 @@ This function will not change the original query given by renderWithCypher or th
 
 #### Defined in
 
-[src/neovis.ts:856](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L856)
+[src/neovis.ts:534](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L534)

@@ -61,7 +61,7 @@ mapping function that gets the neo4j node and returns vis-network node option
 
 #### Defined in
 
-[src/neovis.ts:72](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L72)
+[src/types.ts:65](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L65)
 
 ___
 
@@ -109,7 +109,7 @@ ___
 
 ### chosen
 
-• `Optional` **chosen**: `string`
+• `Optional` **chosen**: `string` \| [`RecursiveMapTo`](../README.md#recursivemapto)<`NodeChosen`, `string`\>
 
 #### Inherited from
 
@@ -123,7 +123,7 @@ ___
 
 ### color
 
-• `Optional` **color**: `string`
+• `Optional` **color**: `string` \| [`RecursiveMapTo`](../README.md#recursivemapto)<`Color`, `string`\>
 
 #### Inherited from
 
@@ -137,7 +137,7 @@ ___
 
 ### fixed
 
-• `Optional` **fixed**: `string`
+• `Optional` **fixed**: `string` \| [`RecursiveMapTo`](../README.md#recursivemapto)<`Object`, `string`\>
 
 #### Inherited from
 
@@ -151,7 +151,7 @@ ___
 
 ### font
 
-• `Optional` **font**: `string`
+• `Optional` **font**: `string` \| [`RecursiveMapTo`](../README.md#recursivemapto)<`Font`, `string`\>
 
 #### Inherited from
 
@@ -221,7 +221,7 @@ ___
 
 ### image
 
-• `Optional` **image**: `string`
+• `Optional` **image**: `string` \| [`RecursiveMapTo`](../README.md#recursivemapto)<`Image`, `string`\>
 
 #### Inherited from
 
@@ -235,7 +235,7 @@ ___
 
 ### imagePadding
 
-• `Optional` **imagePadding**: `string`
+• `Optional` **imagePadding**: `string` \| [`RecursiveMapTo`](../README.md#recursivemapto)<`ImagePadding`, `string`\>
 
 #### Inherited from
 
@@ -361,7 +361,7 @@ ___
 
 ### shadow
 
-• `Optional` **shadow**: `string`
+• `Optional` **shadow**: `string` \| [`RecursiveMapTo`](../README.md#recursivemapto)<`OptionsShadow`, `string`\>
 
 #### Inherited from
 
@@ -417,7 +417,7 @@ ___
 
 ### title
 
-• `Optional` **title**: `string`
+• `Optional` **title**: `string` \| [`RecursiveMapTo`](../README.md#recursivemapto)<`HTMLElement`, `string`\>
 
 #### Inherited from
 
@@ -445,7 +445,7 @@ ___
 
 ### widthConstraint
 
-• `Optional` **widthConstraint**: `string`
+• `Optional` **widthConstraint**: `string` \| [`RecursiveMapTo`](../README.md#recursivemapto)<`Object`, `string`\>
 
 If false, no widthConstraint is applied. If a number is specified, the minimum and maximum widths of the node are set to the value.
 The node's label's lines will be broken on spaces to stay below the maximum and the node's width

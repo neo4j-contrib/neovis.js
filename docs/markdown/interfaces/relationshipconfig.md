@@ -56,7 +56,7 @@ mapping function that gets the neo4j relationship and returns vis-network edge o
 
 #### Defined in
 
-[src/neovis.ts:86](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L86)
+[src/types.ts:79](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L79)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 ### arrows
 
-• `Optional` **arrows**: `string`
+• `Optional` **arrows**: `string` \| [`RecursiveMapTo`](../README.md#recursivemapto)<`Object`, `string`\>
 
 #### Inherited from
 
@@ -90,7 +90,7 @@ ___
 
 ### chosen
 
-• `Optional` **chosen**: `string`
+• `Optional` **chosen**: `string` \| [`RecursiveMapTo`](../README.md#recursivemapto)<`Object`, `string`\>
 
 #### Inherited from
 
@@ -104,7 +104,7 @@ ___
 
 ### color
 
-• `Optional` **color**: `string`
+• `Optional` **color**: `string` \| [`RecursiveMapTo`](../README.md#recursivemapto)<`Object`, `string`\>
 
 #### Inherited from
 
@@ -118,7 +118,7 @@ ___
 
 ### dashes
 
-• `Optional` **dashes**: `string`
+• `Optional` **dashes**: `string` \| `string`[]
 
 #### Inherited from
 
@@ -132,7 +132,7 @@ ___
 
 ### font
 
-• `Optional` **font**: `string`
+• `Optional` **font**: `string` \| [`RecursiveMapTo`](../README.md#recursivemapto)<`Font`, `string`\>
 
 #### Inherited from
 
@@ -314,7 +314,7 @@ ___
 
 ### shadow
 
-• `Optional` **shadow**: `string`
+• `Optional` **shadow**: `string` \| [`RecursiveMapTo`](../README.md#recursivemapto)<`OptionsShadow`, `string`\>
 
 #### Inherited from
 
@@ -328,7 +328,7 @@ ___
 
 ### smooth
 
-• `Optional` **smooth**: `string`
+• `Optional` **smooth**: `string` \| [`RecursiveMapTo`](../README.md#recursivemapto)<`Object`, `string`\>
 
 #### Inherited from
 
@@ -342,7 +342,7 @@ ___
 
 ### title
 
-• `Optional` **title**: `string`
+• `Optional` **title**: `string` \| [`RecursiveMapTo`](../README.md#recursivemapto)<`HTMLElement`, `string`\>
 
 #### Inherited from
 
@@ -398,7 +398,7 @@ ___
 
 ### widthConstraint
 
-• `Optional` **widthConstraint**: `string`
+• `Optional` **widthConstraint**: `string` \| [`RecursiveMapTo`](../README.md#recursivemapto)<`Object`, `string`\>
 
 #### Inherited from
 

@@ -210,7 +210,7 @@ VisNetwork.Node.id
 
 #### Defined in
 
-[src/neovis.ts:343](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L343)
+[src/types.ts:336](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L336)
 
 ___
 
@@ -351,11 +351,11 @@ ___
 
 ### raw
 
-• **raw**: `Node`<`NumberOrInteger`\>
+• **raw**: `Node`<[`NumberOrInteger`](../README.md#numberorinteger)\>
 
 #### Defined in
 
-[src/neovis.ts:344](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L344)
+[src/types.ts:337](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L337)
 
 ___
 

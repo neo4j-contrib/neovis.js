@@ -30,7 +30,8 @@ import {
 } from './types';
 import { Font } from 'vis-network';
 
-export { NeoVisEvents } from './events';
+export * from './events';
+export * from './types';
 
 function isNeo4jDriver(neo4jConfig: Neo4jTypes.Driver | Neo4jConfig): neo4jConfig is Neo4jTypes.Driver {
 	return neo4jConfig instanceof Neo4j.driver;
@@ -203,15 +204,14 @@ export class NeoVis {
 		return results;
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	async #runFunction<FUNCTION_TYPE extends (args: any) => any | Promise<any>, NEO_TYPE>(func: FUNCTION_TYPE, node: NEO_TYPE): Promise<ReturnType<FUNCTION_TYPE>> {
+	#runFunction<VIS_TYPE, NEO_TYPE>(func: (neoObj: NEO_TYPE) => VIS_TYPE | Promise<VIS_TYPE>, node: NEO_TYPE): Promise<VIS_TYPE> | VIS_TYPE {
 		if (typeof func === 'function') {
-			return await func(node);
+			return func(node);
 		}
 		throw new Error('Function type property field must be a function');
 	}
 
-	#buildStaticObject<VIS_TYPE extends object>(staticConfig: VIS_TYPE, object: VIS_TYPE): void {
+	#buildStaticObject<VIS_TYPE>(staticConfig: VIS_TYPE, object: VIS_TYPE): void {
 		if (staticConfig && typeof staticConfig === 'object') {
 			for (const prop of Object.keys(staticConfig) as (keyof VIS_TYPE)[]) {
 				const value = staticConfig[prop];
@@ -219,7 +219,7 @@ export class NeoVis {
 					if (!object[prop]) {
 						object[prop as string] = {};
 					}
-					this.#buildStaticObject(value as typeof value & object, object[prop] as VIS_TYPE[keyof VIS_TYPE] & object);
+					this.#buildStaticObject(value, object[prop] as VIS_TYPE[keyof VIS_TYPE] & object);
 				} else {
 					object[prop] = value;
 				}
@@ -235,7 +235,7 @@ export class NeoVis {
 					if (!object[prop]) {
 						object[prop as string] = {};
 					}
-					this.#buildPropertyNameObject(property, object[prop], neo4jObj);
+					this.#buildPropertyNameObject(property as RecursiveMapTo<VIS_TYPE[keyof VIS_TYPE], string>, object[prop], neo4jObj);
 				} else {
 					const value = propertyNameConfig[prop];
 					object[prop] = _retrieveProperty(value as string, neo4jObj);
@@ -244,7 +244,7 @@ export class NeoVis {
 		}
 	}
 
-	async #buildCypherObject<VIS_TYPE extends object>(cypherConfig: RecursiveMapTo<VIS_TYPE, Cypher>, object: VIS_TYPE, id: number): Promise<void> {
+	async #buildCypherObject<VIS_TYPE>(cypherConfig: RecursiveMapTo<VIS_TYPE, Cypher>, object: VIS_TYPE, id: number): Promise<void> {
 		if (cypherConfig && typeof cypherConfig === 'object') {
 			for (const prop of Object.keys(cypherConfig) as (keyof VIS_TYPE)[]) {
 				const value = cypherConfig[prop];
@@ -252,7 +252,7 @@ export class NeoVis {
 					if (!object[prop]) {
 						object[prop as string] = {};
 					}
-					await this.#buildCypherObject(value, object[prop] as VIS_TYPE[keyof VIS_TYPE] & object, id);
+					await this.#buildCypherObject(value as RecursiveMapTo<VIS_TYPE[keyof VIS_TYPE], Cypher>, object[prop], id);
 				} else {
 					object[prop] = await this.#runCypher(value as string, id) as VIS_TYPE[keyof VIS_TYPE];
 				}
@@ -260,7 +260,7 @@ export class NeoVis {
 		}
 	}
 
-	async #buildFunctionObject<VIS_TYPE extends object, NEO_TYPE>(functionConfig: RecursiveMapToFunction<VIS_TYPE, NEO_TYPE>, object: VIS_TYPE, neo4jObj: NEO_TYPE): Promise<void> {
+	async #buildFunctionObject<VIS_TYPE, NEO_TYPE>(functionConfig: RecursiveMapToFunction<VIS_TYPE, NEO_TYPE>, object: VIS_TYPE, neo4jObj: NEO_TYPE): Promise<void> {
 		if (functionConfig && typeof functionConfig === 'object') {
 			for (const prop of Object.keys(functionConfig) as (keyof VIS_TYPE)[]) {
 				const func = functionConfig[prop];
@@ -268,15 +268,15 @@ export class NeoVis {
 					if (!object[prop]) {
 						object[prop as string] = {};
 					}
-					await this.#buildFunctionObject(func, object[prop], neo4jObj);
+					await this.#buildFunctionObject(func as RecursiveMapToFunction<VIS_TYPE[keyof VIS_TYPE], NEO_TYPE>, object[prop], neo4jObj);
 				} else {
-					object[prop] = await this.#runFunction(func, object[prop], neo4jObj);
+					object[prop] = await this.#runFunction(func as (neo: NEO_TYPE) => VIS_TYPE[keyof VIS_TYPE], neo4jObj);
 				}
 			}
 		}
 	}
 
-	async #buildVisObject<VIS_TYPE extends object, NEO_TYPE>(
+	async #buildVisObject<VIS_TYPE, NEO_TYPE>(
 		config: NeovisDataConfig<VIS_TYPE, NEO_TYPE> | NonFlatNeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE>, baseObject: VIS_TYPE, neo4jObject: NEO_TYPE, id: number
 	): Promise<void> {
 		if (!config) {

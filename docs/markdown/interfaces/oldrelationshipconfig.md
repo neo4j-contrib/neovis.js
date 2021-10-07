@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[src/neovis.ts:937](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L937)
+[src/neovis.ts:616](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L616)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-[src/neovis.ts:936](https://github.com/thebestnom/neovis.js/blob/710afe0/src/neovis.ts#L936)
+[src/neovis.ts:615](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L615)

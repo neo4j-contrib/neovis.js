@@ -3,29 +3,30 @@ import type * as VisNetwork from 'vis-network';
 export declare const NEOVIS_DEFAULT_CONFIG: unique symbol;
 export declare const NEOVIS_ADVANCED_CONFIG: unique symbol;
 export declare type NumberOrInteger = number | Neo4jTypes.Integer;
-export declare type Primitive = null | undefined | string | number | boolean | symbol | bigint;
+export declare type RecursiveMapToDist<T, New> = T extends object ? RecursiveMapTo<T, New> : New;
 /**
  * Maps a type recursively and replace each non object type with the new type
  * @param <T> type to map
  * @param <New> type to map to for each non object type
  */
-export declare type RecursiveMapTo<T extends object, New> = {
-    [P in keyof T]: T[P] extends object ? RecursiveMapTo<T[P], New> : New;
+export declare type RecursiveMapTo<T, New> = {
+    [P in keyof T]: RecursiveMapToDist<T[P], New>;
 };
+export declare type RecursiveMapToFunctionDist<T, PARAM_TYPE> = T extends object ? ((param: PARAM_TYPE) => T) | (RecursiveMapToFunction<T, PARAM_TYPE>) : (param: PARAM_TYPE) => T;
 /**
  * Maps a type recursively and adds the ability for each object property to be a function that returns the same type
  * but replace each non object type with a function that returns the same type
  * @param <T> type to map
  * @param <PARAM_TYPE> type of parameter the functions get
  */
-export declare type RecursiveMapToFunction<T extends object, PARAM_TYPE> = {
-    [P in keyof T]: T[P] extends object ? ((param: PARAM_TYPE) => T[P]) | (RecursiveMapToFunction<T[P], PARAM_TYPE>) : (param: PARAM_TYPE) => T;
+export declare type RecursiveMapToFunction<T, PARAM_TYPE> = {
+    [P in keyof T]: RecursiveMapToFunctionDist<T[P], PARAM_TYPE>;
 };
 /**
  * Cypher quarry
  */
 export declare type Cypher = string;
-export interface NeoVisAdvanceConfig<VIS_TYPE extends object, NEO_TYPE> {
+export interface NeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> {
     /**
      * Static values that will the same for every node/relationship
      * */
@@ -36,10 +37,10 @@ export interface NeoVisAdvanceConfig<VIS_TYPE extends object, NEO_TYPE> {
     cypher?: RecursiveMapTo<VIS_TYPE, Cypher>;
     function?: RecursiveMapToFunction<VIS_TYPE, NEO_TYPE>;
 }
-export interface NonFlatNeoVisAdvanceConfig<VIS_TYPE extends object, NEO_TYPE> extends NeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> {
+export interface NonFlatNeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> extends NeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> {
     property?: RecursiveMapTo<VIS_TYPE, string>;
 }
-export declare type NeovisDataConfig<VIS_TYPE extends object, NEO_TYPE> = RecursiveMapTo<VIS_TYPE, string> & {
+export declare type NeovisDataConfig<VIS_TYPE, NEO_TYPE> = RecursiveMapTo<VIS_TYPE, string> & {
     [NEOVIS_ADVANCED_CONFIG]?: NeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE>;
 };
 /**

@@ -6,7 +6,7 @@ export const NEOVIS_DEFAULT_CONFIG = Symbol();
 export const NEOVIS_ADVANCED_CONFIG = Symbol();
 export type NumberOrInteger = number | Neo4jTypes.Integer;
 
-export type RecursiveMapToDist<T, New> = T extends object ? { [P in keyof T]: RecursiveMapTo<T[P], New> } : New
+export type RecursiveMapToDist<T, New> = T extends object ? RecursiveMapTo<T, New> : New
 
 /**
  * Maps a type recursively and replace each non object type with the new type
@@ -15,7 +15,7 @@ export type RecursiveMapToDist<T, New> = T extends object ? { [P in keyof T]: Re
  */
 export type RecursiveMapTo<T, New> = { [P in keyof T]: RecursiveMapToDist<T[P], New> }
 
-export type RecursiveMapToFunctionDist<T, PARAM_TYPE> = T extends object ? { [P in keyof T] : ((param: PARAM_TYPE) => T[P]) | (RecursiveMapToFunction<T[P], PARAM_TYPE>) } : (param: PARAM_TYPE) => T
+export type RecursiveMapToFunctionDist<T, PARAM_TYPE> = T extends object ? ((param: PARAM_TYPE) => T) | (RecursiveMapToFunction<T, PARAM_TYPE>) : (param: PARAM_TYPE) => T
 /**
  * Maps a type recursively and adds the ability for each object property to be a function that returns the same type
  * but replace each non object type with a function that returns the same type
@@ -31,7 +31,7 @@ export type RecursiveMapToFunction<T, PARAM_TYPE> = {
  */
 export type Cypher = string;
 
-export interface NeoVisAdvanceConfig<VIS_TYPE extends object, NEO_TYPE> {
+export interface NeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> {
 	/**
 	 * Static values that will the same for every node/relationship
 	 * */
@@ -43,11 +43,11 @@ export interface NeoVisAdvanceConfig<VIS_TYPE extends object, NEO_TYPE> {
 	function?: RecursiveMapToFunction<VIS_TYPE, NEO_TYPE>;
 }
 
-export interface NonFlatNeoVisAdvanceConfig<VIS_TYPE extends object, NEO_TYPE> extends NeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> {
+export interface NonFlatNeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> extends NeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> {
 	property?: RecursiveMapTo<VIS_TYPE, string>;
 }
 
-export type NeovisDataConfig<VIS_TYPE extends object, NEO_TYPE> =
+export type NeovisDataConfig<VIS_TYPE, NEO_TYPE> =
 	RecursiveMapTo<VIS_TYPE, string>
 	& { [NEOVIS_ADVANCED_CONFIG]?: NeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> };
 
@@ -347,10 +347,3 @@ export interface Edge extends VisNetwork.Edge {
 	id: number;
 	raw: Neo4jTypes.Relationship<NumberOrInteger>;
 }
-
-interface Test {
-	a: VisNetwork.Node | number;
-}
-
-type a = RecursiveMapTo<Test, string>
-const a: a = { a: { font: { size: 'ASd' } } };
