@@ -181,7 +181,7 @@ VisNetwork.Edge.id
 
 #### Defined in
 
-[src/types.ts:347](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L347)
+[src/types.ts:347](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L347)
 
 ___
 
@@ -247,7 +247,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:348](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L348)
+[src/types.ts:348](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L348)
 
 ___
 
