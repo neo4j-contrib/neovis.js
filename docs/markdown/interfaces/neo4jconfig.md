@@ -23,7 +23,7 @@ All view nodes as DataSet
 
 #### Defined in
 
-[src/types.ts:97](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L97)
+[src/types.ts:97](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L97)
 
 ___
 
@@ -33,7 +33,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:89](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L89)
+[src/types.ts:89](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L89)
 
 ___
 
@@ -47,7 +47,7 @@ neo4j server
 
 #### Defined in
 
-[src/types.ts:87](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L87)
+[src/types.ts:87](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L87)
 
 ___
 
@@ -57,4 +57,4 @@ ___
 
 #### Defined in
 
-[src/types.ts:88](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L88)
+[src/types.ts:88](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L88)

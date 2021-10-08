@@ -39,7 +39,7 @@
 
 #### Defined in
 
-[src/neovis.ts:89](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L89)
+[src/neovis.ts:89](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L89)
 
 ## Accessors
 
@@ -57,7 +57,7 @@ All view edges as DataSet
 
 #### Defined in
 
-[src/neovis.ts:65](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L65)
+[src/neovis.ts:65](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L65)
 
 ___
 
@@ -75,7 +75,7 @@ The vis network object
 
 #### Defined in
 
-[src/neovis.ts:80](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L80)
+[src/neovis.ts:80](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L80)
 
 ___
 
@@ -93,7 +93,7 @@ All view nodes as DataSet
 
 #### Defined in
 
-[src/neovis.ts:57](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L57)
+[src/neovis.ts:57](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L57)
 
 ## Methods
 
@@ -109,7 +109,7 @@ Clear the data for the visualization
 
 #### Defined in
 
-[src/neovis.ts:477](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L477)
+[src/neovis.ts:477](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L477)
 
 ___
 
@@ -136,7 +136,7 @@ ___
 
 #### Defined in
 
-[src/neovis.ts:488](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L488)
+[src/neovis.ts:488](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L488)
 
 ___
 
@@ -158,7 +158,7 @@ Reset the config object and reload data
 
 #### Defined in
 
-[src/neovis.ts:497](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L497)
+[src/neovis.ts:497](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L497)
 
 ___
 
@@ -174,7 +174,7 @@ Clear the network and fetch live data form the server and reload the visualizati
 
 #### Defined in
 
-[src/neovis.ts:505](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L505)
+[src/neovis.ts:505](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L505)
 
 ___
 
@@ -196,7 +196,7 @@ Renders the network
 
 #### Defined in
 
-[src/neovis.ts:360](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L360)
+[src/neovis.ts:360](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L360)
 
 ___
 
@@ -218,7 +218,7 @@ Execute an arbitrary Cypher query and re-render the visualization
 
 #### Defined in
 
-[src/neovis.ts:522](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L522)
+[src/neovis.ts:522](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L522)
 
 ___
 
@@ -234,7 +234,7 @@ Stabilize the visualization
 
 #### Defined in
 
-[src/neovis.ts:513](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L513)
+[src/neovis.ts:513](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L513)
 
 ___
 
@@ -257,4 +257,4 @@ This function will not change the original query given by renderWithCypher or th
 
 #### Defined in
 
-[src/neovis.ts:534](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L534)
+[src/neovis.ts:534](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L534)

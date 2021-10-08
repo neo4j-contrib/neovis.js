@@ -31,7 +31,7 @@
 
 #### Defined in
 
-[src/events.ts:13](https://github.com/thebestnom/neovis.js/blob/2890321/src/events.ts#L13)
+[src/events.ts:13](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/events.ts#L13)
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-[src/events.ts:12](https://github.com/thebestnom/neovis.js/blob/2890321/src/events.ts#L12)
+[src/events.ts:12](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/events.ts#L12)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[src/events.ts:11](https://github.com/thebestnom/neovis.js/blob/2890321/src/events.ts#L11)
+[src/events.ts:11](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/events.ts#L11)
 
 ___
 
@@ -95,4 +95,4 @@ ___
 
 #### Defined in
 
-[src/events.ts:14](https://github.com/thebestnom/neovis.js/blob/2890321/src/events.ts#L14)
+[src/events.ts:14](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/events.ts#L14)

@@ -73,7 +73,7 @@ Cypher quarry
 
 #### Defined in
 
-[src/types.ts:32](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L32)
+[src/types.ts:32](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L32)
 
 ___
 
@@ -90,7 +90,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:50](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L50)
+[src/types.ts:50](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L50)
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:262](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L262)
+[src/types.ts:262](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L262)
 
 ___
 
@@ -110,7 +110,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:263](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L263)
+[src/types.ts:263](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L263)
 
 ___
 
@@ -120,7 +120,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:7](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L7)
+[src/types.ts:7](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L7)
 
 ___
 
@@ -143,7 +143,7 @@ Maps a type recursively and replace each non object type with the new type
 
 #### Defined in
 
-[src/types.ts:16](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L16)
+[src/types.ts:16](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L16)
 
 ___
 
@@ -160,7 +160,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:9](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L9)
+[src/types.ts:9](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L9)
 
 ___
 
@@ -184,7 +184,7 @@ but replace each non object type with a function that returns the same type
 
 #### Defined in
 
-[src/types.ts:25](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L25)
+[src/types.ts:25](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L25)
 
 ___
 
@@ -201,7 +201,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:18](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L18)
+[src/types.ts:18](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L18)
 
 ## Variables
 
@@ -211,7 +211,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:6](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L6)
+[src/types.ts:6](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L6)
 
 ___
 
@@ -221,7 +221,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:5](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L5)
+[src/types.ts:5](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L5)
 
 ## Functions
 
@@ -244,7 +244,7 @@ migrate old config to the new one
 
 #### Defined in
 
-[src/neovis.ts:650](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L650)
+[src/neovis.ts:650](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L650)
 
 ___
 
@@ -267,7 +267,7 @@ create html display of the node
 
 #### Defined in
 
-[src/neovis.ts:563](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L563)
+[src/neovis.ts:563](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L563)
 
 ___
 
@@ -290,4 +290,4 @@ create string display of the node
 
 #### Defined in
 
-[src/neovis.ts:584](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L584)
+[src/neovis.ts:584](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L584)

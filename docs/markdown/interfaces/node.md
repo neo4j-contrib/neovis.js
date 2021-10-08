@@ -210,7 +210,7 @@ VisNetwork.Node.id
 
 #### Defined in
 
-[src/types.ts:336](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L336)
+[src/types.ts:336](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L336)
 
 ___
 
@@ -355,7 +355,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:337](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L337)
+[src/types.ts:337](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L337)
 
 ___
 
