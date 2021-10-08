@@ -8,21 +8,25 @@
 
 ### Properties
 
-- [caption](oldrelationshipconfig.md#caption)
-- [thickness](oldrelationshipconfig.md#thickness)
+- [caption](OldRelationshipConfig.md#caption)
+- [thickness](OldRelationshipConfig.md#thickness)
 
 ## Properties
 
 ### caption
 
-• `Optional` **caption**: *string* \| *boolean*
+• `Optional` **caption**: `string` \| `boolean`
 
-Defined in: [index.d.ts:445](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L445)
+#### Defined in
+
+[src/neovis.ts:616](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L616)
 
 ___
 
 ### thickness
 
-• `Optional` **thickness**: *string*
+• `Optional` **thickness**: `number`
 
-Defined in: [index.d.ts:444](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L444)
+#### Defined in
+
+[src/neovis.ts:615](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L615)

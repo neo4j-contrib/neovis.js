@@ -11,57 +11,71 @@
 
 ## Hierarchy
 
-- [*NeoVisAdvanceConfig*](neovisadvanceconfig.md)<VIS\_TYPE, NEO\_TYPE\>
+- [`NeoVisAdvanceConfig`](NeoVisAdvanceConfig.md)<`VIS_TYPE`, `NEO_TYPE`\>
 
-  ↳ **NonFlatNeoVisAdvanceConfig**
+  ↳ **`NonFlatNeoVisAdvanceConfig`**
 
 ## Table of contents
 
 ### Properties
 
-- [cypher](nonflatneovisadvanceconfig.md#cypher)
-- [function](nonflatneovisadvanceconfig.md#function)
-- [property](nonflatneovisadvanceconfig.md#property)
-- [static](nonflatneovisadvanceconfig.md#static)
+- [cypher](NonFlatNeoVisAdvanceConfig.md#cypher)
+- [function](NonFlatNeoVisAdvanceConfig.md#function)
+- [property](NonFlatNeoVisAdvanceConfig.md#property)
+- [static](NonFlatNeoVisAdvanceConfig.md#static)
 
 ## Properties
 
 ### cypher
 
-• `Optional` **cypher**: [*RecursiveMapTo*](../README.md#recursivemapto)<VIS\_TYPE, string\>
+• `Optional` **cypher**: [`RecursiveMapTo`](../README.md#recursivemapto)<`VIS_TYPE`, `string`\>
 
 Cypher that will be called for every object (will look the same as
 
-Inherited from: [NeoVisAdvanceConfig](neovisadvanceconfig.md).[cypher](neovisadvanceconfig.md#cypher)
+#### Inherited from
 
-Defined in: [index.d.ts:49](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L49)
+[NeoVisAdvanceConfig](NeoVisAdvanceConfig.md).[cypher](NeoVisAdvanceConfig.md#cypher)
+
+#### Defined in
+
+[src/types.ts:42](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L42)
 
 ___
 
 ### function
 
-• `Optional` **function**: [*RecursiveMapToFunction*](../README.md#recursivemaptofunction)<VIS\_TYPE, NEO\_TYPE\>
+• `Optional` **function**: [`RecursiveMapToFunction`](../README.md#recursivemaptofunction)<`VIS_TYPE`, `NEO_TYPE`\>
 
-Inherited from: [NeoVisAdvanceConfig](neovisadvanceconfig.md).[function](neovisadvanceconfig.md#function)
+#### Inherited from
 
-Defined in: [index.d.ts:50](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L50)
+[NeoVisAdvanceConfig](NeoVisAdvanceConfig.md).[function](NeoVisAdvanceConfig.md#function)
+
+#### Defined in
+
+[src/types.ts:43](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L43)
 
 ___
 
 ### property
 
-• `Optional` **property**: [*RecursiveMapTo*](../README.md#recursivemapto)<VIS\_TYPE, string\>
+• `Optional` **property**: [`RecursiveMapTo`](../README.md#recursivemapto)<`VIS_TYPE`, `string`\>
 
-Defined in: [index.d.ts:54](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L54)
+#### Defined in
+
+[src/types.ts:47](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L47)
 
 ___
 
 ### static
 
-• `Optional` **static**: VIS\_TYPE
+• `Optional` **static**: `VIS_TYPE`
 
 Static values that will the same for every node/relationship
 
-Inherited from: [NeoVisAdvanceConfig](neovisadvanceconfig.md).[static](neovisadvanceconfig.md#static)
+#### Inherited from
 
-Defined in: [index.d.ts:45](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L45)
+[NeoVisAdvanceConfig](NeoVisAdvanceConfig.md).[static](NeoVisAdvanceConfig.md#static)
+
+#### Defined in
+
+[src/types.ts:38](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L38)

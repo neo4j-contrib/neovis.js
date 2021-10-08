@@ -1,8 +1,11 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/neovis.js',
+    entry: './src/neovis.ts',
     devtool: "source-map",
+    resolve: {
+        extensions: [".ts", ".js"]
+    },
     output: {
         filename: process.env.BUILD_WITH_DEPENDENCIES ? 'neovis.js' : 'neovis-without-dependencies.js',
         library: 'NeoVis',
@@ -11,7 +14,7 @@ module.exports = {
     },
     module: {
         rules: [{
-            test: /\.js$/,
+            test: /\.ts$/,
             exclude: /node_modules/,
             loader: 'babel-loader'
         }, {
@@ -19,7 +22,7 @@ module.exports = {
             use: ['style-loader', 'css-loader']
         }, {
             test: /\.(png|jpg|gif|svg|eot|ttf|woff2?)$/,
-            loader: 'url-loader'
+            type: "asset"
         }]
     },
     externals: [

@@ -10,33 +10,41 @@ neovis.js
 
 ### Enumerations
 
-- [NeoVisEvents](enums/neovisevents.md)
+- [NeoVisEvents](enums/NeoVisEvents.md)
 
 ### Classes
 
-- [NeoVis](classes/neovis.md)
+- [EventController](classes/EventController.md)
+- [NeoVis](classes/NeoVis.md)
 
 ### Interfaces
 
-- [BaseNeovisConfig](interfaces/baseneovisconfig.md)
-- [Edge](interfaces/edge.md)
-- [LabelConfig](interfaces/labelconfig.md)
-- [Neo4jConfig](interfaces/neo4jconfig.md)
-- [NeoVisAdvanceConfig](interfaces/neovisadvanceconfig.md)
-- [NeovisConfig](interfaces/neovisconfig.md)
-- [Node](interfaces/node.md)
-- [NonFlatNeoVisAdvanceConfig](interfaces/nonflatneovisadvanceconfig.md)
-- [NonFlatNeovisConfig](interfaces/nonflatneovisconfig.md)
-- [OldLabelConfig](interfaces/oldlabelconfig.md)
-- [OldNeoVisConfig](interfaces/oldneovisconfig.md)
-- [OldRelationshipConfig](interfaces/oldrelationshipconfig.md)
-- [RelationshipConfig](interfaces/relationshipconfig.md)
+- [BaseNeovisConfig](interfaces/BaseNeovisConfig.md)
+- [Edge](interfaces/Edge.md)
+- [EventFunctionTypes](interfaces/EventFunctionTypes.md)
+- [LabelConfig](interfaces/LabelConfig.md)
+- [Neo4jConfig](interfaces/Neo4jConfig.md)
+- [NeoVisAdvanceConfig](interfaces/NeoVisAdvanceConfig.md)
+- [NeovisConfig](interfaces/NeovisConfig.md)
+- [Node](interfaces/Node.md)
+- [NonFlatNeoVisAdvanceConfig](interfaces/NonFlatNeoVisAdvanceConfig.md)
+- [NonFlatNeovisConfig](interfaces/NonFlatNeovisConfig.md)
+- [OldLabelConfig](interfaces/OldLabelConfig.md)
+- [OldNeoVisConfig](interfaces/OldNeoVisConfig.md)
+- [OldRelationshipConfig](interfaces/OldRelationshipConfig.md)
+- [RelationshipConfig](interfaces/RelationshipConfig.md)
 
 ### Type aliases
 
 - [Cypher](README.md#cypher)
+- [NeovisDataConfig](README.md#neovisdataconfig)
+- [NonFlatLabelConfig](README.md#nonflatlabelconfig)
+- [NonFlatRelationsipConfig](README.md#nonflatrelationsipconfig)
+- [NumberOrInteger](README.md#numberorinteger)
 - [RecursiveMapTo](README.md#recursivemapto)
+- [RecursiveMapToDist](README.md#recursivemaptodist)
 - [RecursiveMapToFunction](README.md#recursivemaptofunction)
+- [RecursiveMapToFunctionDist](README.md#recursivemaptofunctiondist)
 
 ### Variables
 
@@ -53,74 +61,173 @@ neovis.js
 
 ### default
 
-Renames and exports: [NeoVis](classes/neovis.md)
+Renames and re-exports [NeoVis](classes/NeoVis.md)
 
 ## Type aliases
 
 ### Cypher
 
-Ƭ **Cypher**: *string*
+Ƭ **Cypher**: `string`
 
 Cypher quarry
 
-Defined in: [index.d.ts:39](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L39)
+#### Defined in
+
+[src/types.ts:32](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L32)
+
+___
+
+### NeovisDataConfig
+
+Ƭ **NeovisDataConfig**<`VIS_TYPE`, `NEO_TYPE`\>: [`RecursiveMapTo`](README.md#recursivemapto)<`VIS_TYPE`, `string`\> & { `[NEOVIS_ADVANCED_CONFIG]?`: [`NeoVisAdvanceConfig`](interfaces/NeoVisAdvanceConfig.md)<`VIS_TYPE`, `NEO_TYPE`\>  }
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `VIS_TYPE` |
+| `NEO_TYPE` |
+
+#### Defined in
+
+[src/types.ts:50](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L50)
+
+___
+
+### NonFlatLabelConfig
+
+Ƭ **NonFlatLabelConfig**: [`NonFlatNeoVisAdvanceConfig`](interfaces/NonFlatNeoVisAdvanceConfig.md)<`VisNetwork.Node`, `Neo4jTypes.Node`<`number`\>\>
+
+#### Defined in
+
+[src/types.ts:262](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L262)
+
+___
+
+### NonFlatRelationsipConfig
+
+Ƭ **NonFlatRelationsipConfig**: [`NonFlatNeoVisAdvanceConfig`](interfaces/NonFlatNeoVisAdvanceConfig.md)<`VisNetwork.Edge`, `Neo4jTypes.Relationship`<`number`\>\>
+
+#### Defined in
+
+[src/types.ts:263](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L263)
+
+___
+
+### NumberOrInteger
+
+Ƭ **NumberOrInteger**: `number` \| `Neo4jTypes.Integer`
+
+#### Defined in
+
+[src/types.ts:7](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L7)
 
 ___
 
 ### RecursiveMapTo
 
-Ƭ **RecursiveMapTo**<T, New\>: { [P in keyof T]: T[P] extends object ? RecursiveMapTo<T[P], New\> : New}
+Ƭ **RecursiveMapTo**<`T`, `New`\>: { [P in keyof T]: RecursiveMapToDist<T[P], New\> }
 
 Maps a type recursively and replace each non object type with the new type
 
+**`param`** type to map
+
+**`param`** type to map to for each non object type
+
 #### Type parameters
 
-| Name | Description |
-| :------ | :------ |
-| `T` | type to map |
-| `New` | type to map to for each non object type |
+| Name |
+| :------ |
+| `T` |
+| `New` |
 
-Defined in: [index.d.ts:22](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L22)
+#### Defined in
+
+[src/types.ts:16](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L16)
+
+___
+
+### RecursiveMapToDist
+
+Ƭ **RecursiveMapToDist**<`T`, `New`\>: `T` extends `object` ? [`RecursiveMapTo`](README.md#recursivemapto)<`T`, `New`\> : `New`
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `T` |
+| `New` |
+
+#### Defined in
+
+[src/types.ts:9](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L9)
 
 ___
 
 ### RecursiveMapToFunction
 
-Ƭ **RecursiveMapToFunction**<T, PARAM_TYPE\>: { [P in keyof T]: T[P] extends object ? function \| RecursiveMapToFunction<T[P], PARAM\_TYPE\> : function}
+Ƭ **RecursiveMapToFunction**<`T`, `PARAM_TYPE`\>: { [P in keyof T]: RecursiveMapToFunctionDist<T[P], PARAM\_TYPE\> }
 
 Maps a type recursively and adds the ability for each object property to be a function that returns the same type
 but replace each non object type with a function that returns the same type
 
+**`param`** type to map
+
+**`param`** type of parameter the functions get
+
 #### Type parameters
 
-| Name | Description |
-| :------ | :------ |
-| `T` | type to map |
-| `PARAM_TYPE` | type of parameter the functions get |
+| Name |
+| :------ |
+| `T` |
+| `PARAM_TYPE` |
 
-Defined in: [index.d.ts:32](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L32)
+#### Defined in
+
+[src/types.ts:25](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L25)
+
+___
+
+### RecursiveMapToFunctionDist
+
+Ƭ **RecursiveMapToFunctionDist**<`T`, `PARAM_TYPE`\>: `T` extends `object` ? (`param`: `PARAM_TYPE`) => `T` \| [`RecursiveMapToFunction`](README.md#recursivemaptofunction)<`T`, `PARAM_TYPE`\> : (`param`: `PARAM_TYPE`) => `T`
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `T` |
+| `PARAM_TYPE` |
+
+#### Defined in
+
+[src/types.ts:18](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L18)
 
 ## Variables
 
 ### NEOVIS\_ADVANCED\_CONFIG
 
-• `Const` **NEOVIS\_ADVANCED\_CONFIG**: unique *symbol*
+• **NEOVIS\_ADVANCED\_CONFIG**: typeof [`NEOVIS_ADVANCED_CONFIG`](README.md#neovis_advanced_config)
 
-Defined in: [index.d.ts:5](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L5)
+#### Defined in
+
+[src/types.ts:6](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L6)
 
 ___
 
 ### NEOVIS\_DEFAULT\_CONFIG
 
-• `Const` **NEOVIS\_DEFAULT\_CONFIG**: unique *symbol*
+• **NEOVIS\_DEFAULT\_CONFIG**: typeof [`NEOVIS_DEFAULT_CONFIG`](README.md#neovis_default_config)
 
-Defined in: [index.d.ts:4](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L4)
+#### Defined in
+
+[src/types.ts:5](https://github.com/thebestnom/neovis.js/blob/2890321/src/types.ts#L5)
 
 ## Functions
 
 ### migrateFromOldConfig
 
-▸ **migrateFromOldConfig**(`oldNeoVisConfig`: [*OldNeoVisConfig*](interfaces/oldneovisconfig.md)): [*NeovisConfig*](interfaces/neovisconfig.md)
+▸ **migrateFromOldConfig**(`oldNeoVisConfig`): [`NeovisConfig`](interfaces/NeovisConfig.md)
 
 **`deprecated`** will be removed in the future
 migrate old config to the new one
@@ -129,17 +236,21 @@ migrate old config to the new one
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `oldNeoVisConfig` | [*OldNeoVisConfig*](interfaces/oldneovisconfig.md) | 1.0.0 config object |
+| `oldNeoVisConfig` | [`OldNeoVisConfig`](interfaces/OldNeoVisConfig.md) | 1.0.0 config object |
 
-**Returns:** [*NeovisConfig*](interfaces/neovisconfig.md)
+#### Returns
 
-Defined in: [index.d.ts:479](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L479)
+[`NeovisConfig`](interfaces/NeovisConfig.md)
+
+#### Defined in
+
+[src/neovis.ts:650](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L650)
 
 ___
 
 ### objectToTitleHtml
 
-▸ **objectToTitleHtml**(`neo4jNode`: Neo4j.Node, `title_properties`: [*string*]): HTMLDivElement
+▸ **objectToTitleHtml**(`neo4jObject`, `titleProperties`): `HTMLDivElement`
 
 create html display of the node
 
@@ -147,18 +258,22 @@ create html display of the node
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `neo4jNode` | Neo4j.Node | node to create html from |
-| `title_properties` | [*string*] | which properties to map |
+| `neo4jObject` | `Node`<[`NumberOrInteger`](README.md#numberorinteger)\> \| `Relationship`<[`NumberOrInteger`](README.md#numberorinteger)\> | node to create html from |
+| `titleProperties` | `string`[] | which properties to map |
 
-**Returns:** HTMLDivElement
+#### Returns
 
-Defined in: [index.d.ts:420](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L420)
+`HTMLDivElement`
+
+#### Defined in
+
+[src/neovis.ts:563](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L563)
 
 ___
 
 ### objectToTitleString
 
-▸ **objectToTitleString**(`neo4jNode`: Neo4j.Node, `title_properties`: [*string*]): *string*
+▸ **objectToTitleString**(`neo4jObject`, `titleProperties`): `string`
 
 create string display of the node
 
@@ -166,9 +281,13 @@ create string display of the node
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `neo4jNode` | Neo4j.Node | node to create title string from |
-| `title_properties` | [*string*] | which properties to map |
+| `neo4jObject` | `Node`<[`NumberOrInteger`](README.md#numberorinteger)\> \| `Relationship`<[`NumberOrInteger`](README.md#numberorinteger)\> | node to create title string from |
+| `titleProperties` | `string`[] | which properties to map |
 
-**Returns:** *string*
+#### Returns
 
-Defined in: [index.d.ts:427](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L427)
+`string`
+
+#### Defined in
+
+[src/neovis.ts:584](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L584)

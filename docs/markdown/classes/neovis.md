@@ -6,117 +6,143 @@
 
 ### Constructors
 
-- [constructor](neovis.md#constructor)
+- [constructor](NeoVis.md#constructor)
 
 ### Accessors
 
-- [edges](neovis.md#edges)
-- [network](neovis.md#network)
-- [nodes](neovis.md#nodes)
+- [edges](NeoVis.md#edges)
+- [network](NeoVis.md#network)
+- [nodes](NeoVis.md#nodes)
 
 ### Methods
 
-- [clearNetwork](neovis.md#clearnetwork)
-- [registerOnEvent](neovis.md#registeronevent)
-- [reinit](neovis.md#reinit)
-- [reload](neovis.md#reload)
-- [render](neovis.md#render)
-- [renderWithCypher](neovis.md#renderwithcypher)
-- [stabilize](neovis.md#stabilize)
-- [updateWithCypher](neovis.md#updatewithcypher)
+- [clearNetwork](NeoVis.md#clearnetwork)
+- [registerOnEvent](NeoVis.md#registeronevent)
+- [reinit](NeoVis.md#reinit)
+- [reload](NeoVis.md#reload)
+- [render](NeoVis.md#render)
+- [renderWithCypher](NeoVis.md#renderwithcypher)
+- [stabilize](NeoVis.md#stabilize)
+- [updateWithCypher](NeoVis.md#updatewithcypher)
 
 ## Constructors
 
 ### constructor
 
-\+ **new NeoVis**(`config`: [*NeovisConfig*](../interfaces/neovisconfig.md) \| [*NonFlatNeovisConfig*](../interfaces/nonflatneovisconfig.md)): [*NeoVis*](neovis.md)
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `config` | [*NeovisConfig*](../interfaces/neovisconfig.md) \| [*NonFlatNeovisConfig*](../interfaces/nonflatneovisconfig.md) |
-
-**Returns:** [*NeoVis*](neovis.md)
-
-Defined in: [index.d.ts:345](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L345)
-
-## Accessors
-
-### edges
-
-• get **edges**(): *DataSet*<[*Edge*](../interfaces/edge.md), ``"id"``\>
-
-All view edges as DataSet
-
-**`link`** https://visjs.github.io/vis-data/data/dataset.html
-
-**Returns:** *DataSet*<[*Edge*](../interfaces/edge.md), ``"id"``\>
-
-Defined in: [index.d.ts:358](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L358)
-
-___
-
-### network
-
-• get **network**(): *Network*
-
-The vis network object
-
-**`link`** https://visjs.github.io/vis-network/docs/network/#methods
-
-**Returns:** *Network*
-
-Defined in: [index.d.ts:364](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L364)
-
-___
-
-### nodes
-
-• get **nodes**(): *DataSet*<[*Node*](../interfaces/node.md), ``"id"``\>
-
-All view nodes as DataSet
-
-**`link`** https://visjs.github.io/vis-data/data/dataset.html
-
-**Returns:** *DataSet*<[*Node*](../interfaces/node.md), ``"id"``\>
-
-Defined in: [index.d.ts:352](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L352)
-
-## Methods
-
-### clearNetwork
-
-▸ **clearNetwork**(): *void*
-
-Clear the data for the visualization
-
-**Returns:** *void*
-
-Defined in: [index.d.ts:374](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L374)
-
-___
-
-### registerOnEvent
-
-▸ **registerOnEvent**(`eventType`: [*NeoVisEvents*](../enums/neovisevents.md), `handler`: (`event`: *any*) => *void*): *void*
+• **new NeoVis**(`config`)
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `eventType` | [*NeoVisEvents*](../enums/neovisevents.md) | Event type to be handled |
-| `handler` | (`event`: *any*) => *void* | Handler to manage the event |
+| `config` | [`NeovisConfig`](../interfaces/NeovisConfig.md) \| [`NonFlatNeovisConfig`](../interfaces/NonFlatNeovisConfig.md) | configures the visualization and Neo4j server connection |
 
-**Returns:** *void*
+#### Defined in
 
-Defined in: [index.d.ts:381](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L381)
+[src/neovis.ts:89](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L89)
+
+## Accessors
+
+### edges
+
+• `get` **edges**(): `DataSet`<[`Edge`](../interfaces/Edge.md), ``"id"``\>
+
+All view edges as DataSet
+
+**`link`** https://visjs.github.io/vis-data/data/dataset.html
+
+#### Returns
+
+`DataSet`<[`Edge`](../interfaces/Edge.md), ``"id"``\>
+
+#### Defined in
+
+[src/neovis.ts:65](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L65)
+
+___
+
+### network
+
+• `get` **network**(): `Network`
+
+The vis network object
+
+**`link`** https://visjs.github.io/vis-network/docs/network/#methods
+
+#### Returns
+
+`Network`
+
+#### Defined in
+
+[src/neovis.ts:80](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L80)
+
+___
+
+### nodes
+
+• `get` **nodes**(): `DataSet`<[`Node`](../interfaces/Node.md), ``"id"``\>
+
+All view nodes as DataSet
+
+**`link`** https://visjs.github.io/vis-data/data/dataset.html
+
+#### Returns
+
+`DataSet`<[`Node`](../interfaces/Node.md), ``"id"``\>
+
+#### Defined in
+
+[src/neovis.ts:57](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L57)
+
+## Methods
+
+### clearNetwork
+
+▸ **clearNetwork**(): `void`
+
+Clear the data for the visualization
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/neovis.ts:477](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L477)
+
+___
+
+### registerOnEvent
+
+▸ **registerOnEvent**<`T`\>(`eventType`, `handler`): `void`
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends [`NeoVisEvents`](../enums/NeoVisEvents.md) |
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `eventType` | `T` | Event type to be handled |
+| `handler` | [`EventFunctionTypes`](../interfaces/EventFunctionTypes.md)[`T`] | Handler to manage the event |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/neovis.ts:488](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L488)
 
 ___
 
 ### reinit
 
-▸ **reinit**(`config`: [*NeovisConfig*](../interfaces/neovisconfig.md) \| [*NonFlatNeovisConfig*](../interfaces/nonflatneovisconfig.md)): *void*
+▸ **reinit**(`config`): `void`
 
 Reset the config object and reload data
 
@@ -124,41 +150,59 @@ Reset the config object and reload data
 
 | Name | Type |
 | :------ | :------ |
-| `config` | [*NeovisConfig*](../interfaces/neovisconfig.md) \| [*NonFlatNeovisConfig*](../interfaces/nonflatneovisconfig.md) |
+| `config` | [`NeovisConfig`](../interfaces/NeovisConfig.md) \| [`NonFlatNeovisConfig`](../interfaces/NonFlatNeovisConfig.md) |
 
-**Returns:** *void*
+#### Returns
 
-Defined in: [index.d.ts:387](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L387)
+`void`
+
+#### Defined in
+
+[src/neovis.ts:497](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L497)
 
 ___
 
 ### reload
 
-▸ **reload**(): *void*
+▸ **reload**(): `void`
 
 Clear the network and fetch live data form the server and reload the visualization
 
-**Returns:** *void*
+#### Returns
 
-Defined in: [index.d.ts:392](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L392)
+`void`
+
+#### Defined in
+
+[src/neovis.ts:505](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L505)
 
 ___
 
 ### render
 
-▸ **render**(): *void*
+▸ **render**(`query?`): `void`
 
 Renders the network
 
-**Returns:** *void*
+#### Parameters
 
-Defined in: [index.d.ts:369](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L369)
+| Name | Type |
+| :------ | :------ |
+| `query?` | `string` |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/neovis.ts:360](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L360)
 
 ___
 
 ### renderWithCypher
 
-▸ **renderWithCypher**(`query`: *string*): *void*
+▸ **renderWithCypher**(`query`): `void`
 
 Execute an arbitrary Cypher query and re-render the visualization
 
@@ -166,29 +210,37 @@ Execute an arbitrary Cypher query and re-render the visualization
 
 | Name | Type |
 | :------ | :------ |
-| `query` | *string* |
+| `query` | `string` |
 
-**Returns:** *void*
+#### Returns
 
-Defined in: [index.d.ts:403](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L403)
+`void`
+
+#### Defined in
+
+[src/neovis.ts:522](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L522)
 
 ___
 
 ### stabilize
 
-▸ **stabilize**(): *void*
+▸ **stabilize**(): `void`
 
 Stabilize the visualization
 
-**Returns:** *void*
+#### Returns
 
-Defined in: [index.d.ts:397](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L397)
+`void`
+
+#### Defined in
+
+[src/neovis.ts:513](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L513)
 
 ___
 
 ### updateWithCypher
 
-▸ **updateWithCypher**(`query`: *string*): *void*
+▸ **updateWithCypher**(`query`): `void`
 
 Execute an arbitrary Cypher query and update the current visualization, retaning current nodes
 This function will not change the original query given by renderWithCypher or the inital cypher.
@@ -197,8 +249,12 @@ This function will not change the original query given by renderWithCypher or th
 
 | Name | Type |
 | :------ | :------ |
-| `query` | *string* |
+| `query` | `string` |
 
-**Returns:** *void*
+#### Returns
 
-Defined in: [index.d.ts:410](https://github.com/thebestnom/neovis.js/blob/ed1c244/index.d.ts#L410)
+`void`
+
+#### Defined in
+
+[src/neovis.ts:534](https://github.com/thebestnom/neovis.js/blob/2890321/src/neovis.ts#L534)
