@@ -210,7 +210,7 @@ import NeoVis from 'neovis.js/dist/neovis.js';
 
 ## Api Reference
 
-[Api Reference](docs/markdown)
+[Api Reference](https://neo4j-contrib.github.io/neovis.js/modules.html)
 
 ## Build
 
