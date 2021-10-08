@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import Neo4j, * as Neo4jMockImport from 'neo4j-driver';
 import Neovis, {
 	migrateFromOldConfig,
