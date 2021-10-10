@@ -34,15 +34,15 @@
 
 		function draw() {
 			var config = {
-				container_id: "viz",
+				containerId: "viz",
 				neo4j: {
-					server_url: $("#url").val(),
-					server_user: $("#user").val(),
-					server_password: $("#pass").val()
+					serverUrl: $("#url").val(),
+					serverUser: $("#user").val(),
+					serverPassword: $("#pass").val()
 				},
 				labels: {},
 				relationships: {},
-				initial_cypher: $("#cypher").val()
+				initialCypher: $("#cypher").val()
 			};
 			config.labels[$("#label").val()] = {
 				label: $("#caption").val(),

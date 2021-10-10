@@ -152,11 +152,11 @@ And define our draw() function:
 
     function draw() {
         const config = {
-            container_id: "viz",
+            containerId: "viz",
             neo4j: {
-                server_url: "bolt://localhost:7687",
-                server_user: "neo4j",
-                server_password: "sorts-swims-burglaries",
+                serverUrl: "bolt://localhost:7687",
+                serverUser: "neo4j",
+                serverPassword: "sorts-swims-burglaries",
             }
             labels: {
                 Character: {
@@ -178,7 +178,7 @@ And define our draw() function:
                     value: "weight"
                 }
             },
-            initial_cypher: "MATCH (n)-[r:INTERACTS]->(m) RETURN *"
+            initialCypher: "MATCH (n)-[r:INTERACTS]->(m) RETURN *"
         };
 
         neoViz = new NeoVis.default(config);

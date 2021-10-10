@@ -94,7 +94,7 @@ export class NeoVis {
 	}
 
 	#consoleLog(message: object | string, level = 'log'): void {
-		if (level !== 'log' || this.#config.console_debug) {
+		if (level !== 'log' || this.#config.consoleDebug) {
 			// eslint-disable-next-line no-console
 			console[level](message);
 		}
@@ -168,16 +168,16 @@ export class NeoVis {
 		}
 		this.#config = config;
 		this.#driver = isNeo4jDriver(config.neo4j) ? config.neo4j : Neo4j.driver(
-			config.neo4j?.server_url ?? defaults.neo4j.neo4jUri,
+			config.neo4j?.serverUrl ?? defaults.neo4j.neo4jUri,
 			Neo4j.auth.basic(
-				config.neo4j?.server_user ?? defaults.neo4j.neo4jUser,
-				config.neo4j?.server_password ?? defaults.neo4j.neo4jPassword
+				config.neo4j?.serverUser ?? defaults.neo4j.neo4jUser,
+				config.neo4j?.serverPassword ?? defaults.neo4j.neo4jPassword
 			),
 			deepmerge(defaults.neo4j.driverConfig, config.neo4j?.driverConfig ?? {})
 		);
-		this.#database = config.server_database;
-		this.#query = config.initial_cypher ?? defaults.neo4j.initialQuery;
-		this.#container = document.getElementById(config.container_id);
+		this.#database = config.serverDatabase;
+		this.#query = config.initialCypher ?? defaults.neo4j.initialQuery;
+		this.#container = document.getElementById(config.containerId);
 	}
 
 	async #runCypher<T>(cypher: Cypher, id: number): Promise<T | T[]> {
@@ -520,7 +520,7 @@ export class NeoVis {
 	 * @param query
 	 */
 	renderWithCypher(query: Cypher): void {
-		// this._config.initial_cypher = query;
+		// this._config.initialCypher = query;
 		this.clearNetwork();
 		this.#query = query;
 		this.render();
@@ -649,14 +649,14 @@ export interface OldNeoVisConfig {
  */
 export function migrateFromOldConfig(oldNeoVisConfig: OldNeoVisConfig): NeovisConfig {
 	return {
-		container_id: oldNeoVisConfig.container_id,
-		initial_cypher: oldNeoVisConfig.initial_cypher,
-		console_debug: oldNeoVisConfig.console_debug,
-		server_database: oldNeoVisConfig.server_database,
+		containerId: oldNeoVisConfig.container_id,
+		initialCypher: oldNeoVisConfig.initial_cypher,
+		consoleDebug: oldNeoVisConfig.console_debug,
+		serverDatabase: oldNeoVisConfig.server_database,
 		neo4j: {
-			server_url: oldNeoVisConfig.server_url,
-			server_user: oldNeoVisConfig.server_url,
-			server_password: oldNeoVisConfig.server_password,
+			serverUrl: oldNeoVisConfig.server_url,
+			serverUser: oldNeoVisConfig.server_url,
+			serverPassword: oldNeoVisConfig.server_password,
 			driverConfig: oldNeoVisConfig.encrypted || oldNeoVisConfig.trust ? {
 				encrypted: oldNeoVisConfig.encrypted,
 				trust: oldNeoVisConfig.trust
@@ -703,9 +703,10 @@ export function migrateFromOldConfig(oldNeoVisConfig: OldNeoVisConfig): NeovisCo
 			.reduce((newLabelsConfig, [relationship, oldRelationshipsConfig]) => {
 				newLabelsConfig[relationship] = {
 					value: oldRelationshipsConfig.thickness,
+					label: typeof oldRelationshipsConfig.caption === 'string' ? oldRelationshipsConfig.caption : undefined,
 					[NEOVIS_ADVANCED_CONFIG]: {
 						function: {
-							title: oldRelationshipsConfig.caption ? objectToTitleHtml : undefined
+							title: objectToTitleHtml
 						}
 					}
 				};
