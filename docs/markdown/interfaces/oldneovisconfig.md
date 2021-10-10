@@ -31,7 +31,7 @@
 
 #### Defined in
 
-[src/neovis.ts:636](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L636)
+[src/neovis.ts:636](https://github.com/thebestnom/neovis.js/blob/441899a/src/neovis.ts#L636)
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 #### Defined in
 
-[src/neovis.ts:640](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L640)
+[src/neovis.ts:640](https://github.com/thebestnom/neovis.js/blob/441899a/src/neovis.ts#L640)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[src/neovis.ts:623](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L623)
+[src/neovis.ts:623](https://github.com/thebestnom/neovis.js/blob/441899a/src/neovis.ts#L623)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[src/neovis.ts:641](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L641)
+[src/neovis.ts:641](https://github.com/thebestnom/neovis.js/blob/441899a/src/neovis.ts#L641)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[src/neovis.ts:637](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L637)
+[src/neovis.ts:637](https://github.com/thebestnom/neovis.js/blob/441899a/src/neovis.ts#L637)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[src/neovis.ts:638](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L638)
+[src/neovis.ts:638](https://github.com/thebestnom/neovis.js/blob/441899a/src/neovis.ts#L638)
 
 ___
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[src/neovis.ts:639](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L639)
+[src/neovis.ts:639](https://github.com/thebestnom/neovis.js/blob/441899a/src/neovis.ts#L639)
 
 ___
 
@@ -111,7 +111,7 @@ ___
 
 #### Defined in
 
-[src/neovis.ts:628](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L628)
+[src/neovis.ts:628](https://github.com/thebestnom/neovis.js/blob/441899a/src/neovis.ts#L628)
 
 ___
 
@@ -131,7 +131,7 @@ ___
 
 #### Defined in
 
-[src/neovis.ts:632](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L632)
+[src/neovis.ts:632](https://github.com/thebestnom/neovis.js/blob/441899a/src/neovis.ts#L632)
 
 ___
 
@@ -141,7 +141,7 @@ ___
 
 #### Defined in
 
-[src/neovis.ts:627](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L627)
+[src/neovis.ts:627](https://github.com/thebestnom/neovis.js/blob/441899a/src/neovis.ts#L627)
 
 ___
 
@@ -151,7 +151,7 @@ ___
 
 #### Defined in
 
-[src/neovis.ts:626](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L626)
+[src/neovis.ts:626](https://github.com/thebestnom/neovis.js/blob/441899a/src/neovis.ts#L626)
 
 ___
 
@@ -161,7 +161,7 @@ ___
 
 #### Defined in
 
-[src/neovis.ts:624](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L624)
+[src/neovis.ts:624](https://github.com/thebestnom/neovis.js/blob/441899a/src/neovis.ts#L624)
 
 ___
 
@@ -171,7 +171,7 @@ ___
 
 #### Defined in
 
-[src/neovis.ts:625](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L625)
+[src/neovis.ts:625](https://github.com/thebestnom/neovis.js/blob/441899a/src/neovis.ts#L625)
 
 ___
 
@@ -181,4 +181,4 @@ ___
 
 #### Defined in
 
-[src/neovis.ts:642](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/neovis.ts#L642)
+[src/neovis.ts:642](https://github.com/thebestnom/neovis.js/blob/441899a/src/neovis.ts#L642)

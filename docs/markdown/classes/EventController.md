@@ -21,7 +21,7 @@
 
 #### Defined in
 
-[src/events.ts:20](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/events.ts#L20)
+[src/events.ts:20](https://github.com/thebestnom/neovis.js/blob/441899a/src/events.ts#L20)
 
 ## Methods
 
@@ -48,7 +48,7 @@
 
 #### Defined in
 
-[src/events.ts:47](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/events.ts#L47)
+[src/events.ts:47](https://github.com/thebestnom/neovis.js/blob/441899a/src/events.ts#L47)
 
 ___
 
@@ -75,4 +75,4 @@ ___
 
 #### Defined in
 
-[src/events.ts:34](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/events.ts#L34)
+[src/events.ts:34](https://github.com/thebestnom/neovis.js/blob/441899a/src/events.ts#L34)

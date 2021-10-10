@@ -61,7 +61,7 @@ mapping function that gets the neo4j node and returns vis-network node option
 
 #### Defined in
 
-[src/types.ts:65](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L65)
+[src/types.ts:65](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L65)
 
 ___
 

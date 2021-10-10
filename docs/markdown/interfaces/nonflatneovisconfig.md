@@ -8,12 +8,12 @@ look at the normal config for more information
 **`example`**
 ```js
 {
-     container_id: 'viz',
+     containerId: 'viz',
      nonFlat: true,
      neo4j: {
-     	server_url: 'bolt://localhost:7687',
-     	server_user: 'neo4j',
-     	server_password: 'gland-presentation-worry'
+     	serverUrl: 'bolt://localhost:7687',
+     	serverUser: 'neo4j',
+     	serverPassword: 'gland-presentation-worry'
      },
      visConfig: {
      	nodes: {
@@ -53,7 +53,7 @@ look at the normal config for more information
      		}
      	}
      },
-     initial_cypher: 'MATCH (n)-[r]->(m) RETURN n,r,m'
+     initialCypher: 'MATCH (n)-[r]->(m) RETURN n,r,m'
 }
 ```
 
@@ -67,23 +67,23 @@ look at the normal config for more information
 
 ### Properties
 
-- [console\_debug](NonFlatNeovisConfig.md#console_debug)
-- [container\_id](NonFlatNeovisConfig.md#container_id)
+- [consoleDebug](NonFlatNeovisConfig.md#consoledebug)
+- [containerId](NonFlatNeovisConfig.md#containerid)
 - [defaultLabelConfig](NonFlatNeovisConfig.md#defaultlabelconfig)
 - [defaultRelationshipsConfig](NonFlatNeovisConfig.md#defaultrelationshipsconfig)
-- [initial\_cypher](NonFlatNeovisConfig.md#initial_cypher)
+- [initialCypher](NonFlatNeovisConfig.md#initialcypher)
 - [labels](NonFlatNeovisConfig.md#labels)
 - [neo4j](NonFlatNeovisConfig.md#neo4j)
 - [nonFlat](NonFlatNeovisConfig.md#nonflat)
 - [relationships](NonFlatNeovisConfig.md#relationships)
-- [server\_database](NonFlatNeovisConfig.md#server_database)
+- [serverDatabase](NonFlatNeovisConfig.md#serverdatabase)
 - [visConfig](NonFlatNeovisConfig.md#visconfig)
 
 ## Properties
 
-### console\_debug
+### consoleDebug
 
-• `Optional` **console\_debug**: `boolean`
+• `Optional` **consoleDebug**: `boolean`
 
 Should output debug messages to console
 
@@ -91,27 +91,27 @@ Should output debug messages to console
 
 #### Inherited from
 
-[BaseNeovisConfig](BaseNeovisConfig.md).[console_debug](BaseNeovisConfig.md#console_debug)
+[BaseNeovisConfig](BaseNeovisConfig.md).[consoleDebug](BaseNeovisConfig.md#consoledebug)
 
 #### Defined in
 
-[src/types.ts:128](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L128)
+[src/types.ts:128](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L128)
 
 ___
 
-### container\_id
+### containerId
 
-• **container\_id**: `string`
+• **containerId**: `string`
 
 Html id of the element you want Neovis to render on
 
 #### Inherited from
 
-[BaseNeovisConfig](BaseNeovisConfig.md).[container_id](BaseNeovisConfig.md#container_id)
+[BaseNeovisConfig](BaseNeovisConfig.md).[containerId](BaseNeovisConfig.md#containerid)
 
 #### Defined in
 
-[src/types.ts:104](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L104)
+[src/types.ts:104](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L104)
 
 ___
 
@@ -121,7 +121,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:323](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L323)
+[src/types.ts:323](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L323)
 
 ___
 
@@ -131,23 +131,23 @@ ___
 
 #### Defined in
 
-[src/types.ts:324](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L324)
+[src/types.ts:324](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L324)
 
 ___
 
-### initial\_cypher
+### initialCypher
 
-• `Optional` **initial\_cypher**: `string`
+• `Optional` **initialCypher**: `string`
 
 The Cypher query that will get the data
 
 #### Inherited from
 
-[BaseNeovisConfig](BaseNeovisConfig.md).[initial_cypher](BaseNeovisConfig.md#initial_cypher)
+[BaseNeovisConfig](BaseNeovisConfig.md).[initialCypher](BaseNeovisConfig.md#initialcypher)
 
 #### Defined in
 
-[src/types.ts:123](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L123)
+[src/types.ts:123](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L123)
 
 ___
 
@@ -157,7 +157,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:325](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L325)
+[src/types.ts:325](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L325)
 
 ___
 
@@ -173,7 +173,7 @@ Neo4j Driver instance or configuration to make one
 
 #### Defined in
 
-[src/types.ts:113](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L113)
+[src/types.ts:113](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L113)
 
 ___
 
@@ -189,7 +189,7 @@ Tells Neovis is the config is flat or not
 
 #### Defined in
 
-[src/types.ts:322](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L322)
+[src/types.ts:322](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L322)
 
 ___
 
@@ -199,13 +199,13 @@ ___
 
 #### Defined in
 
-[src/types.ts:326](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L326)
+[src/types.ts:326](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L326)
 
 ___
 
-### server\_database
+### serverDatabase
 
-• `Optional` **server\_database**: `string`
+• `Optional` **serverDatabase**: `string`
 
 database name you want to connect to
 
@@ -213,11 +213,11 @@ database name you want to connect to
 
 #### Inherited from
 
-[BaseNeovisConfig](BaseNeovisConfig.md).[server_database](BaseNeovisConfig.md#server_database)
+[BaseNeovisConfig](BaseNeovisConfig.md).[serverDatabase](BaseNeovisConfig.md#serverdatabase)
 
 #### Defined in
 
-[src/types.ts:109](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L109)
+[src/types.ts:109](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L109)
 
 ___
 
@@ -235,4 +235,4 @@ Vis network config to override neovis defaults
 
 #### Defined in
 
-[src/types.ts:118](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L118)
+[src/types.ts:118](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L118)
