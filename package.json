@@ -24,9 +24,7 @@
     "build:dev": "run-p build:typings build:dev:*",
     "build:dev:with-dependencies": "cross-env BUILD_WITH_DEPENDENCIES=true webpack --mode=development",
     "build:dev:without-dependencies": "webpack --mode=development",
-    "typedoc": "run-p typedoc:*",
-    "typedoc:html": "typedoc src/neovis.ts --out docs/html --plugin none --excludePrivate",
-    "typedoc:markdown": "typedoc src/neovis.ts --out docs/markdown --plugin typedoc-plugin-markdown --readme none --excludePrivate"
+    "typedoc": "typedoc src/neovis.ts --out docs/ --plugin none --excludePrivate"
   },
   "repository": {
     "type": "git",
@@ -65,7 +63,6 @@
     "style-loader": "^3.3.0",
     "timsort": "^0.3.0",
     "typedoc": "^0.22.5",
-    "typedoc-plugin-markdown": "^3.11.3",
     "typescript": "^4.4.3",
     "uuid": "^8.3.2",
     "vis-data": "^7.1.2",
