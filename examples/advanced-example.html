@@ -35,11 +35,11 @@
 
 		function draw() {
 			var config = {
-				container_id: 'viz',
+				containerId: 'viz',
 				neo4j: {
-					server_url: 'bolt://localhost:7687',
-					server_user: 'neo4j',
-					server_password: 'gland-presentation-worry'
+					serverUrl: 'bolt://localhost:7687',
+					serverUser: 'neo4j',
+					serverPassword: 'gland-presentation-worry'
 				},
 				visConfig: {
 					nodes: {
@@ -75,7 +75,7 @@
 						}
 					}
 				},
-				initial_cypher: 'MATCH (n)-[r]->(m) RETURN n,r,m'
+				initialCypher: 'MATCH (n)-[r]->(m) RETURN n,r,m'
 			};
 
 			viz = new NeoVis.default(config);

@@ -22,8 +22,8 @@ const Neo4jMock = Neo4jMockImport as unknown as typeof Neo4jMockType;
 
 
 describe('Neovis', () => {
-	const container_id = 'randomId';
-	const initial_cypher = 'test query';
+	const containerId = 'randomId';
+	const initialCypher = 'test query';
 	const label1 = 'label1';
 	const label2 = 'label2';
 	const relationshipType = 'TEST';
@@ -32,7 +32,7 @@ describe('Neovis', () => {
 	beforeEach(() => Neo4jMock.clearAllMocks());
 	beforeEach(() => {
 		testUtils.clearIdCounter();
-		document.body.innerHTML = `<div id="${container_id}"></div>`;
+		document.body.innerHTML = `<div id="${containerId}"></div>`;
 	});
 
 	describe('NeoVis config defaults behavior', () => {
@@ -123,12 +123,12 @@ describe('Neovis', () => {
 
 	describe('Neovis default behavior', () => {
 		beforeEach(() => {
-			neovis = new Neovis({ initial_cypher, container_id });
+			neovis = new Neovis({ initialCypher, containerId });
 		});
 
 		it('should call run with query', () => {
 			neovis.render();
-			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledWith(initial_cypher, { limit: 30 });
+			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledWith(initialCypher, { limit: 30 });
 		});
 
 		it('should call completed when complete', () => new Promise<void>(done => {
@@ -215,8 +215,8 @@ describe('Neovis', () => {
 	describe('neovis with sizeCypher', () => {
 		const sizeCypher = 'sizeCypher';
 		const neovisConfig = {
-			initial_cypher,
-			container_id,
+			initialCypher,
+			containerId,
 			labels: {
 				[label1]: {
 					[NEOVIS_ADVANCED_CONFIG]: {
@@ -234,7 +234,7 @@ describe('Neovis', () => {
 		it('should call sizeCypher and save return value to data set value', async () => {
 			const node = testUtils.makeNode([label1]);
 			testUtils.mockFullRunSubscribe({
-				[initial_cypher]: {
+				[initialCypher]: {
 					default: [testUtils.makeRecord([node])]
 				},
 				[sizeCypher]: {
@@ -252,14 +252,14 @@ describe('Neovis', () => {
 	describe('neovis with update cypher', () => {
 		const updateWithCypher = 'updateCypher';
 		beforeEach(() => {
-			neovis = new Neovis({ initial_cypher, container_id });
+			neovis = new Neovis({ initialCypher, containerId });
 		});
 
 		it('should call updateWithCypher and add the new node to visualization', async () => {
 			const node1 = testUtils.makeNode([label1]);
 			const node2 = testUtils.makeNode([label1]);
 			testUtils.mockFullRunSubscribe({
-				[initial_cypher]: {
+				[initialCypher]: {
 					default: [testUtils.makeRecord([node1])]
 				},
 				[updateWithCypher]: {
@@ -280,7 +280,7 @@ describe('Neovis', () => {
 		it('call updateWithCypher with same init query should not create duplicate nodes', async () => {
 			const node1 = testUtils.makeNode([label1]);
 			testUtils.mockFullRunSubscribe({
-				[initial_cypher]: {
+				[initialCypher]: {
 					default: [testUtils.makeRecord([node1])]
 				}
 			});
@@ -289,7 +289,7 @@ describe('Neovis', () => {
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1);
 			expect(neovis.nodes.length).toBe(1); // 1 node before update with cypher
-			neovis.updateWithCypher(initial_cypher); // do the update
+			neovis.updateWithCypher(initialCypher); // do the update
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1 + 1); // once for initial cypher and once for the update
 			expect(neovis.nodes.length).toBe(1); // 1 node after update with cypher
@@ -300,7 +300,7 @@ describe('Neovis', () => {
 	const fontSize = 28;
 	const fontColor = '#00FF00';
 	describe.each([['config', {
-		container_id,
+		containerId,
 		labels: {
 			[label1]: {
 				[NEOVIS_ADVANCED_CONFIG]: {
@@ -314,9 +314,9 @@ describe('Neovis', () => {
 				}
 			}
 		},
-		initial_cypher: initial_cypher
+		initialCypher
 	} as Partial<NeovisConfig>], ['non flat config', {
-		container_id,
+		containerId,
 		nonFlat: true,
 		labels: {
 			[label1]: {
@@ -329,7 +329,7 @@ describe('Neovis', () => {
 				}
 			}
 		},
-		initial_cypher: initial_cypher
+		initialCypher
 	} as Partial<NonFlatNeovisConfig>]])('neovis advance %s test', (configName: string, config) => {
 		beforeEach(() => {
 			neovis = new Neovis(config as NonFlatNeovisConfig | NeovisConfig);
@@ -338,7 +338,7 @@ describe('Neovis', () => {
 		it('image field in config should reflect in node data', async () => {
 			const node1 = testUtils.makeNode([label1]);
 			testUtils.mockFullRunSubscribe({
-				[initial_cypher]: {
+				[initialCypher]: {
 					default: [testUtils.makeRecord([node1])]
 				}
 			});
@@ -351,7 +351,7 @@ describe('Neovis', () => {
 		it('image field for type not specified in config should not reflect in node data', async () => {
 			const node1 = testUtils.makeNode([label2]);
 			testUtils.mockFullRunSubscribe({
-				[initial_cypher]: {
+				[initialCypher]: {
 					default: [testUtils.makeRecord([node1])]
 				}
 			});
@@ -364,7 +364,7 @@ describe('Neovis', () => {
 		it('font field in config should reflect in node data', async () => {
 			const node1 = testUtils.makeNode([label1]);
 			testUtils.mockFullRunSubscribe({
-				[initial_cypher]: {
+				[initialCypher]: {
 					default: [testUtils.makeRecord([node1])]
 				}
 			});
@@ -379,7 +379,7 @@ describe('Neovis', () => {
 		it('font field for type not specified in config should not reflect in node data', async () => {
 			const node1 = testUtils.makeNode([label2]);
 			testUtils.mockFullRunSubscribe({
-				[initial_cypher]: {
+				[initialCypher]: {
 					default: [testUtils.makeRecord([node1])]
 				}
 			});
@@ -398,7 +398,7 @@ describe('Neovis', () => {
 
 		it('should merge property name type to vis.js config properly', async () => {
 			const config: NeovisConfig = {
-				container_id: container_id,
+				containerId,
 				labels: {
 					[label1]: {
 						font: {
@@ -407,12 +407,12 @@ describe('Neovis', () => {
 						},
 					}
 				},
-				initial_cypher: initial_cypher
+				initialCypher
 			};
 			neovis = new Neovis(config);
 			const node1 = testUtils.makeNode([label1], { [intProperty]: intPropertyValue });
 			testUtils.mockFullRunSubscribe({
-				[initial_cypher]: {
+				[initialCypher]: {
 					default: [testUtils.makeRecord([node1])]
 				}
 			});
@@ -426,7 +426,7 @@ describe('Neovis', () => {
 
 		it('should merge static type to vis.js config properly', async () => {
 			const config: Partial<NeovisConfig> = {
-				container_id,
+				containerId,
 				labels: {
 					[label1]: {
 						[NEOVIS_ADVANCED_CONFIG]: {
@@ -436,12 +436,12 @@ describe('Neovis', () => {
 						}
 					}
 				},
-				initial_cypher
+				initialCypher
 			};
 			neovis = new Neovis(config as NeovisConfig);
 			const node1 = testUtils.makeNode([label1], { [intProperty]: intPropertyValue });
 			testUtils.mockFullRunSubscribe({
-				[initial_cypher]: {
+				[initialCypher]: {
 					default: [testUtils.makeRecord([node1])]
 				}
 			});
@@ -453,7 +453,7 @@ describe('Neovis', () => {
 
 		it('should merge function type to vis.js config properly', async () => {
 			const config: Partial<NeovisConfig> = {
-				container_id: container_id,
+				containerId,
 				labels: {
 					[label1]: {
 						[NEOVIS_ADVANCED_CONFIG]: {
@@ -463,12 +463,12 @@ describe('Neovis', () => {
 						}
 					}
 				},
-				initial_cypher: initial_cypher
+				initialCypher
 			};
 			neovis = new Neovis(config as NeovisConfig);
 			const node1 = testUtils.makeNode([label1], { [intProperty]: intPropertyValue });
 			testUtils.mockFullRunSubscribe({
-				[initial_cypher]: {
+				[initialCypher]: {
 					default: [testUtils.makeRecord([node1])]
 				}
 			});
@@ -481,7 +481,7 @@ describe('Neovis', () => {
 		it('should merge cypher type to vis.js config properly', async () => {
 			const sizeCypher = 'sizeCypher';
 			const config: Partial<NeovisConfig> = {
-				container_id,
+				containerId,
 				labels: {
 					[label1]: {
 						[NEOVIS_ADVANCED_CONFIG]: {
@@ -491,12 +491,12 @@ describe('Neovis', () => {
 						}
 					}
 				},
-				initial_cypher: initial_cypher
+				initialCypher
 			};
 			neovis = new Neovis(config as NeovisConfig);
 			const node1 = testUtils.makeNode([label1], { [intProperty]: intPropertyValue });
 			testUtils.mockFullRunSubscribe({
-				[initial_cypher]: {
+				[initialCypher]: {
 					default: [testUtils.makeRecord([node1])]
 				},
 				[sizeCypher]: {
@@ -513,8 +513,8 @@ describe('Neovis', () => {
 
 	describe('neovis config migration', () => {
 		const oldConfig: Partial<OldNeoVisConfig> = {
-			initial_cypher,
-			container_id,
+			initial_cypher: initialCypher,
+			container_id: containerId,
 			labels: {
 				a: {
 					caption: 'name'

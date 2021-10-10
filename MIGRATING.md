@@ -3,6 +3,9 @@
 2.0.0 was designed to be an extension of vis-network instead of a wrapper, that's means that all custom-made properties
 are now the vis-network name
 
+
+Also any snake_case parameters are now camelCase
+
 ## quick migration
 ```ts
 oldConfig = {
@@ -16,6 +19,27 @@ const newConfig = migrateFromOldConfig(oldConfig)
 
 
 ## specifics
+
+- any snake_case parameter is now camelCase
+
+```ts
+// before
+const config = {
+    container_id: "divId",
+    initial_cypher: "MATCH (a) RETURN a",
+    server_database: "neo4j",
+    console_debug: true
+    // ...
+}
+//after
+const config = {
+    containerId: "divId",
+    initialCypher: "MATCH (a) RETURN a",
+    serverDatabase: "neo4j",
+    consoleDebug: true
+    // ...
+}
+```
 
 - neo4j driver configuration moved from flat onto the config object to `neo4j` onto the object
 
@@ -34,9 +58,9 @@ const config = {
 const config = {
     // ...
     neo4j: { // this can also be a Neo4J driver instance now instead of object
-        server_url: 'bolt://localhost:7687',
-        server_user: 'neo4j',
-        server_password: 'gland-presentation-worry',
+        serverUrl: 'bolt://localhost:7687',
+        serverUser: 'neo4j',
+        serverPassword: 'gland-presentation-worry',
         driverConfig: { // full driver config object by neo4j https://neo4j.com/docs/api/javascript-driver/current/function/index.html#configuration
             encrypted: "ENCRYPTION_ON",
             trust: "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES"
