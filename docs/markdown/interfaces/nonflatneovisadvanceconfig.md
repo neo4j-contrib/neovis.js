@@ -38,7 +38,7 @@ Cypher that will be called for every object (will look the same as
 
 #### Defined in
 
-[src/types.ts:42](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L42)
+[src/types.ts:42](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L42)
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:43](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L43)
+[src/types.ts:43](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L43)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:47](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L47)
+[src/types.ts:47](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L47)
 
 ___
 
@@ -78,4 +78,4 @@ Static values that will the same for every node/relationship
 
 #### Defined in
 
-[src/types.ts:38](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L38)
+[src/types.ts:38](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L38)

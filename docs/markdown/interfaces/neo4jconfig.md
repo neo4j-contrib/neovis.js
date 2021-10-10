@@ -7,9 +7,9 @@
 ### Properties
 
 - [driverConfig](Neo4jConfig.md#driverconfig)
-- [server\_password](Neo4jConfig.md#server_password)
-- [server\_url](Neo4jConfig.md#server_url)
-- [server\_user](Neo4jConfig.md#server_user)
+- [serverPassword](Neo4jConfig.md#serverpassword)
+- [serverUrl](Neo4jConfig.md#serverurl)
+- [serverUser](Neo4jConfig.md#serveruser)
 
 ## Properties
 
@@ -23,23 +23,23 @@ All view nodes as DataSet
 
 #### Defined in
 
-[src/types.ts:97](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L97)
+[src/types.ts:97](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L97)
 
 ___
 
-### server\_password
+### serverPassword
 
-• `Optional` **server\_password**: `string`
+• `Optional` **serverPassword**: `string`
 
 #### Defined in
 
-[src/types.ts:89](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L89)
+[src/types.ts:89](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L89)
 
 ___
 
-### server\_url
+### serverUrl
 
-• `Optional` **server\_url**: `string`
+• `Optional` **serverUrl**: `string`
 
 neo4j server
 
@@ -47,14 +47,14 @@ neo4j server
 
 #### Defined in
 
-[src/types.ts:87](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L87)
+[src/types.ts:87](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L87)
 
 ___
 
-### server\_user
+### serverUser
 
-• `Optional` **server\_user**: `string`
+• `Optional` **serverUser**: `string`
 
 #### Defined in
 
-[src/types.ts:88](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L88)
+[src/types.ts:88](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L88)

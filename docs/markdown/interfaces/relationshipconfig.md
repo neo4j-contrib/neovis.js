@@ -56,7 +56,7 @@ mapping function that gets the neo4j relationship and returns vis-network edge o
 
 #### Defined in
 
-[src/types.ts:79](https://github.com/thebestnom/neovis.js/blob/2344f9f/src/types.ts#L79)
+[src/types.ts:79](https://github.com/thebestnom/neovis.js/blob/441899a/src/types.ts#L79)
 
 ___
 

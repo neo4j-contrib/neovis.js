@@ -74,9 +74,9 @@ export interface Neo4jConfig {
      * neo4j server
      * @example bolt://localhost:7687
      */
-    server_url?: string;
-    server_user?: string;
-    server_password?: string;
+    serverUrl?: string;
+    serverUser?: string;
+    serverPassword?: string;
     /**
      * @link https://neo4j.com/docs/api/javascript-driver/current/function/index.html#configuration
      */
@@ -90,12 +90,12 @@ export interface BaseNeovisConfig {
     /**
      * Html id of the element you want Neovis to render on
      */
-    container_id: string;
+    containerId: string;
     /**
      * database name you want to connect to
      * @default neo4j
      */
-    server_database?: string;
+    serverDatabase?: string;
     /**
      * Neo4j Driver instance or configuration to make one
      */
@@ -108,12 +108,12 @@ export interface BaseNeovisConfig {
     /**
      * The Cypher query that will get the data
      */
-    initial_cypher?: Cypher;
+    initialCypher?: Cypher;
     /**
      * Should output debug messages to console
      * @default false
      */
-    console_debug?: boolean;
+    consoleDebug?: boolean;
     /**
      * Tells Neovis is the config is flat or not
      * @default false
@@ -125,11 +125,11 @@ export interface BaseNeovisConfig {
  * ```js
  * //simple
  * {
- *      container_id: "viz",
+ *      containerId: "viz",
  *      neo4j: {
- *      	server_url: "bolt://localhost:7687",
- *      	server_user: "neo4j",
- *      	server_password: "sorts-swims-burglaries"
+ *      	serverUrl: "bolt://localhost:7687",
+ *      	serverUser: "neo4j",
+ *      	serverPassword: "sorts-swims-burglaries"
  *      },
  *      labels: {
  *      	Character: {
@@ -143,15 +143,15 @@ export interface BaseNeovisConfig {
  *      		value: "weight"
  *      	}
  *      },
- *      initial_cypher: "MATCH (n)-[r:INTERACTS]->(m) RETURN n,r,m"
+ *      initialCypher: "MATCH (n)-[r:INTERACTS]->(m) RETURN n,r,m"
  * }
  * // advance
  * {
- *      container_id: 'viz',
+ *      containerId: 'viz',
  *      neo4j: {
- *      	server_url: 'bolt://localhost:7687',
- *      	server_user: 'neo4j',
- *      	server_password: 'gland-presentation-worry'
+ *      	serverUrl: 'bolt://localhost:7687',
+ *      	serverUser: 'neo4j',
+ *      	serverPassword: 'gland-presentation-worry'
  *      },
  *      visConfig: {
  *      	nodes: {
@@ -191,7 +191,7 @@ export interface BaseNeovisConfig {
  *      		}
  *      	}
  *      },
- *      initial_cypher: 'MATCH (n)-[r]->(m) RETURN n,r,m'
+ *      initialCypher: 'MATCH (n)-[r]->(m) RETURN n,r,m'
  * }
  * ```
  */
@@ -252,12 +252,12 @@ export declare type NonFlatRelationsipConfig = NonFlatNeoVisAdvanceConfig<VisNet
  * @example
  * ```js
  * {
- *      container_id: 'viz',
+ *      containerId: 'viz',
  *      nonFlat: true,
  *      neo4j: {
- *      	server_url: 'bolt://localhost:7687',
- *      	server_user: 'neo4j',
- *      	server_password: 'gland-presentation-worry'
+ *      	serverUrl: 'bolt://localhost:7687',
+ *      	serverUser: 'neo4j',
+ *      	serverPassword: 'gland-presentation-worry'
  *      },
  *      visConfig: {
  *      	nodes: {
@@ -297,7 +297,7 @@ export declare type NonFlatRelationsipConfig = NonFlatNeoVisAdvanceConfig<VisNet
  *      		}
  *      	}
  *      },
- *      initial_cypher: 'MATCH (n)-[r]->(m) RETURN n,r,m'
+ *      initialCypher: 'MATCH (n)-[r]->(m) RETURN n,r,m'
  * }
  * ```
  */
