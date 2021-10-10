@@ -12,11 +12,11 @@
 <script>
 	function draw() {
 		var config = {
-			container_id: "viz",
+			containerId: "viz",
 			neo4j: {
-				server_url: "bolt://54.88.38.186:32889",
-				server_user: "neo4j",
-				server_password: "change-guest-honks"
+				serverUrl: "bolt://54.88.38.186:32889",
+				serverUser: "neo4j",
+				serverPassword: "change-guest-honks"
 			},
 			labels: {
 				Troll: {
@@ -31,7 +31,7 @@
 					value: "count"
 				}
 			},
-			initial_cypher: "MATCH p=(:Troll)-[:RETWEETS]->(:Troll) RETURN p"
+			initialCypher: "MATCH p=(:Troll)-[:RETWEETS]->(:Troll) RETURN p"
 		}
 
 		var viz = new NeoVis.default(config);

@@ -34,11 +34,11 @@
 
 		function draw() {
 			var config = {
-				container_id: "viz",
+				containerId: "viz",
 				neo4j: {
-					server_url: "bolt://54.209.44.254:33146",
-					server_user: "neo4j",
-					server_password: "investigators-spill-future"
+					serverUrl: "bolt://54.209.44.254:33146",
+					serverUser: "neo4j",
+					serverPassword: "investigators-spill-future"
 				},
 				labels: {
 					//"Character": "name",
@@ -71,7 +71,7 @@
 						label: "El Presidente"
 					}
 				},
-				initial_cypher: "match (p:Person)-[r]-(o:Organization)-[r1]-(p2:Person) RETURN * LIMIT 10"
+				initialCypher: "match (p:Person)-[r]-(o:Organization)-[r1]-(p2:Person) RETURN * LIMIT 10"
 			};
 
 			viz = new NeoVis.default(config);
