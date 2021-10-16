@@ -655,7 +655,7 @@ export function migrateFromOldConfig(oldNeoVisConfig: OldNeoVisConfig): NeovisCo
 		serverDatabase: oldNeoVisConfig.server_database,
 		neo4j: {
 			serverUrl: oldNeoVisConfig.server_url,
-			serverUser: oldNeoVisConfig.server_url,
+			serverUser: oldNeoVisConfig.server_user,
 			serverPassword: oldNeoVisConfig.server_password,
 			driverConfig: oldNeoVisConfig.encrypted || oldNeoVisConfig.trust ? {
 				encrypted: oldNeoVisConfig.encrypted,
