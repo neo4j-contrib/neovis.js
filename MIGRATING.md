@@ -61,7 +61,8 @@ const config = {
         serverUrl: 'bolt://localhost:7687',
         serverUser: 'neo4j',
         serverPassword: 'gland-presentation-worry',
-        driverConfig: { // full driver config object by neo4j https://neo4j.com/docs/api/javascript-driver/current/function/index.html#configuration
+        driverConfig: { // typically need not if you use localhost. Checkout https://neo4j.com/docs/operations-manual/current/security/ssl-framework/#ssl-connectors
+            // full driver config object by neo4j https://neo4j.com/docs/api/javascript-driver/current/function/index.html#configuration
             encrypted: "ENCRYPTION_ON",
             trust: "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES"
         }
@@ -134,7 +135,7 @@ const config = {
 // after
 const config = {
     labels: {
-        Label: { // everything that is directly on this object gets mapped from the neo4j node
+        YourNeo4jNodeLabelName: { // everything that is directly on this object gets mapped from the neo4j node
             // full properties list can be found at https://visjs.github.io/vis-network/docs/network/nodes.html
             label: "name", // puts the property `name` from the neo4j node and puts it onto the label property of vis.js's node
             value: "pagerank",
@@ -159,7 +160,7 @@ const config = {
         }
     },
     relationships: {
-        RELATIONSHIP: { // same as node but mapped from neo4j relationship to vis.js edge
+        YourNeo4jRelationshipLabelName: { // same as node but mapped from neo4j relationship to vis.js edge
             // full properties list can be found at https://visjs.github.io/vis-network/docs/network/edges.html
             value: "wight",
             // the default is now without caption
