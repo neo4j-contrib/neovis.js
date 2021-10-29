@@ -156,7 +156,7 @@ export class NeoVis {
 					(config as NeovisConfig) = {
 						...config as NeovisConfig,
 						relationships: {
-							...config.labels as Record<string, RelationshipConfig>,
+							...config.relationships as Record<string, RelationshipConfig>,
 							[key]: {
 								...deepmerge(defaultRelationshipConfig as RelationshipConfig, config.relationships?.[key] as RelationshipConfig),
 								[NEOVIS_ADVANCED_CONFIG]: deepmerge((defaultRelationshipConfig as RelationshipConfig)[NEOVIS_ADVANCED_CONFIG] ?? {}, (config.relationships?.[key] as RelationshipConfig)[NEOVIS_ADVANCED_CONFIG] ?? {}),
@@ -244,7 +244,7 @@ export class NeoVis {
 		}
 	}
 
-	async #buildCypherObject<VIS_TYPE>(cypherConfig: RecursiveMapTo<VIS_TYPE, Cypher>, object: VIS_TYPE, id: number): Promise<void> {
+	*#buildCypherObject<VIS_TYPE>(cypherConfig: RecursiveMapTo<VIS_TYPE, Cypher>, object: VIS_TYPE, id: number): Generator<Promise<void>> {
 		if (cypherConfig && typeof cypherConfig === 'object') {
 			for (const prop of Object.keys(cypherConfig) as (keyof VIS_TYPE)[]) {
 				const value = cypherConfig[prop];
@@ -252,15 +252,16 @@ export class NeoVis {
 					if (!object[prop]) {
 						object[prop as string] = {};
 					}
-					await this.#buildCypherObject(value as RecursiveMapTo<VIS_TYPE[keyof VIS_TYPE], Cypher>, object[prop], id);
+					yield *this.#buildCypherObject(value as RecursiveMapTo<VIS_TYPE[keyof VIS_TYPE], Cypher>, object[prop], id);
 				} else {
-					object[prop] = await this.#runCypher(value as string, id) as VIS_TYPE[keyof VIS_TYPE];
+					const promise = this.#runCypher(value as string, id) as Promise<VIS_TYPE[keyof VIS_TYPE]>;
+					yield Promise.resolve(promise).then(value => { object[prop] = value; } ) as Promise<void>;
 				}
 			}
 		}
 	}
 
-	async #buildFunctionObject<VIS_TYPE, NEO_TYPE>(functionConfig: RecursiveMapToFunction<VIS_TYPE, NEO_TYPE>, object: VIS_TYPE, neo4jObj: NEO_TYPE): Promise<void> {
+	*#buildFunctionObject<VIS_TYPE, NEO_TYPE>(functionConfig: RecursiveMapToFunction<VIS_TYPE, NEO_TYPE>, object: VIS_TYPE, neo4jObj: NEO_TYPE): Generator<Promise<void>> {
 		if (functionConfig && typeof functionConfig === 'object') {
 			for (const prop of Object.keys(functionConfig) as (keyof VIS_TYPE)[]) {
 				const func = functionConfig[prop];
@@ -268,9 +269,10 @@ export class NeoVis {
 					if (!object[prop]) {
 						object[prop as string] = {};
 					}
-					await this.#buildFunctionObject(func as RecursiveMapToFunction<VIS_TYPE[keyof VIS_TYPE], NEO_TYPE>, object[prop], neo4jObj);
+					yield *this.#buildFunctionObject(func as RecursiveMapToFunction<VIS_TYPE[keyof VIS_TYPE], NEO_TYPE>, object[prop], neo4jObj);
 				} else {
-					object[prop] = await this.#runFunction(func as (neo: NEO_TYPE) => VIS_TYPE[keyof VIS_TYPE], neo4jObj);
+					const promise = this.#runFunction(func as (neo: NEO_TYPE) => VIS_TYPE[keyof VIS_TYPE], neo4jObj);
+					yield Promise.resolve(promise).then(value => { object[prop] = value; } ) as Promise<void>;
 				}
 			}
 		}
@@ -309,8 +311,8 @@ export class NeoVis {
 		}
 		this.#buildPropertyNameObject(propertyConfig, baseObject, neo4jObject);
 		this.#buildStaticObject(staticConfig, baseObject);
-		await this.#buildCypherObject(cypherConfig, baseObject, id);
-		await this.#buildFunctionObject(functionConfig, baseObject, neo4jObject);
+		await Promise.all(this.#buildCypherObject(cypherConfig, baseObject, id));
+		await Promise.all(this.#buildFunctionObject(functionConfig, baseObject, neo4jObject));
 	}
 
 	/**
@@ -378,7 +380,7 @@ export class NeoVis {
 					const dataPromises = record.map(async (v: object) => {
 						this.#consoleLog('Constructor:');
 						this.#consoleLog(v?.constructor.name);
-						if ((isNode as unknown as (obj: object) => obj is Neo4jCore.Node)(v)) {
+						if (isNode(v)) {
 							const node = await this.#buildNodeVisObject(v);
 							try {
 								this.#data.nodes.update(node);
@@ -386,11 +388,11 @@ export class NeoVis {
 								this.#consoleLog(e, 'error');
 							}
 
-						} else if ((isRelationship as unknown as (obj: object) => obj is Neo4jCore.Relationship)(v)) {
+						} else if (isRelationship(v)) {
 							const edge = await this.#buildEdgeVisObject(v);
 							this.#data.edges.update(edge);
 
-						} else if ((isPath as unknown as (obj: object) => obj is Neo4jCore.Path)(v)) {
+						} else if (isPath(v)) {
 							this.#consoleLog('PATH');
 							this.#consoleLog(v);
 							const startNode = await this.#buildNodeVisObject(v.start);
@@ -409,11 +411,11 @@ export class NeoVis {
 							for (const obj of v) {
 								this.#consoleLog('Array element constructor:');
 								this.#consoleLog(obj?.constructor.name);
-								if ((isNode as unknown as (obj: object) => obj is Neo4jCore.Node)(obj)) {
+								if (isNode(obj)) {
 									const node = await this.#buildNodeVisObject(obj);
 									this.#data.nodes.update(node);
 
-								} else if ((isRelationship as unknown as (obj: object) => obj is Neo4jCore.Relationship)(obj)) {
+								} else if (isRelationship(obj)) {
 									const edge = await this.#buildEdgeVisObject(obj);
 
 									this.#data.edges.update(edge);
@@ -448,7 +450,7 @@ export class NeoVis {
 
 					// eslint-disable-next-line @typescript-eslint/no-this-alias
 					const neoVis = this;
-					this.#network.on('click', function (this: VisNetwork.Network, params: { nodes: Node[], edges: Edge[], pointer: { DOM: VisNetwork.Position }}) {
+					this.#network.on('click', function (this: VisNetwork.Network, params: { nodes: Node[], edges: Edge[], pointer: { DOM: VisNetwork.Position } }) {
 						if (params.nodes.length > 0) {
 							const nodeId = this.getNodeAt(params.pointer.DOM) as number;
 							neoVis.#events.generateEvent(NeoVisEvents.ClickNodeEvent, {
