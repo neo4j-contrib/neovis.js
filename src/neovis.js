@@ -385,7 +385,12 @@ export default class NeoVis {
 								arrows: {
 									to: { enabled: this._config.arrows || false } // FIXME: handle default value
 								},
-								length: 200
+								length: 700,
+								font: {
+									size: 8,
+									strokeWidth: 0,
+									align: 'top'
+								},
 							},
 							layout: {
 								improvedLayout: false,
@@ -394,12 +399,8 @@ export default class NeoVis {
 									sortMethod: this._config.hierarchical_sort_method || 'hubsize'
 								}
 							},
-							physics: { // TODO: adaptive physics settings based on size of graph rendered
-								// enabled: true,
-								// timestep: 0.5,
-								// stabilization: {
-								//     iterations: 10
-								// }
+							physics: {
+								
 
 								adaptiveTimestep: true,
 								// barnesHut: {
@@ -408,7 +409,8 @@ export default class NeoVis {
 								//     springLength: 95
 								// },
 								stabilization: {
-									iterations: 200,
+									enabled: true,
+									iterations: 100,
 									fit: true
 								}
 							}
