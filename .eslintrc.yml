@@ -1,4 +1,4 @@
-parser: babel-eslint
+parser: "@typescript-eslint/parser"
 env:
   browser: true
   es6: true
@@ -6,14 +6,18 @@ env:
 extends:
   - 'eslint:recommended'
   - 'plugin:jest/recommended'
+  - 'plugin:@typescript-eslint/recommended'
 globals:
   Atomics: readonly
   SharedArrayBuffer: readonly
 parserOptions:
-  ecmaVersion: 2018
+  ecmaVersion: 2020
   sourceType: module
+ignorePatterns:
+  - docs/
 plugins:
   - jest
+  - '@typescript-eslint'
 rules:
   indent:
     - error
@@ -27,5 +31,9 @@ rules:
   no-console:
     - error
   no-prototype-builtins: off
+  object-curly-spacing:
+    - error
+    - always
   jest/no-mocks-import:
     - error
+  "@typescript-eslint/ban-types": off

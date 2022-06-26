@@ -34,26 +34,25 @@
 
 		function draw() {
 			var config = {
-				container_id: "viz",
-				server_url: "bolt://localhost:7687",
-				server_user: "neo4j",
-				server_password: "sorts-swims-burglaries",
+				containerId: "viz",
+				neo4j: {
+					serverUrl: "bolt://localhost:7687",
+					serverUser: "neo4j",
+					serverPassword: "sorts-swims-burglaries"
+				},
 				labels: {
-					//"Character": "name",
-					"Character": {
-						"caption": "name",
-						"size": "pagerank",
-						"community": "community"
-						//"sizeCypher": "MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c"
+					Character: {
+						label: "name",
+						value: "pagerank",
+						group: "community"
 					}
 				},
 				relationships: {
-					"INTERACTS": {
-						"thickness": "weight",
-						"caption": false
+					INTERACTS: {
+						value: "weight"
 					}
 				},
-				initial_cypher: "MATCH (n)-[r:INTERACTS]->(m) RETURN n,r,m"
+				initialCypher: "MATCH (n)-[r:INTERACTS]->(m) RETURN n,r,m"
 			};
 
 			viz = new NeoVis.default(config);
@@ -75,7 +74,7 @@ Cypher query: <textarea rows="4" cols=50 id="cypher"></textarea><br>
 </body>
 
 <script>
-	$("#reload").click(function() {
+	$("#reload").click(function () {
 
 		var cypher = $("#cypher").val();
 
@@ -89,7 +88,7 @@ Cypher query: <textarea rows="4" cols=50 id="cypher"></textarea><br>
 
 	});
 
-	$("#stabilize").click(function() {
+	$("#stabilize").click(function () {
 		viz.stabilize();
 	})
 

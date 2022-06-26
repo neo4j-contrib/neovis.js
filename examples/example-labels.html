@@ -26,48 +26,59 @@
             crossorigin="anonymous"></script>
 
     <script type="text/javascript">
-        // define config car
-        // instantiate nodevis object
-        // draw
+		// define config car
+		// instantiate nodevis object
+		// draw
 
-        var viz;
+		var viz;
 
-        function draw() {
-            var config = {
-                container_id: "viz",
-                server_url: "bolt://54.209.44.254:33146",
-                server_user: "neo4j",
-                server_password: "investigators-spill-future",
-                labels: {
-                    //"Character": "name",
-                    "Person": {
-                        "caption": "name",
-                        "size": 1.0,
-                        "sizeCypher": "MATCH (n) WHERE id(n) = {id} RETURN SIZE((n)--()) AS s;",
-                        "icon": "????"
-                    },
-                    "Organization": {
-                        "caption": "name",
-                        "size": 2.0,
-                        "sizeCypher": "MATCH (n) WHERE id(n) = {id} RETURN SIZE((n)--()) AS s",
-                        "icon": "???"
-                    }
+		function draw() {
+			var config = {
+				containerId: "viz",
+				neo4j: {
+					serverUrl: "bolt://54.209.44.254:33146",
+					serverUser: "neo4j",
+					serverPassword: "investigators-spill-future"
+				},
+				labels: {
+					//"Character": "name",
+					Person: {
+						label: "name",
+						[NeoVis.NEOVIS_ADVANCED_CONFIG]: {
+							static: {
+								value: 1.0
+							},
+							cypher: {
+								value: "MATCH (n) WHERE id(n) = $id RETURN SIZE((n)--()) AS s;"
+							}
+						}
+					},
+					"Organization": {
+						caption: "name",
+						[NeoVis.NEOVIS_ADVANCED_CONFIG]: {
+							static: {
+								value: 2.0
+							},
+							cypher: {
+								value: "MATCH (n) WHERE id(n) = $id RETURN SIZE((n)--()) AS s"
+							}
+						}
+					}
 
-                },
-                relationships: {
-                    "PRESIDENT": {
-                        "caption": "El Presidente"
-                    }
-                },
-                initial_cypher: "match (p:Person)-[r]-(o:Organization)-[r1]-(p2:Person) RETURN * LIMIT 10",
-                arrows: false
-            };
+				},
+				relationships: {
+					PRESIDENT: {
+						label: "El Presidente"
+					}
+				},
+				initialCypher: "match (p:Person)-[r]-(o:Organization)-[r1]-(p2:Person) RETURN * LIMIT 10"
+			};
 
-            viz = new NeoVis.default(config);
-            viz.render();
-            console.log(viz);
+			viz = new NeoVis.default(config);
+			viz.render();
+			console.log(viz);
 
-        }
+		}
     </script>
 </head>
 <body onload="draw()">
@@ -81,19 +92,19 @@ Cypher query: <textarea rows="4" cols=50 id="cypher"></textarea><br>
 </body>
 
 <script>
-    $("#reload").click(function() {
+	$("#reload").click(function () {
 
-        var cypher = $("#cypher").val();
+		var cypher = $("#cypher").val();
 
-        if (cypher.length > 3) {
-            viz.renderWithCypher(cypher);
-        } else {
-            console.log("reload");
-            viz.reload();
+		if (cypher.length > 3) {
+			viz.renderWithCypher(cypher);
+		} else {
+			console.log("reload");
+			viz.reload();
 
-        }
+		}
 
-    });
+	});
 
 </script>
 </html>
