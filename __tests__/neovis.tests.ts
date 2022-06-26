@@ -358,7 +358,7 @@ describe('Neovis', () => {
 
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
-			expect(neovis.nodes.get(1)).toHaveProperty('image', undefined);
+			expect(neovis.nodes.get(1)).not.toHaveProperty('image');
 		});
 
 		it('font field in config should reflect in node data', async () => {
@@ -386,7 +386,7 @@ describe('Neovis', () => {
 
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
-			expect(neovis.nodes.get(1)).toHaveProperty('font', undefined);
+			expect(neovis.nodes.get(1)).not.toHaveProperty('font');
 		});
 	});
 
