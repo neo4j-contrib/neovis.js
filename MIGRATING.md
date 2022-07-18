@@ -161,7 +161,7 @@ const config = {
     relationships: {
         RELATIONSHIP: { // same as node but mapped from neo4j relationship to vis.js edge
             // full properties list can be found at https://visjs.github.io/vis-network/docs/network/edges.html
-            value: "wight",
+            value: "weight",
             // the default is now without caption
             [NeoVis.NEOVIS_ADVANCED_CONFIG]: {// here you put edge properties that aren't mapped directly from the neo4j relationship
                 cypher: {}, // same as label advance cypher
