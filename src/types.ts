@@ -90,10 +90,6 @@ export interface Neo4jConfig {
 	/**
 	 * @link https://neo4j.com/docs/api/javascript-driver/current/function/index.html#configuration
 	 */
-	/**
-	 * All view nodes as DataSet
-	 * @link https://visjs.github.io/vis-data/data/dataset.html
-	 */
 	driverConfig?: Neo4jTypes.Config;
 }
 
