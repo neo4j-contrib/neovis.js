@@ -16,7 +16,8 @@ const defaults = {
 			maxConnectionPoolSize: 100,
 			connectionAcquisitionTimeout: 10000,
 			disableLosslessIntegers: true,
-		}
+		},
+		groupAsLabel: true
 	},
 
 	visJs: {
