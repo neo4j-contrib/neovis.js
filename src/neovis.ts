@@ -239,6 +239,7 @@ export class NeoVis {
 		this.#database = config.serverDatabase;
 		this.#query = config.initialCypher ?? defaults.neo4j.initialQuery;
 		this.#container = document.getElementById(config.containerId);
+		this.#config.groupAsLabel = config.groupAsLabel ?? defaults.neo4j.groupAsLabel;
 	}
 
 	async #runCypher<T>(cypher: Cypher, id: number): Promise<T | T[]> {
@@ -390,6 +391,9 @@ export class NeoVis {
 
 		node.id = isInt(neo4jNode.identity) ? (neo4jNode.identity as Neo4jTypes.Integer).toInt() : neo4jNode.identity as number;
 		node.raw = neo4jNode;
+		if(this.#config.groupAsLabel) {
+			node.group = label;
+		}
 
 		await this.#buildVisObject(labelConfig, node as Node, neo4jNode, node.id);
 
