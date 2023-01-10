@@ -157,7 +157,7 @@ And define our draw() function:
                 serverUrl: "bolt://localhost:7687",
                 serverUser: "neo4j",
                 serverPassword: "sorts-swims-burglaries",
-            }
+            },
             labels: {
                 Character: {
                     label: "name",
