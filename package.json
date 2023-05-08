@@ -1,6 +1,6 @@
 {
   "name": "neovis.js",
-  "version": "2.0.4",
+  "version": "2.1.0-alpha2",
   "description": "Graph visualizations powered by vis.js with data from Neo4j.",
   "main": "./dist/neovis.js",
   "module": "./dist/neovis-without-dependencies.js",

@@ -428,13 +428,14 @@ export class NeoVis {
 
 		// connect to Neo4j instance
 		// run query
-		let recordCount = 0;
-		const _query = query || this.#query;
-		const session = this.#driver.session(this.#database ? { database: this.#database } : undefined);
-		const dataBuildPromises: Promise<any>[] = [];
+		
 		if(this.#config.dataFunction) {
 			this.#runFunctionDataGetter();
 		} else {
+			let recordCount = 0;
+			const _query = query || this.#query;
+			const session = this.#driver.session(this.#database ? { database: this.#database } : undefined);
+			const dataBuildPromises: Promise<unknown>[] = [];
 			session.run(_query, parameters)
 				.subscribe({
 					onNext: (record) => {
@@ -459,7 +460,7 @@ export class NeoVis {
 	async #runFunctionDataGetter() {
 		let recordCount = 0;
 		try {
-			const dataBuildPromises: Promise<any>[] = [];
+			const dataBuildPromises: Promise<unknown>[] = [];
 			for await (const record of this.#config.dataFunction!()) {
 				dataBuildPromises.push(this.#createSingleRecord(record));
 				recordCount++;
