@@ -503,6 +503,9 @@ export class NeoVis {
 						this.#consoleLog(this.#data.edges);
 
 						this.#network = new vis.Network(container, this.#data, options);
+					} else {
+						const options = deepmerge(defaults.visJs, this.#config.visConfig ?? {});
+						this.#network.setOptions(options);
 					}
 					this.#consoleLog('completed');
 					setTimeout(
