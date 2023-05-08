@@ -11,6 +11,7 @@ declare const defaults: {
             connectionAcquisitionTimeout: number;
             disableLosslessIntegers: boolean;
         };
+        groupAsLabel: boolean;
     };
     visJs: {
         nodes: {

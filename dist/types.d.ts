@@ -111,6 +111,11 @@ export interface BaseNeovisConfig {
      */
     consoleDebug?: boolean;
     /**
+     * Should group be the label
+     * @default true
+     */
+    groupAsLabel?: boolean;
+    /**
      * Tells Neovis is the config is flat or not
      * @default false
      */
