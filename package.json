@@ -1,6 +1,6 @@
 {
   "name": "neovis.js",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Graph visualizations powered by vis.js with data from Neo4j.",
   "main": "./dist/neovis.js",
   "module": "./dist/neovis-without-dependencies.js",
@@ -24,7 +24,7 @@
     "build:dev": "run-p build:typings build:dev:*",
     "build:dev:with-dependencies": "cross-env BUILD_WITH_DEPENDENCIES=true webpack --mode=development",
     "build:dev:without-dependencies": "webpack --mode=development",
-    "typedoc": "typedoc src/neovis.ts --out docs/ --plugin none --excludePrivate"
+    "typedoc": "typedoc src/neovis.ts --out docs/ --excludePrivate"
   },
   "repository": {
     "type": "git",

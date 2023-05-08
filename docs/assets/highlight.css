@@ -1,39 +1,39 @@
 :root {
-    --light-hl-0: #000000;
-    --dark-hl-0: #D4D4D4;
-    --light-hl-1: #800000;
-    --dark-hl-1: #808080;
-    --light-hl-2: #800000;
-    --dark-hl-2: #569CD6;
-    --light-hl-3: #000000FF;
-    --dark-hl-3: #D4D4D4;
-    --light-hl-4: #FF0000;
-    --dark-hl-4: #9CDCFE;
-    --light-hl-5: #0000FF;
-    --dark-hl-5: #CE9178;
-    --light-hl-6: #800000;
-    --dark-hl-6: #D7BA7D;
-    --light-hl-7: #098658;
-    --dark-hl-7: #B5CEA8;
-    --light-hl-8: #0451A5;
+    --light-hl-0: #795E26;
+    --dark-hl-0: #DCDCAA;
+    --light-hl-1: #000000;
+    --dark-hl-1: #D4D4D4;
+    --light-hl-2: #A31515;
+    --dark-hl-2: #CE9178;
+    --light-hl-3: #0000FF;
+    --dark-hl-3: #569CD6;
+    --light-hl-4: #800000;
+    --dark-hl-4: #808080;
+    --light-hl-5: #800000;
+    --dark-hl-5: #569CD6;
+    --light-hl-6: #000000FF;
+    --dark-hl-6: #D4D4D4;
+    --light-hl-7: #E50000;
+    --dark-hl-7: #9CDCFE;
+    --light-hl-8: #0000FF;
     --dark-hl-8: #CE9178;
-    --light-hl-9: #795E26;
-    --dark-hl-9: #DCDCAA;
-    --light-hl-10: #0000FF;
-    --dark-hl-10: #569CD6;
-    --light-hl-11: #001080;
-    --dark-hl-11: #9CDCFE;
-    --light-hl-12: #0070C1;
-    --dark-hl-12: #4FC1FF;
-    --light-hl-13: #A31515;
-    --dark-hl-13: #CE9178;
+    --light-hl-9: #800000;
+    --dark-hl-9: #D7BA7D;
+    --light-hl-10: #098658;
+    --dark-hl-10: #B5CEA8;
+    --light-hl-11: #0451A5;
+    --dark-hl-11: #CE9178;
+    --light-hl-12: #001080;
+    --dark-hl-12: #9CDCFE;
+    --light-hl-13: #0070C1;
+    --dark-hl-13: #4FC1FF;
     --light-hl-14: #AF00DB;
     --dark-hl-14: #C586C0;
-    --light-hl-15: #008000;
-    --dark-hl-15: #6A9955;
-    --light-hl-16: #000000;
-    --dark-hl-16: #C8C8C8;
-    --light-code-background: #F5F5F5;
+    --light-hl-15: #000000;
+    --dark-hl-15: #C8C8C8;
+    --light-hl-16: #008000;
+    --dark-hl-16: #6A9955;
+    --light-code-background: #FFFFFF;
     --dark-code-background: #1E1E1E;
 }
 
@@ -79,7 +79,7 @@
     --code-background: var(--dark-code-background);
 } }
 
-body.light {
+:root[data-theme='light'] {
     --hl-0: var(--light-hl-0);
     --hl-1: var(--light-hl-1);
     --hl-2: var(--light-hl-2);
@@ -100,7 +100,7 @@ body.light {
     --code-background: var(--light-code-background);
 }
 
-body.dark {
+:root[data-theme='dark'] {
     --hl-0: var(--dark-hl-0);
     --hl-1: var(--dark-hl-1);
     --hl-2: var(--dark-hl-2);
