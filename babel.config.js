@@ -6,6 +6,7 @@ module.exports = {
 	}], "@babel/preset-typescript"],
 	plugins: [
 		["@babel/plugin-transform-runtime", {corejs: 3}],
-		"@babel/plugin-proposal-class-properties"
+		"@babel/plugin-proposal-class-properties",
+		"@babel/plugin-proposal-private-methods"
 	]
 }

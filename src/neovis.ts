@@ -28,7 +28,6 @@ import {
 	RecursiveMapToFunction,
 	RelationshipConfig
 } from './types';
-import { Font } from 'vis-network';
 
 export * from './events';
 export * from './types';
@@ -36,8 +35,70 @@ export * from './types';
 function isNeo4jDriver(neo4jConfig: Neo4jTypes.Driver | Neo4jConfig): neo4jConfig is Neo4jTypes.Driver {
 	return neo4jConfig instanceof Neo4j.driver;
 }
+function _propertyToHtml<T extends { toString: () => string }>(key: string, value: T | T[]): string {
+	if (Array.isArray(value) && value.length > 1) {
+		let out = `<strong>${key}:</strong><br /><ul>`;
+		for (const val of value) {
+			out += `<li>${val}</li>`;
+		}
+		return out + '</ul>';
+	}
+	return `<strong>${key}:</strong> ${value}<br>`;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function _retrieveProperty<T>(prop: string, obj: any): T {
+	if (typeof obj?.properties === 'object') {
+		return isInt(obj.properties[prop]) ? obj.properties[prop].toInt() : obj.properties[prop];
+	}
+	throw new Error('Neo4j object is not properly constructed');
+}
+
+/**
+ * create html display of the node
+ * @param neo4jObject node to create html from
+ * @param titleProperties which properties to map
+ */
+export function objectToTitleHtml(neo4jObject: Neo4jTypes.Node<NumberOrInteger> | Neo4jTypes.Relationship<NumberOrInteger>, titleProperties: string[]): HTMLDivElement {
+	let titleString = '';
+	if (!titleProperties) {
+		titleProperties = Object.keys(neo4jObject.properties);
+	}
+	for (const key of titleProperties) {
+		const propVal = _retrieveProperty(key, neo4jObject);
+		if (propVal) {
+			titleString += _propertyToHtml(key, propVal);
+		}
+	}
+	const title = document.createElement('div');
+	title.innerHTML = titleString;
+	return title;
+}
+
+/**
+ * create string display of the node
+ * @param neo4jObject node to create title string from
+ * @param titleProperties which properties to map
+ */
+export function objectToTitleString(neo4jObject: Neo4jTypes.Node<NumberOrInteger> | Neo4jTypes.Relationship<NumberOrInteger>, titleProperties: string[]): string {
+	let title = '';
+	if (!titleProperties) {
+		titleProperties = Object.keys(neo4jObject.properties);
+	}
+	for (const key of titleProperties) {
+		const propVal = _retrieveProperty(key, neo4jObject);
+		if (propVal) {
+			title += `${key}: ${propVal}\n`;
+		}
+	}
+	return title;
+}
 
 export class NeoVis {
+	static NEOVIS_DEFAULT_CONFIG = NEOVIS_DEFAULT_CONFIG;
+	static NEOVIS_ADVANCED_CONFIG = NEOVIS_ADVANCED_CONFIG;
+	static objectToTitleHtml = objectToTitleHtml;
+	static objectToTitleString = objectToTitleString;
 	#data = {
 		nodes: new vis.DataSet<Node>(),
 		edges: new vis.DataSet<Edge>()
@@ -538,65 +599,6 @@ export class NeoVis {
 	}
 }
 
-function _propertyToHtml<T extends { toString: () => string }>(key: string, value: T | T[]): string {
-	if (Array.isArray(value) && value.length > 1) {
-		let out = `<strong>${key}:</strong><br /><ul>`;
-		for (const val of value) {
-			out += `<li>${val}</li>`;
-		}
-		return out + '</ul>';
-	}
-	return `<strong>${key}:</strong> ${value}<br>`;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function _retrieveProperty<T>(prop: string, obj: any): T {
-	if (typeof obj?.properties === 'object') {
-		return isInt(obj.properties[prop]) ? obj.properties[prop].toInt() : obj.properties[prop];
-	}
-	throw new Error('Neo4j object is not properly constructed');
-}
-
-/**
- * create html display of the node
- * @param neo4jObject node to create html from
- * @param titleProperties which properties to map
- */
-export function objectToTitleHtml(neo4jObject: Neo4jTypes.Node<NumberOrInteger> | Neo4jTypes.Relationship<NumberOrInteger>, titleProperties: string[]): HTMLDivElement {
-	let titleString = '';
-	if (!titleProperties) {
-		titleProperties = Object.keys(neo4jObject.properties);
-	}
-	for (const key of titleProperties) {
-		const propVal = _retrieveProperty(key, neo4jObject);
-		if (propVal) {
-			titleString += _propertyToHtml(key, propVal);
-		}
-	}
-	const title = document.createElement('div');
-	title.innerHTML = titleString;
-	return title;
-}
-
-/**
- * create string display of the node
- * @param neo4jObject node to create title string from
- * @param titleProperties which properties to map
- */
-export function objectToTitleString(neo4jObject: Neo4jTypes.Node<NumberOrInteger> | Neo4jTypes.Relationship<NumberOrInteger>, titleProperties: string[]): string {
-	let title = '';
-	if (!titleProperties) {
-		titleProperties = Object.keys(neo4jObject.properties);
-	}
-	for (const key of titleProperties) {
-		const propVal = _retrieveProperty(key, neo4jObject);
-		if (propVal) {
-			title += `${key}: ${propVal}\n`;
-		}
-	}
-	return title;
-}
-
 /**
  * @deprecated for migration only
  */
@@ -606,7 +608,7 @@ export interface OldLabelConfig {
 	community?: string;
 	sizeCypher?: string;
 	image?: string;
-	font?: string | Font;
+	font?: string | VisNetwork.Font;
 	title_properties?: string[];
 }
 

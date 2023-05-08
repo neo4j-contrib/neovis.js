@@ -2,30 +2,30 @@ import type * as Neo4jTypes from 'neo4j-driver';
 import type * as VisNetwork from 'vis-network';
 export declare const NEOVIS_DEFAULT_CONFIG: unique symbol;
 export declare const NEOVIS_ADVANCED_CONFIG: unique symbol;
-export declare type NumberOrInteger = number | Neo4jTypes.Integer;
-export declare type RecursiveMapToDist<T, New> = T extends object ? RecursiveMapTo<T, New> : New;
+export type NumberOrInteger = number | Neo4jTypes.Integer;
+export type RecursiveMapToDist<T, New> = T extends object ? RecursiveMapTo<T, New> : New;
 /**
  * Maps a type recursively and replace each non object type with the new type
  * @param <T> type to map
  * @param <New> type to map to for each non object type
  */
-export declare type RecursiveMapTo<T, New> = {
+export type RecursiveMapTo<T, New> = {
     [P in keyof T]: RecursiveMapToDist<T[P], New>;
 };
-export declare type RecursiveMapToFunctionDist<T, PARAM_TYPE> = T extends object ? ((param: PARAM_TYPE) => T) | (RecursiveMapToFunction<T, PARAM_TYPE>) : (param: PARAM_TYPE) => T;
+export type RecursiveMapToFunctionDist<T, PARAM_TYPE> = T extends object ? ((param: PARAM_TYPE) => T) | (RecursiveMapToFunction<T, PARAM_TYPE>) : (param: PARAM_TYPE) => T;
 /**
  * Maps a type recursively and adds the ability for each object property to be a function that returns the same type
  * but replace each non object type with a function that returns the same type
  * @param <T> type to map
  * @param <PARAM_TYPE> type of parameter the functions get
  */
-export declare type RecursiveMapToFunction<T, PARAM_TYPE> = {
+export type RecursiveMapToFunction<T, PARAM_TYPE> = {
     [P in keyof T]: RecursiveMapToFunctionDist<T[P], PARAM_TYPE>;
 };
 /**
  * Cypher quarry
  */
-export declare type Cypher = string;
+export type Cypher = string;
 export interface NeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> {
     /**
      * Static values that will the same for every node/relationship
@@ -40,7 +40,7 @@ export interface NeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> {
 export interface NonFlatNeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> extends NeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE> {
     property?: RecursiveMapTo<VIS_TYPE, string>;
 }
-export declare type NeovisDataConfig<VIS_TYPE, NEO_TYPE> = RecursiveMapTo<VIS_TYPE, string> & {
+export type NeovisDataConfig<VIS_TYPE, NEO_TYPE> = RecursiveMapTo<VIS_TYPE, string> & {
     [NEOVIS_ADVANCED_CONFIG]?: NeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE>;
 };
 /**
@@ -79,10 +79,6 @@ export interface Neo4jConfig {
     serverPassword?: string;
     /**
      * @link https://neo4j.com/docs/api/javascript-driver/current/function/index.html#configuration
-     */
-    /**
-     * All view nodes as DataSet
-     * @link https://visjs.github.io/vis-data/data/dataset.html
      */
     driverConfig?: Neo4jTypes.Config;
 }
@@ -243,8 +239,8 @@ export interface NeovisConfig extends BaseNeovisConfig {
         [NEOVIS_DEFAULT_CONFIG]?: RelationshipConfig;
     };
 }
-export declare type NonFlatLabelConfig = NonFlatNeoVisAdvanceConfig<VisNetwork.Node, Neo4jTypes.Node<number>>;
-export declare type NonFlatRelationsipConfig = NonFlatNeoVisAdvanceConfig<VisNetwork.Edge, Neo4jTypes.Relationship<number>>;
+export type NonFlatLabelConfig = NonFlatNeoVisAdvanceConfig<VisNetwork.Node, Neo4jTypes.Node<number>>;
+export type NonFlatRelationsipConfig = NonFlatNeoVisAdvanceConfig<VisNetwork.Edge, Neo4jTypes.Relationship<number>>;
 /**
  * non flat version of the configuration (without Symbols)
  * look at the normal config for more information
