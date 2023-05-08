@@ -127,7 +127,7 @@ describe('Neovis', () => {
 		});
 
 		it('should call run with query', () => {
-			neovis.render();
+			neovis.render(undefined, { limit: 30 });
 			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledWith(initialCypher, { limit: 30 });
 		});
 

@@ -424,118 +424,146 @@ export class NeoVis {
 	/**
 	 * Renders the network
 	 */
-	render(query?: Cypher): void {
+	render(query?: Cypher, parameters?: any): void {
 
 		// connect to Neo4j instance
 		// run query
 		let recordCount = 0;
 		const _query = query || this.#query;
 		const session = this.#driver.session(this.#database ? { database: this.#database } : undefined);
-		const dataBuildPromises = [];
-		session
-			.run(_query, { limit: 30 })
-			.subscribe({
-				onNext: (record) => {
-					recordCount++;
+		const dataBuildPromises: Promise<any>[] = [];
+		if(this.#config.dataFunction) {
+			this.#runFunctionDataGetter();
+		} else {
+			session.run(_query, parameters)
+				.subscribe({
+					onNext: (record) => {
+						recordCount++;
+						dataBuildPromises.push(this.#createSingleRecord(record));
+					},
+					onCompleted: async () => {
+						await Promise.all(dataBuildPromises);
+						await session.close();
 
-					this.#consoleLog('CLASS NAME');
-					this.#consoleLog(record?.constructor.name);
-					this.#consoleLog(record);
-
-					const dataPromises = record.map(async (v: object) => {
-						this.#consoleLog('Constructor:');
-						this.#consoleLog(v?.constructor.name);
-						if (isNode(v)) {
-							const node = await this.#buildNodeVisObject(v);
-							try {
-								this.#data.nodes.update(node);
-							} catch (e) {
-								this.#consoleLog(e, 'error');
-							}
-
-						} else if (isRelationship(v)) {
-							const edge = await this.#buildEdgeVisObject(v);
-							this.#data.edges.update(edge);
-
-						} else if (isPath(v)) {
-							this.#consoleLog('PATH');
-							this.#consoleLog(v);
-							const startNode = await this.#buildNodeVisObject(v.start);
-							const endNode = await this.#buildNodeVisObject(v.end);
-
-							this.#data.nodes.update(startNode);
-							this.#data.nodes.update(endNode);
-
-							for (const obj of v.segments) {
-								this.#data.nodes.update(await this.#buildNodeVisObject(obj.start));
-								this.#data.nodes.update(await this.#buildNodeVisObject(obj.end));
-								this.#data.edges.update(await this.#buildEdgeVisObject(obj.relationship));
-							}
-
-						} else if (Array.isArray(v)) {
-							for (const obj of v) {
-								this.#consoleLog('Array element constructor:');
-								this.#consoleLog(obj?.constructor.name);
-								if (isNode(obj)) {
-									const node = await this.#buildNodeVisObject(obj);
-									this.#data.nodes.update(node);
-
-								} else if (isRelationship(obj)) {
-									const edge = await this.#buildEdgeVisObject(obj);
-
-									this.#data.edges.update(edge);
-								}
-							}
-						}
-					});
-					dataBuildPromises.push(Promise.all(dataPromises));
-				},
-				onCompleted: async () => {
-					await Promise.all(dataBuildPromises);
-					await session.close();
-
-					if (!this.#network) {
-						const options = deepmerge(defaults.visJs, this.#config.visConfig ?? {});
-
-						const container = this.#container;
-
-						this.#consoleLog(this.#data.nodes);
-						this.#consoleLog(this.#data.edges);
-
-						this.#network = new vis.Network(container, this.#data, options);
+						this.#completeRun();
+						this.#events.generateEvent(NeoVisEvents.CompletionEvent, { recordCount });
+					},
+					onError: (error) => {
+						this.#consoleLog(error, 'error');
+						this.#events.generateEvent(NeoVisEvents.ErrorEvent, { error });
 					}
-					this.#consoleLog('completed');
-					setTimeout(
-						() => {
-							this.#network.stopSimulation();
-						},
-						10000
-					);
-					this.#events.generateEvent(NeoVisEvents.CompletionEvent, { recordCount });
+				} as Neo4jCore.ResultObserver);
+		}
+	}
 
-					// eslint-disable-next-line @typescript-eslint/no-this-alias
-					const neoVis = this;
-					this.#network.on('click', function (this: VisNetwork.Network, params: { nodes: Node[], edges: Edge[], pointer: { DOM: VisNetwork.Position } }) {
-						if (params.nodes.length > 0) {
-							const nodeId = this.getNodeAt(params.pointer.DOM) as number;
-							neoVis.#events.generateEvent(NeoVisEvents.ClickNodeEvent, {
-								nodeId,
-								node: neoVis.#data.nodes.get(nodeId)
-							});
-						} else if (params.edges.length > 0) {
-							const edgeId = this.getEdgeAt(params.pointer.DOM) as number;
-							neoVis.#events.generateEvent(NeoVisEvents.ClickEdgeEvent, {
-								edgeId,
-								edge: neoVis.#data.edges.get(edgeId)
-							});
-						}
-					});
-				},
-				onError: (error) => {
-					this.#consoleLog(error, 'error');
-					this.#events.generateEvent(NeoVisEvents.ErrorEvent, { error });
+	async #runFunctionDataGetter() {
+		let recordCount = 0;
+		try {
+			const dataBuildPromises: Promise<any>[] = [];
+			for await (const record of this.#config.dataFunction!()) {
+				dataBuildPromises.push(this.#createSingleRecord(record));
+				recordCount++;
+			}
+			await Promise.all(dataBuildPromises);
+		} catch(error) {
+			this.#events.generateEvent(NeoVisEvents.ErrorEvent, { error });
+			return;
+		}
+		this.#completeRun();
+		this.#events.generateEvent(NeoVisEvents.CompletionEvent, { recordCount });
+	}
+
+	async #createSingleRecord(record: Neo4jTypes.Record) {
+
+		this.#consoleLog('CLASS NAME');
+		this.#consoleLog(record?.constructor.name);
+		this.#consoleLog(record);
+
+		const dataPromises = record.map(async (v: object) => {
+			this.#consoleLog('Constructor:');
+			this.#consoleLog(v?.constructor.name);
+			if (isNode(v)) {
+				const node = await this.#buildNodeVisObject(v);
+				try {
+					this.#data.nodes.update(node);
+				} catch (e) {
+					this.#consoleLog(e, 'error');
 				}
-			} as Neo4jCore.ResultObserver);
+
+			} else if (isRelationship(v)) {
+				const edge = await this.#buildEdgeVisObject(v);
+				this.#data.edges.update(edge);
+
+			} else if (isPath(v)) {
+				this.#consoleLog('PATH');
+				this.#consoleLog(v);
+				const startNode = await this.#buildNodeVisObject(v.start);
+				const endNode = await this.#buildNodeVisObject(v.end);
+
+				this.#data.nodes.update(startNode);
+				this.#data.nodes.update(endNode);
+
+				for (const obj of v.segments) {
+					this.#data.nodes.update(await this.#buildNodeVisObject(obj.start));
+					this.#data.nodes.update(await this.#buildNodeVisObject(obj.end));
+					this.#data.edges.update(await this.#buildEdgeVisObject(obj.relationship));
+				}
+
+			} else if (Array.isArray(v)) {
+				for (const obj of v) {
+					this.#consoleLog('Array element constructor:');
+					this.#consoleLog(obj?.constructor.name);
+					if (isNode(obj)) {
+						const node = await this.#buildNodeVisObject(obj);
+						this.#data.nodes.update(node);
+
+					} else if (isRelationship(obj)) {
+						const edge = await this.#buildEdgeVisObject(obj);
+
+						this.#data.edges.update(edge);
+					}
+				}
+			}
+		});
+		return Promise.all(dataPromises);
+	}
+
+	#completeRun() {
+		if (!this.#network) {
+			const options = deepmerge(defaults.visJs, this.#config.visConfig ?? {});
+
+			const container = this.#container;
+
+			this.#consoleLog(this.#data.nodes);
+			this.#consoleLog(this.#data.edges);
+
+			this.#network = new vis.Network(container, this.#data, options);
+		}
+		this.#consoleLog('completed');
+		setTimeout(
+			() => {
+				this.#network.stopSimulation();
+			},
+			10000
+		);
+
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
+		const neoVis = this;
+		this.#network.on('click', function (this: VisNetwork.Network, params: { nodes: Node[], edges: Edge[], pointer: { DOM: VisNetwork.Position } }) {
+			if (params.nodes.length > 0) {
+				const nodeId = this.getNodeAt(params.pointer.DOM) as number;
+				neoVis.#events.generateEvent(NeoVisEvents.ClickNodeEvent, {
+					nodeId,
+					node: neoVis.#data.nodes.get(nodeId)
+				});
+			} else if (params.edges.length > 0) {
+				const edgeId = this.getEdgeAt(params.pointer.DOM) as number;
+				neoVis.#events.generateEvent(NeoVisEvents.ClickEdgeEvent, {
+					edgeId,
+					edge: neoVis.#data.edges.get(edgeId)
+				});
+			}
+		});
 	}
 
 	/**
