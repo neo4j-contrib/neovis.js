@@ -1,0 +1,16 @@
+{
+  "name": "server",
+  "version": "0.0.0",
+  "private": "true",
+  "main": "server.ts",
+  "license": "MIT",
+  "dependencies": {
+    "@fastify/cors": "^8.2.1",
+    "fastify": "^4.17.0",
+    "neo4j-driver": "^5.8.0",
+    "ts-node": "^10.9.1"
+  },
+  "scripts": {
+    "start": "ts-node server.ts"
+  }
+}

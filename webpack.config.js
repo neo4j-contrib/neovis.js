@@ -10,6 +10,7 @@ module.exports = {
         filename: process.env.BUILD_WITH_DEPENDENCIES ? 'neovis.js' : 'neovis-without-dependencies.js',
         library: 'NeoVis',
         libraryTarget: 'umd',
+        sourceMapFilename: '[name].map[hash]',
         path: path.resolve(__dirname, 'dist')
     },
     module: {

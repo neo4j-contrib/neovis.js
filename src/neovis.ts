@@ -1,8 +1,8 @@
 'use strict';
 
-import type * as Neo4jTypes from 'neo4j-driver';
+import * as Neo4jTypes from 'neo4j-driver';
 import Neo4j from 'neo4j-driver';
-import type * as Neo4jCore from 'neo4j-driver-core';
+import * as Neo4jCore from 'neo4j-driver-core';
 import { isInt, isNode, isPath, isRelationship } from 'neo4j-driver-core';
 import * as vis from 'vis-network/standalone';
 import { defaults } from './defaults';
@@ -31,6 +31,28 @@ import {
 
 export * from './events';
 export * from './types';
+
+function toNeo4jInt({low, high}: {high: number, low: number}): Neo4jTypes.Integer {
+	return new Neo4j.types.Integer(low, high);
+}
+
+function dumbToNeo4j(field: any) {
+	if (field.labels) {
+		return new Neo4j.types.Node(toNeo4jInt(field.identity), field.labels, field.properties);
+	} else if (field.type) {
+		return new Neo4j.types.Relationship(toNeo4jInt(field.identity), toNeo4jInt(field.start), toNeo4jInt(field.end), field.type, field.properties);
+	} else if (field.segments) {
+		field.segments = field.segments.map(segment => new Neo4j.types.PathSegment(
+			new Neo4j.types.Node(toNeo4jInt(segment.start.identity), segment.start.labels, segment.start.properties),
+			new Neo4j.types.Relationship(toNeo4jInt(segment.relationship.identity), toNeo4jInt(segment.relationship.start), toNeo4jInt(segment.relationship.end), field.type, segment.relationship.properties),
+			new Neo4j.types.Node(toNeo4jInt(segment.end.identity), segment.end.labels, segment.end.properties)
+		));
+		field.start = new Neo4j.types.Node(toNeo4jInt(field.start.identity), field.start.labels, field.start.properties);
+		field.end = new Neo4j.types.Node(toNeo4jInt(field.end.identity), field.end.labels, field.end.properties);
+
+		return new Neo4j.types.Path(field.start, field.end, field.segments);
+	}
+}
 
 function isNeo4jDriver(neo4jConfig: Neo4jTypes.Driver | Neo4jConfig): neo4jConfig is Neo4jTypes.Driver {
 	return neo4jConfig instanceof Neo4j.driver;
@@ -228,16 +250,19 @@ export class NeoVis {
 			}
 		}
 		this.#config = config;
-		this.#driver = isNeo4jDriver(config.neo4j) ? config.neo4j : Neo4j.driver(
-			config.neo4j?.serverUrl ?? defaults.neo4j.neo4jUri,
-			Neo4j.auth.basic(
-				config.neo4j?.serverUser ?? defaults.neo4j.neo4jUser,
-				config.neo4j?.serverPassword ?? defaults.neo4j.neo4jPassword
-			),
-			deepmerge(defaults.neo4j.driverConfig, config.neo4j?.driverConfig ?? {})
-		);
-		this.#database = config.serverDatabase;
-		this.#query = config.initialCypher ?? defaults.neo4j.initialQuery;
+		if (!config.dataFunction) {
+			this.#driver = isNeo4jDriver(config.neo4j) ? config.neo4j : Neo4j.driver(
+				config.neo4j?.serverUrl ?? defaults.neo4j.neo4jUri,
+				Neo4j.auth.basic(
+					config.neo4j?.serverUser ?? defaults.neo4j.neo4jUser,
+					config.neo4j?.serverPassword ?? defaults.neo4j.neo4jPassword
+				),
+				deepmerge(defaults.neo4j.driverConfig, config.neo4j?.driverConfig ?? {})
+			);
+
+			this.#database = config.serverDatabase;
+			this.#query = config.initialCypher ?? defaults.neo4j.initialQuery;
+		}
 		this.#container = document.getElementById(config.containerId);
 		this.#config.groupAsLabel = config.groupAsLabel ?? defaults.neo4j.groupAsLabel;
 	}
@@ -314,10 +339,10 @@ export class NeoVis {
 					if (!object[prop]) {
 						object[prop as string] = {};
 					}
-					yield *this.#buildCypherObject(value as RecursiveMapTo<VIS_TYPE[keyof VIS_TYPE], Cypher>, object[prop], id);
+					yield* this.#buildCypherObject(value as RecursiveMapTo<VIS_TYPE[keyof VIS_TYPE], Cypher>, object[prop], id);
 				} else {
 					const promise = this.#runCypher(value as string, id) as Promise<VIS_TYPE[keyof VIS_TYPE]>;
-					yield Promise.resolve(promise).then(value => { object[prop] = value; } ) as Promise<void>;
+					yield Promise.resolve(promise).then(value => { object[prop] = value; }) as Promise<void>;
 				}
 			}
 		}
@@ -331,10 +356,10 @@ export class NeoVis {
 					if (!object[prop]) {
 						object[prop as string] = {};
 					}
-					yield *this.#buildFunctionObject(func as RecursiveMapToFunction<VIS_TYPE[keyof VIS_TYPE], NEO_TYPE>, object[prop], neo4jObj);
+					yield* this.#buildFunctionObject(func as RecursiveMapToFunction<VIS_TYPE[keyof VIS_TYPE], NEO_TYPE>, object[prop], neo4jObj);
 				} else {
 					const promise = this.#runFunction(func as (neo: NEO_TYPE) => VIS_TYPE[keyof VIS_TYPE], neo4jObj);
-					yield Promise.resolve(promise).then(value => { object[prop] = value; } ) as Promise<void>;
+					yield Promise.resolve(promise).then(value => { object[prop] = value; }) as Promise<void>;
 				}
 			}
 		}
@@ -391,7 +416,7 @@ export class NeoVis {
 
 		node.id = isInt(neo4jNode.identity) ? (neo4jNode.identity as Neo4jTypes.Integer).toInt() : neo4jNode.identity as number;
 		node.raw = neo4jNode;
-		if(this.#config.groupAsLabel) {
+		if (this.#config.groupAsLabel) {
 			node.group = label;
 		}
 
@@ -425,35 +450,10 @@ export class NeoVis {
 	 * Renders the network
 	 */
 	render(query?: Cypher, parameters?: any): void {
-
-		// connect to Neo4j instance
-		// run query
-		
-		if(this.#config.dataFunction) {
+		if (this.#config.dataFunction) {
 			this.#runFunctionDataGetter();
 		} else {
-			let recordCount = 0;
-			const _query = query || this.#query;
-			const session = this.#driver.session(this.#database ? { database: this.#database } : undefined);
-			const dataBuildPromises: Promise<unknown>[] = [];
-			session.run(_query, parameters)
-				.subscribe({
-					onNext: (record) => {
-						recordCount++;
-						dataBuildPromises.push(this.#createSingleRecord(record));
-					},
-					onCompleted: async () => {
-						await Promise.all(dataBuildPromises);
-						await session.close();
-
-						this.#completeRun();
-						this.#events.generateEvent(NeoVisEvents.CompletionEvent, { recordCount });
-					},
-					onError: (error) => {
-						this.#consoleLog(error, 'error');
-						this.#events.generateEvent(NeoVisEvents.ErrorEvent, { error });
-					}
-				} as Neo4jCore.ResultObserver);
+			this.#runNeo4jDataGetter(query, parameters);
 		}
 	}
 
@@ -466,7 +466,7 @@ export class NeoVis {
 				recordCount++;
 			}
 			await Promise.all(dataBuildPromises);
-		} catch(error) {
+		} catch (error) {
 			this.#events.generateEvent(NeoVisEvents.ErrorEvent, { error });
 			return;
 		}
@@ -474,8 +474,39 @@ export class NeoVis {
 		this.#events.generateEvent(NeoVisEvents.CompletionEvent, { recordCount });
 	}
 
-	async #createSingleRecord(record: Neo4jTypes.Record) {
+	#runNeo4jDataGetter(query?: Cypher, parameters?: any) {
+		// connect to Neo4j instance
+		// run query
+		let recordCount = 0;
+		const _query = query || this.#query;
+		const session = this.#driver.session(this.#database ? { database: this.#database } : undefined);
+		const dataBuildPromises: Promise<unknown>[] = [];
+		session.run(_query, parameters)
+			.subscribe({
+				onNext: (record) => {
+					recordCount++;
+					dataBuildPromises.push(this.#createSingleRecord(record));
+				},
+				onCompleted: async () => {
+					await Promise.all(dataBuildPromises);
+					await session.close();
 
+					this.#completeRun();
+					this.#events.generateEvent(NeoVisEvents.CompletionEvent, { recordCount });
+				},
+				onError: (error) => {
+					this.#consoleLog(error, 'error');
+					this.#events.generateEvent(NeoVisEvents.ErrorEvent, { error });
+				}
+			} as Neo4jCore.ResultObserver);
+	}
+
+	async #createSingleRecord(record: Neo4jTypes.Record | Partial<Neo4jTypes.Record>) {
+		if (!(record instanceof Neo4j.types.Record)) {
+			const fields: any[] = (record as any)._fields;
+			(record as any)._fields = fields.map(dumbToNeo4j);
+			record = new Neo4j.types.Record(record.keys, (record as any)._fields, (record as any)._fieldLookup);
+		}
 		this.#consoleLog('CLASS NAME');
 		this.#consoleLog(record?.constructor.name);
 		this.#consoleLog(record);
