@@ -542,4 +542,36 @@ describe('Neovis', () => {
 			expect(neovis.nodes.get(1)).toBeDefined();
 		});
 	});
+	const retData = [new Neo4j.types.Record(
+		["a", "b", "c", "d"]
+	, [
+		 
+	], {"a": 0, "b": 1, "c": 2, "d": 3})].map(rec => rec.toObject());
+	describe.each([['Sync Iterable', {
+		containerId,
+		dataFunction() {
+			return retData
+		},
+	} as Partial<NeovisConfig>], ['Sync Generator', {
+		containerId,
+		*dataFunction() {
+			for(const record of retData) {
+				yield record
+			}
+		},
+	} as Partial<NonFlatNeovisConfig>], ['Async Iterable', {
+		containerId,
+		async dataFunction() {
+			return retData;
+		},
+	} as Partial<NonFlatNeovisConfig>], ['ASync Generator', {
+		containerId,
+		async *dataFunction() {
+			for(const record of retData) {
+				yield record;
+			}
+		},
+	} as Partial<NonFlatNeovisConfig>]])('neovis dataFunction %s test', (configName: string, config) => {
+		// TODO TESTS
+	});
 });
