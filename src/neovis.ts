@@ -32,25 +32,72 @@ import {
 export * from './events';
 export * from './types';
 
-function toNeo4jInt({low, high}: {high: number, low: number}): Neo4jTypes.Integer {
+function toNeo4jInt({ low, high }: { high: number, low: number }): Neo4jTypes.Integer {
 	return new Neo4j.types.Integer(low, high);
 }
 
-function dumbToNeo4j(field: any) {
-	if (field.labels) {
-		return new Neo4j.types.Node(toNeo4jInt(field.identity), field.labels, field.properties);
-	} else if (field.type) {
-		return new Neo4j.types.Relationship(toNeo4jInt(field.identity), toNeo4jInt(field.start), toNeo4jInt(field.end), field.type, field.properties);
-	} else if (field.segments) {
-		field.segments = field.segments.map(segment => new Neo4j.types.PathSegment(
-			new Neo4j.types.Node(toNeo4jInt(segment.start.identity), segment.start.labels, segment.start.properties),
-			new Neo4j.types.Relationship(toNeo4jInt(segment.relationship.identity), toNeo4jInt(segment.relationship.start), toNeo4jInt(segment.relationship.end), field.type, segment.relationship.properties),
-			new Neo4j.types.Node(toNeo4jInt(segment.end.identity), segment.end.labels, segment.end.properties)
-		));
-		field.start = new Neo4j.types.Node(toNeo4jInt(field.start.identity), field.start.labels, field.start.properties);
-		field.end = new Neo4j.types.Node(toNeo4jInt(field.end.identity), field.end.labels, field.end.properties);
+interface FakeIdentity {
+	high: number,
+	low: number
+}
+interface FakeNode {
+	labels: string[];
+	identity: FakeIdentity;
+	properties: Record<string, FakeIdentity | any>;
+}
 
-		return new Neo4j.types.Path(field.start, field.end, field.segments);
+interface FakeRelationship {
+	identity: FakeIdentity;
+	type: string;
+	start: FakeIdentity;
+	end: FakeIdentity;
+	properties: Record<string, FakeIdentity | any>;
+}
+
+interface FakePathSegments {
+	start: FakeNode;
+	end: FakeNode;
+	relationship: FakeRelationship
+}
+
+interface FakePath {
+	start: FakeNode;
+	end: FakeNode;
+	segments: FakePathSegments[];
+}
+
+function isFakeInteger(property: FakeIdentity | any): property is FakeIdentity {
+	return typeof property === 'object' && 'high' in property && 'low' in property && Object.keys(property).length == 2;
+}
+
+function properyMapWithIdentity(properties: Record<string, FakeIdentity | any>): Record<string, Neo4jTypes.Integer | any> {
+	return Object.entries(properties).reduce((ret, [key, value]) => {
+		if(isFakeInteger(value)) {
+			ret[key] = toNeo4jInt(value);
+		} else if(Array.isArray(value)) {
+			ret[key] = value.map(va => isFakeInteger(va) ? toNeo4jInt(va) : va);
+		} else {
+			ret[key] = value;
+		}
+		return ret;
+	}, {});
+}
+
+function dumbToNeo4j(field: FakeNode | FakeRelationship | FakePath): Neo4jTypes.Node | Neo4jTypes.Relationship | Neo4jTypes.Path {
+	if ('labels' in field) {
+		return new Neo4j.types.Node(toNeo4jInt(field.identity), field.labels, properyMapWithIdentity(field.properties));
+	} else if ('type' in field) {
+		return new Neo4j.types.Relationship(toNeo4jInt(field.identity), toNeo4jInt(field.start), toNeo4jInt(field.end), field.type, properyMapWithIdentity(field.properties));
+	} else if ('segments' in field) {	
+		return new Neo4j.types.Path(
+			new Neo4j.types.Node(toNeo4jInt(field.start.identity), field.start.labels, properyMapWithIdentity(field.start.properties)),
+			new Neo4j.types.Node(toNeo4jInt(field.end.identity), field.end.labels, properyMapWithIdentity(field.end.properties)),
+			field.segments.map(segment => new Neo4j.types.PathSegment(
+				new Neo4j.types.Node(toNeo4jInt(segment.start.identity), segment.start.labels, properyMapWithIdentity(segment.start.properties)),
+				new Neo4j.types.Relationship(toNeo4jInt(segment.relationship.identity), toNeo4jInt(segment.relationship.start), toNeo4jInt(segment.relationship.end), segment.relationship.type, properyMapWithIdentity(segment.relationship.properties)),
+				new Neo4j.types.Node(toNeo4jInt(segment.end.identity), segment.end.labels, properyMapWithIdentity(segment.end.properties))
+			))
+		);
 	}
 }
 
@@ -451,17 +498,17 @@ export class NeoVis {
 	 */
 	render(query?: Cypher, parameters?: any): void {
 		if (this.#config.dataFunction) {
-			this.#runFunctionDataGetter();
+			this.#runFunctionDataGetter(parameters);
 		} else {
 			this.#runNeo4jDataGetter(query, parameters);
 		}
 	}
 
-	async #runFunctionDataGetter() {
+	async #runFunctionDataGetter(parameters?: any) {
 		let recordCount = 0;
 		try {
 			const dataBuildPromises: Promise<unknown>[] = [];
-			for await (const record of this.#config.dataFunction!()) {
+			for await (const record of await this.#config.dataFunction(parameters)) {
 				dataBuildPromises.push(this.#createSingleRecord(record));
 				recordCount++;
 			}
@@ -503,9 +550,8 @@ export class NeoVis {
 
 	async #createSingleRecord(record: Neo4jTypes.Record | Partial<Neo4jTypes.Record>) {
 		if (!(record instanceof Neo4j.types.Record)) {
-			const fields: any[] = (record as any)._fields;
-			(record as any)._fields = fields.map(dumbToNeo4j);
-			record = new Neo4j.types.Record(record.keys, (record as any)._fields, (record as any)._fieldLookup);
+			const fields: (FakeNode | FakePath | FakeRelationship)[] = (record as any)._fields;
+			record = new Neo4j.types.Record(record.keys, fields.map(dumbToNeo4j), (record as any)._fieldLookup);
 		}
 		this.#consoleLog('CLASS NAME');
 		this.#consoleLog(record?.constructor.name);
