@@ -105,7 +105,7 @@ export interface BaseNeovisConfig {
      * function to get the data instead of neo4j driver
      * @returns list of neo4j data
      */
-    dataFunction?: () => AsyncIterable<Neo4jTypes.Record>;
+    dataFunction?: (any?: any) => AsyncIterable<Neo4jTypes.Record> | Promise<Iterable<Neo4jTypes.Record>>;
     /**
      * The Cypher query that will get the data
      */

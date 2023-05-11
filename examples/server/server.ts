@@ -18,7 +18,22 @@ server.register(cors)
 server.get('/data', async (request, reply) => {
   const session = driver.session();
   const ret = await session.run("MATCH a=(n)-[r:INTERACTS]->(m) RETURN n,r,m,a");
+  session.close();
   return ret.records;
+})
+
+server.get<{Params:{id: number }}>('/data/:id', async (req, res) => {
+  const session = driver.session();
+  const ret = await session.run("MATCH a=(n)-[r:INTERACTS]->(m) WHERE ID(n) = $id RETURN a,n,r,m", { id: Number(req.params.id) });
+  session.close();
+  return ret.records;
+});
+
+server.get('/allIds', async (req, res) => {
+  const session = driver.session();
+  const ret = await session.run("MATCH (n) RETURN id(n)");
+  session.close();
+  return ret.records.map(rec => rec.get(0).toInt());
 })
 
 server.listen({ port: 8080 }, (err, address) => {

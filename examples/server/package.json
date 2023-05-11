@@ -11,6 +11,9 @@
     "ts-node": "^10.9.1"
   },
   "scripts": {
-    "start": "ts-node server.ts"
+    "start": "nodemon server.ts"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }
