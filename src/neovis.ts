@@ -43,7 +43,7 @@ interface FakeIdentity {
 interface FakeNode {
 	labels: string[];
 	identity: FakeIdentity;
-	properties: Record<string, FakeIdentity | any>;
+	properties: Record<string, FakeIdentity | unknown>;
 }
 
 interface FakeRelationship {
@@ -51,7 +51,7 @@ interface FakeRelationship {
 	type: string;
 	start: FakeIdentity;
 	end: FakeIdentity;
-	properties: Record<string, FakeIdentity | any>;
+	properties: Record<string, FakeIdentity | unknown>;
 }
 
 interface FakePathSegments {
@@ -66,11 +66,11 @@ interface FakePath {
 	segments: FakePathSegments[];
 }
 
-function isFakeInteger(property: FakeIdentity | any): property is FakeIdentity {
+function isFakeInteger(property: FakeIdentity | unknown): property is FakeIdentity {
 	return typeof property === 'object' && 'high' in property && 'low' in property && Object.keys(property).length == 2;
 }
 
-function properyMapWithIdentity(properties: Record<string, FakeIdentity | any>): Record<string, Neo4jTypes.Integer | any> {
+function properyMapWithIdentity(properties: Record<string, FakeIdentity | unknown>): Record<string, Neo4jTypes.Integer | unknown> {
 	return Object.entries(properties).reduce((ret, [key, value]) => {
 		if(isFakeInteger(value)) {
 			ret[key] = toNeo4jInt(value);
@@ -496,7 +496,7 @@ export class NeoVis {
 	/**
 	 * Renders the network
 	 */
-	render(query?: Cypher, parameters?: any): void {
+	render(query?: Cypher, parameters?: unknown): void {
 		if (this.#config.dataFunction) {
 			this.#runFunctionDataGetter(parameters);
 		} else {
@@ -504,7 +504,7 @@ export class NeoVis {
 		}
 	}
 
-	async #runFunctionDataGetter(parameters?: any) {
+	async #runFunctionDataGetter(parameters?: unknown) {
 		let recordCount = 0;
 		try {
 			const dataBuildPromises: Promise<unknown>[] = [];
@@ -521,7 +521,7 @@ export class NeoVis {
 		this.#events.generateEvent(NeoVisEvents.CompletionEvent, { recordCount });
 	}
 
-	#runNeo4jDataGetter(query?: Cypher, parameters?: any) {
+	#runNeo4jDataGetter(query?: Cypher, parameters?: unknown) {
 		// connect to Neo4j instance
 		// run query
 		let recordCount = 0;
@@ -550,7 +550,9 @@ export class NeoVis {
 
 	async #createSingleRecord(record: Neo4jTypes.Record | Partial<Neo4jTypes.Record>) {
 		if (!(record instanceof Neo4j.types.Record)) {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const fields: (FakeNode | FakePath | FakeRelationship)[] = (record as any)._fields;
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			record = new Neo4j.types.Record(record.keys, fields.map(dumbToNeo4j), (record as any)._fieldLookup);
 		}
 		this.#consoleLog('CLASS NAME');
