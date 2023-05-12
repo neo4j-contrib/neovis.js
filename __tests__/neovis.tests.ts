@@ -27,7 +27,7 @@ describe('Neovis', () => {
 	const label1 = 'label1';
 	const label2 = 'label2';
 	const relationshipType = 'TEST';
-	let neovis: NeoVis; 
+	let neovis: NeoVis;
 
 	beforeEach(() => Neo4jMock.clearAllMocks());
 	beforeEach(() => {
@@ -543,35 +543,70 @@ describe('Neovis', () => {
 		});
 	});
 	const retData = [new Neo4j.types.Record(
-		["a", "b", "c", "d"]
-	, [
-		 
-	], {"a": 0, "b": 1, "c": 2, "d": 3})].map(rec => rec.toObject());
-	describe.each([['Sync Iterable', {
+		['a', 'b', 'c', 'd'], [
+			new Neo4j.types.Node(new Neo4j.types.Integer(0, 0), ['Test'], { test: 1, test2: new Neo4j.types.Integer(1, 0) }),
+			new Neo4j.types.Node(new Neo4j.types.Integer(1, 0), ['Test'], {}),
+			new Neo4j.types.Relationship(new Neo4j.types.Integer(0, 0), new Neo4j.types.Integer(0, 0), new Neo4j.types.Integer(1, 0), 'TEST', {}),
+			new Neo4j.types.Path(
+				new Neo4j.types.Node(new Neo4j.types.Integer(2, 0), ['Test'], {}),
+				new Neo4j.types.Node(new Neo4j.types.Integer(3, 0), ['Test'], {}), [
+					new Neo4j.types.PathSegment(
+						new Neo4j.types.Node(new Neo4j.types.Integer(2, 0), ['Test'], {}),
+						new Neo4j.types.Relationship(new Neo4j.types.Integer(1, 0), new Neo4j.types.Integer(3, 0), new Neo4j.types.Integer(1, 0), 'TEST', {}),
+						new Neo4j.types.Node(new Neo4j.types.Integer(3, 0), ['Test'], {})
+					)]
+			)
+		], { 'a': 0, 'b': 1, 'c': 2, 'd': 3 })
+	].map(rec => JSON.parse(JSON.stringify(rec)));
+	const dataFunctionSharedConfig: Partial<NeovisConfig> = {
 		containerId,
+		labels: {
+			Test: {
+				value: 'test',
+				label: 'test2'
+			}
+		}
+	};
+	describe.each([['Sync Iterable', {
+		...dataFunctionSharedConfig,
 		dataFunction() {
-			return retData
+			return retData;
 		},
 	} as Partial<NeovisConfig>], ['Sync Generator', {
-		containerId,
+		...dataFunctionSharedConfig,
 		*dataFunction() {
-			for(const record of retData) {
-				yield record
+			for (const record of retData) {
+				yield record;
 			}
 		},
 	} as Partial<NonFlatNeovisConfig>], ['Async Iterable', {
-		containerId,
+		...dataFunctionSharedConfig,
 		async dataFunction() {
 			return retData;
 		},
 	} as Partial<NonFlatNeovisConfig>], ['ASync Generator', {
-		containerId,
+		...dataFunctionSharedConfig,
 		async *dataFunction() {
-			for(const record of retData) {
+			for (const record of retData) {
 				yield record;
 			}
 		},
 	} as Partial<NonFlatNeovisConfig>]])('neovis dataFunction %s test', (configName: string, config) => {
+		beforeEach(() => {
+			neovis = new Neovis(config as NonFlatNeovisConfig | NeovisConfig);
+		});
 		// TODO TESTS
+		it('should create all nodes and relationship same if it was normal', async () => {
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(neovis.nodes.length).toBe(4);
+			expect(neovis.edges.length).toBe(2);
+			expect(neovis.nodes.get(0)?.value).toBe(1);
+		});
+		it('should desriallize int correctly in properties', async () => {
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(neovis.nodes.get(0)?.label).toBe(1);
+		});
 	});
 });
