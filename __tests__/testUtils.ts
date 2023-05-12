@@ -18,16 +18,16 @@ export function clearIdCounter(): void {
 	counter = 1;
 }
 
-export function makeNode(labels: string[], properties: unknown = {}): Neo4jCore.Node<number> {
+export function makeNode(labels: string[], properties: Record<string, unknown> = {}): Neo4jCore.Node<number> {
 	return new Neo4jCore.Node(counter++, labels, properties);
 }
 
-export function makeRelationship(type: string, startNode: Neo4jCore.Node<number>, endNode: Neo4jCore.Node<number>, properties: unknown = {}): Neo4jCore.Relationship<number> {
+export function makeRelationship(type: string, startNode: Neo4jCore.Node<number>, endNode: Neo4jCore.Node<number>, properties: Record<string, unknown> = {}): Neo4jCore.Relationship<number> {
 	return new Neo4jCore.Relationship(counter++, startNode.identity, endNode.identity, type, properties);
 }
 
 export function makePathFromNodes(nodes: Neo4jType.Node<number>[], relationshipType: string): Neo4jCore.Path<number> {
-	const pathSegments = [];
+	const pathSegments: Neo4jCore.PathSegment<number>[] = [];
 	for (let i = 0; i < nodes.length - 1; i++) {
 		pathSegments.push(new Neo4jCore.PathSegment(
 			nodes[i],
@@ -64,7 +64,7 @@ export function mockNormalRunSubscribe(records: Neo4jType.Record<{ [key: string]
 			records.forEach(onNext);
 			onCompleted();
 		};
-		return observablePromise as ObservablePromise<{ records: Neo4jType.Record<unknown>[] }>;
+		return observablePromise as ObservablePromise<{ records: Neo4jType.Record<Record<string, unknown>>[] }>;
 	});
 }
 
@@ -82,11 +82,14 @@ export function mockFullRunSubscribe(cypherIdsAndAnswers: Record<string, { defau
 			records.forEach(onNext);
 			onCompleted();
 		};
-		return observablePromise as ObservablePromise<{ records: Neo4jType.Record<unknown>[] }>;
+		return observablePromise as ObservablePromise<{ records: Neo4jType.Record<Record<string, unknown>>[] }>;
 	});
 }
 
 
 export function neovisRenderDonePromise(neovis: NeoVis): Promise<Parameters<EventFunctionTypes[NeoVisEvents.CompletionEvent]>[0]> {
-	return new Promise(res => neovis.registerOnEvent(NeoVisEvents.CompletionEvent, res));
+	return new Promise((res, rej) => {
+		neovis.registerOnEvent(NeoVisEvents.CompletionEvent, res);
+		neovis.registerOnEvent(NeoVisEvents.ErrorEvent, rej);
+	});
 }
