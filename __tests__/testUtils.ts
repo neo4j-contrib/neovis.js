@@ -69,14 +69,14 @@ export function mockNormalRunSubscribe(records: Neo4jType.Record<{ [key: string]
 }
 
 export function mockFullRunSubscribe(cypherIdsAndAnswers: Record<string, { default?: Neo4jType.Record<{ [key: string]: unknown }>[], [id: number]: Neo4jType.Record<{ [key: string]: unknown }>[] } >): void {
-	Neo4jMock.mockSessionRun.mockImplementation((cypher: string, parameters: { id: number}) => {
+	Neo4jMock.mockSessionRun.mockImplementation((cypher: string, parameters: Record<string, unknown>) => {
 		if (!cypherIdsAndAnswers[cypher]) {
 			throw new Error(`the cypher '${cypher}' was not expected`);
 		}
-		if (!cypherIdsAndAnswers[cypher].default && !cypherIdsAndAnswers[cypher][parameters.id]) {
+		if (!cypherIdsAndAnswers[cypher].default && !cypherIdsAndAnswers[cypher][parameters.id as number]) {
 			throw new Error(`the id '${parameters.id}' was not expected for cypher ${cypher}`);
 		}
-		const records = cypherIdsAndAnswers[cypher].default || cypherIdsAndAnswers[cypher][parameters.id];
+		const records = cypherIdsAndAnswers[cypher].default || cypherIdsAndAnswers[cypher][parameters.id as number];
 		const observablePromise: Partial<ObservablePromise<{ records: Neo4jType.Record<{ [key: string]: unknown }>[] }>> = Promise.resolve({ records });
 		observablePromise.subscribe = ({ onNext, onCompleted }) => {
 			records.forEach(onNext);

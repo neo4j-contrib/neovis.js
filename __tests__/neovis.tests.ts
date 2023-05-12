@@ -50,7 +50,7 @@ describe('Neovis', () => {
 				}
 			};
 			const neovis = new Neovis(config as NeovisConfig);
-			expect(neovis._config.labels.a).toMatchObject({ label: 'name', chosen: 'test' });
+			expect(neovis._config.labels!.a).toMatchObject({ label: 'name', chosen: 'test' });
 		});
 		it('should not change the config sent', () => {
 			config = {
@@ -87,7 +87,7 @@ describe('Neovis', () => {
 				}
 			};
 			const neovis = new Neovis(config as NeovisConfig);
-			expect(neovis._config.relationships.a).toMatchObject({
+			expect(neovis._config.relationships!.a).toMatchObject({
 				label: 'name', color: 'test', chosen: 'overridden'
 			});
 		});
@@ -101,7 +101,7 @@ describe('Neovis', () => {
 				}
 			};
 			const neovis = new Neovis(config as NeovisConfig);
-			expect(neovis._config.labels.a).toMatchObject({ label: 'name', chosen: 'test' });
+			expect(neovis._config.labels!.a).toMatchObject({ label: 'name', chosen: 'test' });
 		});
 		it('should override default config if specific relationship have one', () => {
 			config.relationships = {
@@ -115,7 +115,7 @@ describe('Neovis', () => {
 				}
 			};
 			const neovis = new Neovis(config as NeovisConfig);
-			expect(neovis._config.relationships.a).toMatchObject({
+			expect(neovis._config.relationships!.a).toMatchObject({
 				label: 'name', value: 'test', chosen: 'overridden'
 			});
 		});
@@ -206,9 +206,9 @@ describe('Neovis', () => {
 			]);
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
-			expect(neovis.nodes.get(1).raw).toBeDefined();
-			expect(neovis.nodes.get(2).raw).toBeDefined();
-			expect(neovis.edges.get(3).raw).toBeDefined();
+			expect(neovis.nodes.get(1)!.raw).toBeDefined();
+			expect(neovis.nodes.get(2)!.raw).toBeDefined();
+			expect(neovis.edges.get(3)!.raw).toBeDefined();
 		});
 	});
 
@@ -371,9 +371,9 @@ describe('Neovis', () => {
 
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
-			expect(neovis.nodes.get(1).font).toBeDefined();
-			expect((neovis.nodes.get(1).font as VisNetwork.Font).size).toBe(fontSize);
-			expect((neovis.nodes.get(1).font as VisNetwork.Font).color).toBe(fontColor);
+			expect(neovis.nodes.get(1)!.font).toBeDefined();
+			expect((neovis.nodes.get(1)!.font as VisNetwork.Font).size).toBe(fontSize);
+			expect((neovis.nodes.get(1)!.font as VisNetwork.Font).color).toBe(fontColor);
 		});
 
 		it('font field for type not specified in config should not reflect in node data', async () => {
@@ -420,8 +420,8 @@ describe('Neovis', () => {
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(Neo4jMock.mockSessionRun).toHaveBeenCalledTimes(1);
 			expect(neovis.nodes.get(1)).toHaveProperty('font');
-			expect(neovis.nodes.get(1).font).toHaveProperty('size', intPropertyValue);
-			expect(neovis.nodes.get(1).font).toHaveProperty('color', intPropertyValue);
+			expect(neovis.nodes.get(1)!.font).toHaveProperty('size', intPropertyValue);
+			expect(neovis.nodes.get(1)!.font).toHaveProperty('color', intPropertyValue);
 		});
 
 		it('should merge static type to vis.js config properly', async () => {
