@@ -105,7 +105,7 @@ export interface BaseNeovisConfig {
      * function to get the data instead of neo4j driver
      * @returns list of neo4j data
      */
-    dataFunction?: (any?: any) => AsyncIterable<Neo4jTypes.Record> | Promise<Iterable<Neo4jTypes.Record>>;
+    dataFunction?: (any?: unknown) => AsyncIterable<Neo4jTypes.Record> | Promise<Iterable<Neo4jTypes.Record>> | Iterable<Neo4jTypes.Record>;
     /**
      * The Cypher query that will get the data
      */
@@ -321,7 +321,6 @@ export interface Node extends VisNetwork.Node {
     /**
      * @link https://neo4j.com/docs/api/javascript-driver/current/class/src/graph-types.js~Node.html
      */
-    id: number;
     raw: Neo4jTypes.Node<NumberOrInteger>;
 }
 /**
@@ -331,6 +330,6 @@ export interface Edge extends VisNetwork.Edge {
     /**
      * https://neo4j.com/docs/api/javascript-driver/current/class/src/graph-types.js~Relationship.html
      */
-    id: number;
+    id: number | string;
     raw: Neo4jTypes.Relationship<NumberOrInteger>;
 }

@@ -162,6 +162,20 @@ describe('Neovis', () => {
 			expect(neovis.edges.length).toBe(1);
 		});
 
+		it('should work with big int', async () => {
+			testUtils.mockNormalRunSubscribe([
+				testUtils.makeRecord([testUtils.makePathFromNodes([
+					testUtils.makeNode([label1], {}, new Neo4j.types.Integer(0, 1)),
+					testUtils.makeNode([label1], {}, new Neo4j.types.Integer(1, 1))
+				], relationshipType)]),
+			]);
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(neovis.nodes.length).toBe(2);
+			expect(neovis.edges.length).toBe(1);
+			expect(neovis.nodes.getIds()).toEqual(['4294967296', '4294967297']);
+		});
+
 		it('should save record with multiple parameters', async () => {
 			const firstNode = testUtils.makeNode([label1]);
 			const secondNode = testUtils.makeNode([label1]);
@@ -238,7 +252,7 @@ describe('Neovis', () => {
 					default: [testUtils.makeRecord([node])]
 				},
 				[sizeCypher]: {
-					[node.identity]: [testUtils.makeRecord([Neo4j.int(1)])]
+					[typeof node.identity === 'object' ? node.identity.toInt(): node.identity]: [testUtils.makeRecord([Neo4j.int(1)])]
 				}
 			});
 
@@ -500,7 +514,7 @@ describe('Neovis', () => {
 					default: [testUtils.makeRecord([node1])]
 				},
 				[sizeCypher]: {
-					[node1.identity]: [testUtils.makeRecord([intPropertyValue])]
+					[typeof node1.identity === 'object' ? node1.identity.toInt(): node1.identity]: [testUtils.makeRecord([intPropertyValue])]
 				}
 			});
 			neovis.render();
@@ -545,7 +559,17 @@ describe('Neovis', () => {
 	const retData = [new Neo4j.types.Record(
 		['a', 'b', 'c', 'd'], [
 			new Neo4j.types.Node(new Neo4j.types.Integer(0, 0), ['Test'], { test: 1, test2: new Neo4j.types.Integer(1, 0) }),
-			new Neo4j.types.Node(new Neo4j.types.Integer(1, 0), ['Test'], {}),
+			new Neo4j.types.Node(new Neo4j.types.Integer(1, 0), ['Test'], { 
+				test1: new Neo4j.types.Date(new Neo4j.types.Integer(1, 0), new Neo4j.types.Integer(1, 0), new Neo4j.types.Integer(1, 0)),
+				test2: new Neo4j.types.DateTime(1, 2, 3, 4, 5, 6, 7, 8),
+				test3: new Neo4j.types.DateTime(1, 2, 3, 4, 5, 6, 7, 8, 'US/Pacific'),
+				test4: new Neo4j.types.Duration(1, 2, 3, 5),
+				test5: new Neo4j.types.LocalDateTime(1, 2, 3, 4, 5, 6, 7),
+				test6: new Neo4j.types.LocalTime(1, 2, 3, 4),
+				test7: new Neo4j.types.Point(1, 2, 3, 4),
+				test8: new Neo4j.types.Point(1, 2, 3),
+				test9: new Neo4j.types.Time(1, 2, 3, 4, 5)
+			}),
 			new Neo4j.types.Relationship(new Neo4j.types.Integer(0, 0), new Neo4j.types.Integer(0, 0), new Neo4j.types.Integer(1, 0), 'TEST', {}),
 			new Neo4j.types.Path(
 				new Neo4j.types.Node(new Neo4j.types.Integer(2, 0), ['Test'], {}),
@@ -607,6 +631,22 @@ describe('Neovis', () => {
 			neovis.render();
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(neovis.nodes.get(0)?.label).toBe(1);
+		});
+		it('should desriallize all neo4j types', async () => {
+			neovis.render();
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(neovis.nodes.get(1)?.raw.properties.test1).toBeInstanceOf(Neo4j.types.Date);
+			expect((neovis.nodes.get(1)?.raw.properties.test1 as any).year).toBeInstanceOf(Neo4j.types.Integer);
+			expect((neovis.nodes.get(1)?.raw.properties.test1 as any).month).toBeInstanceOf(Neo4j.types.Integer);
+			expect((neovis.nodes.get(1)?.raw.properties.test1 as any).day).toBeInstanceOf(Neo4j.types.Integer);
+			expect(neovis.nodes.get(1)?.raw.properties.test2).toBeInstanceOf(Neo4j.types.DateTime);
+			expect(neovis.nodes.get(1)?.raw.properties.test3).toBeInstanceOf(Neo4j.types.DateTime);
+			expect(neovis.nodes.get(1)?.raw.properties.test4).toBeInstanceOf(Neo4j.types.Duration);
+			expect(neovis.nodes.get(1)?.raw.properties.test5).toBeInstanceOf(Neo4j.types.LocalDateTime);
+			expect(neovis.nodes.get(1)?.raw.properties.test6).toBeInstanceOf(Neo4j.types.LocalTime);
+			expect(neovis.nodes.get(1)?.raw.properties.test7).toBeInstanceOf(Neo4j.types.Point);
+			expect(neovis.nodes.get(1)?.raw.properties.test8).toBeInstanceOf(Neo4j.types.Point);
+			expect(neovis.nodes.get(1)?.raw.properties.test9).toBeInstanceOf(Neo4j.types.Time);
 		});
 	});
 });
