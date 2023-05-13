@@ -36,6 +36,10 @@ function toNeo4jInt({ low, high }: { high: number, low: number }): Neo4jTypes.In
 	return new Neo4j.types.Integer(low, high);
 }
 
+function integerToNumber(integer: Neo4jTypes.Integer): number | string {
+	return integer.getHighBits() === 0 ? integer.toInt() : integer.toString();
+}
+
 interface FakeIdentity {
 	high: number,
 	low: number
@@ -66,19 +70,77 @@ interface FakePath {
 	segments: FakePathSegments[];
 }
 
+const FakeTypeToType: Record<number, {keys: string[]; type: new(..._) => unknown;}[]> = {
+	2: [{
+		keys: ['low', 'high'],
+		type: Neo4j.types.Integer
+	}],
+	3: [{
+		keys: ['year', 'month', 'day'],
+		type: Neo4j.types.Date
+	}, {
+		keys: ['srid', 'x', 'y'],
+		type: Neo4j.types.Point
+	}],
+	4: [{
+		keys: ['months', 'days', 'seconds', 'nanoseconds'],
+		type: Neo4j.types.Duration
+	}, {
+		keys: ['hour', 'minute', 'second', 'nanosecond'],
+		type: Neo4j.types.LocalTime
+	}, {
+		keys: ['srid', 'x', 'y', 'z'],
+		type: Neo4j.types.Point
+	}],
+	5: [{
+		keys: ['hour', 'minute', 'second', 'nanosecond', 'timeZoneOffsetSeconds'],
+		type: Neo4j.types.Time
+	}],
+	7: [{
+		keys: ['year', 'month', 'day', 'hour', 'minute', 'second', 'nanosecond'],
+		type: Neo4j.types.LocalDateTime
+	}],
+	8: [{
+		keys: ['year', 'month', 'day', 'hour', 'minute', 'second', 'nanosecond', 'timeZoneOffsetSeconds'],
+		type: Neo4j.types.DateTime
+	}],
+	9: [{
+		keys: ['year', 'month', 'day', 'hour', 'minute', 'second', 'nanosecond', 'timeZoneOffsetSeconds', 'timeZoneId'],
+		type: Neo4j.types.DateTime
+	}]
+};
+
 function isFakeInteger(property: FakeIdentity | unknown): property is FakeIdentity {
 	return typeof property === 'object' && 'high' in property && 'low' in property && Object.keys(property).length == 2;
 }
 
+function propertyToNormal(value: unknown): unknown {
+	if (Array.isArray(value)) {
+		return value.map(propertyToNormal);
+	} else if(typeof value === 'object' && Object.keys(value).length in FakeTypeToType) {
+		for(const fakeType of FakeTypeToType[Object.keys(value).length]) {
+			let isCorrectType = true;
+			const rets: unknown[] = [];
+			for(const key of fakeType.keys) {
+				if(!(key in value)) {
+					isCorrectType = false;
+					break;
+				} else {
+					rets.push(isFakeInteger(value[key]) ? new Neo4j.types.Integer(value[key].low, value[key].high): value[key]);
+				}
+			}
+			if(isCorrectType) {
+				return new fakeType.type(...rets);
+			}
+		}
+	} else {
+		return value;
+	}
+}
+
 function properyMapWithIdentity(properties: Record<string, FakeIdentity | unknown>): Record<string, Neo4jTypes.Integer | unknown> {
 	return Object.entries(properties).reduce((ret, [key, value]) => {
-		if(isFakeInteger(value)) {
-			ret[key] = toNeo4jInt(value);
-		} else if(Array.isArray(value)) {
-			ret[key] = value.map(va => isFakeInteger(va) ? toNeo4jInt(va) : va);
-		} else {
-			ret[key] = value;
-		}
+		ret[key] = propertyToNormal(value);
 		return ret;
 	}, {});
 }
@@ -88,7 +150,7 @@ function dumbToNeo4j(field: FakeNode | FakeRelationship | FakePath): Neo4jTypes.
 		return new Neo4j.types.Node(toNeo4jInt(field.identity), field.labels, properyMapWithIdentity(field.properties));
 	} else if ('type' in field) {
 		return new Neo4j.types.Relationship(toNeo4jInt(field.identity), toNeo4jInt(field.start), toNeo4jInt(field.end), field.type, properyMapWithIdentity(field.properties));
-	} else if ('segments' in field) {	
+	} else if ('segments' in field) {
 		return new Neo4j.types.Path(
 			new Neo4j.types.Node(toNeo4jInt(field.start.identity), field.start.labels, properyMapWithIdentity(field.start.properties)),
 			new Neo4j.types.Node(toNeo4jInt(field.end.identity), field.end.labels, properyMapWithIdentity(field.end.properties)),
@@ -118,7 +180,9 @@ function _propertyToHtml<T extends { toString: () => string }>(key: string, valu
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function _retrieveProperty<T>(prop: string, obj: any): T {
 	if (typeof obj?.properties === 'object') {
-		return isInt(obj.properties[prop]) ? obj.properties[prop].toInt() : obj.properties[prop];
+		return isInt(obj.properties[prop]) ?
+			integerToNumber(obj.properties[prop])
+			: obj.properties[prop];
 	}
 	throw new Error('Neo4j object is not properly constructed');
 }
@@ -314,7 +378,7 @@ export class NeoVis {
 		this.#config.groupAsLabel = config.groupAsLabel ?? defaults.neo4j.groupAsLabel;
 	}
 
-	async #runCypher<T>(cypher: Cypher, id: number): Promise<T | T[]> {
+	async #runCypher<T>(cypher: Cypher, id: number | Neo4jTypes.Integer): Promise<T | T[]> {
 		const session = this.#driver.session(this.#database && { database: this.#database });
 		const results: T[] = [];
 
@@ -378,7 +442,7 @@ export class NeoVis {
 		}
 	}
 
-	*#buildCypherObject<VIS_TYPE>(cypherConfig: RecursiveMapTo<VIS_TYPE, Cypher>, object: VIS_TYPE, id: number): Generator<Promise<void>> {
+	*#buildCypherObject<VIS_TYPE>(cypherConfig: RecursiveMapTo<VIS_TYPE, Cypher>, object: VIS_TYPE, id: number | Neo4jTypes.Integer): Generator<Promise<void>> {
 		if (cypherConfig && typeof cypherConfig === 'object') {
 			for (const prop of Object.keys(cypherConfig) as (keyof VIS_TYPE)[]) {
 				const value = cypherConfig[prop];
@@ -413,7 +477,7 @@ export class NeoVis {
 	}
 
 	async #buildVisObject<VIS_TYPE, NEO_TYPE>(
-		config: NeovisDataConfig<VIS_TYPE, NEO_TYPE> | NonFlatNeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE>, baseObject: VIS_TYPE, neo4jObject: NEO_TYPE, id: number
+		config: NeovisDataConfig<VIS_TYPE, NEO_TYPE> | NonFlatNeoVisAdvanceConfig<VIS_TYPE, NEO_TYPE>, baseObject: VIS_TYPE, neo4jObject: NEO_TYPE, id: number | Neo4jTypes.Integer
 	): Promise<void> {
 		if (!config) {
 			return;
@@ -461,13 +525,13 @@ export class NeoVis {
 		const labelConfig: LabelConfig | NonFlatLabelConfig = this.#config?.labels?.[label] ?? (this.#config as NonFlatNeovisConfig)?.defaultLabelConfig ??
 			(this.#config as NeovisConfig)?.labels?.[NEOVIS_DEFAULT_CONFIG];
 
-		node.id = isInt(neo4jNode.identity) ? (neo4jNode.identity as Neo4jTypes.Integer).toInt() : neo4jNode.identity as number;
+		node.id = isInt(neo4jNode.identity) ? integerToNumber(neo4jNode.identity as Neo4jTypes.Integer) : neo4jNode.identity as number;
 		node.raw = neo4jNode;
 		if (this.#config.groupAsLabel) {
 			node.group = label;
 		}
 
-		await this.#buildVisObject(labelConfig, node as Node, neo4jNode, node.id);
+		await this.#buildVisObject(labelConfig, node as Node, neo4jNode, neo4jNode.identity);
 
 		return node as Node;
 	}
@@ -483,12 +547,12 @@ export class NeoVis {
 			(this.#config as NeovisConfig)?.relationships?.[NEOVIS_DEFAULT_CONFIG];
 
 		const edge: Partial<Edge> = {};
-		edge.id = isInt(r.identity) ? (r.identity as Neo4jTypes.Integer).toInt() : r.identity as number;
-		edge.from = isInt(r.start) ? (r.start as Neo4jTypes.Integer).toInt() : r.start as number;
-		edge.to = isInt(r.end) ? (r.end as Neo4jTypes.Integer).toInt() : r.end as number;
+		edge.id = isInt(r.identity) ? integerToNumber(r.identity as Neo4jTypes.Integer) : r.identity as number;
+		edge.from = isInt(r.start) ? integerToNumber(r.start as Neo4jTypes.Integer) : r.start as number;
+		edge.to = isInt(r.end) ? integerToNumber(r.end as Neo4jTypes.Integer) : r.end as number;
 		edge.raw = r;
 
-		await this.#buildVisObject(relationshipConfig, edge as Edge, r, edge.id);
+		await this.#buildVisObject(relationshipConfig, edge as Edge, r, r.identity);
 
 		return edge as Edge;
 	}

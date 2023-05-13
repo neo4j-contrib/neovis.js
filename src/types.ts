@@ -341,7 +341,6 @@ export interface Node extends VisNetwork.Node {
 	/**
 	 * @link https://neo4j.com/docs/api/javascript-driver/current/class/src/graph-types.js~Node.html
 	 */
-	id: number;
 	raw: Neo4jTypes.Node<NumberOrInteger>;
 }
 
@@ -352,6 +351,6 @@ export interface Edge extends VisNetwork.Edge {
 	/**
 	 * https://neo4j.com/docs/api/javascript-driver/current/class/src/graph-types.js~Relationship.html
 	 */
-	id: number;
+	id: number | string;
 	raw: Neo4jTypes.Relationship<NumberOrInteger>;
 }

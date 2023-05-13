@@ -18,16 +18,16 @@ export function clearIdCounter(): void {
 	counter = 1;
 }
 
-export function makeNode(labels: string[], properties: Record<string, unknown> = {}): Neo4jCore.Node<number> {
-	return new Neo4jCore.Node(counter++, labels, properties);
+export function makeNode(labels: string[], properties: Record<string, unknown> = {}, id?: Neo4jCore.Integer | number): Neo4jCore.Node<Neo4jCore.Integer | number> {
+	return new Neo4jCore.Node(id ?? new Neo4jCore.Integer(counter++, 0), labels, properties);
 }
 
-export function makeRelationship(type: string, startNode: Neo4jCore.Node<number>, endNode: Neo4jCore.Node<number>, properties: Record<string, unknown> = {}): Neo4jCore.Relationship<number> {
+export function makeRelationship(type: string, startNode: Neo4jCore.Node<number | Neo4jCore.Integer>, endNode: Neo4jCore.Node<number | Neo4jCore.Integer>, properties: Record<string, unknown> = {}): Neo4jCore.Relationship<number | Neo4jCore.Integer> {
 	return new Neo4jCore.Relationship(counter++, startNode.identity, endNode.identity, type, properties);
 }
 
-export function makePathFromNodes(nodes: Neo4jType.Node<number>[], relationshipType: string): Neo4jCore.Path<number> {
-	const pathSegments: Neo4jCore.PathSegment<number>[] = [];
+export function makePathFromNodes(nodes: Neo4jType.Node<number | Neo4jCore.Integer>[], relationshipType: string): Neo4jCore.Path<number | Neo4jCore.Integer> {
+	const pathSegments: Neo4jCore.PathSegment<number | Neo4jCore.Integer>[] = [];
 	for (let i = 0; i < nodes.length - 1; i++) {
 		pathSegments.push(new Neo4jCore.PathSegment(
 			nodes[i],

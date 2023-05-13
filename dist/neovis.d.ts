@@ -50,7 +50,7 @@ export declare class NeoVis {
     /**
      * Renders the network
      */
-    render(query?: Cypher, parameters?: any): void;
+    render(query?: Cypher, parameters?: unknown): void;
     /**
      * Clear the data for the visualization
      */
