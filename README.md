@@ -95,10 +95,10 @@ imported.
 
 Specifically we would like:
 
-* Node size to be proportional to the Character's `pagerank` score. This will allow us to quickly identify important
+- Node size to be proportional to the Character's `pagerank` score. This will allow us to quickly identify important
   nodes in the network.
-* Node color to determined by the `community` property. This will allow us to visualize clusters.
-* Relationship thickeness should be proportional to the `weight` property on the `INTERACTS` relationship.
+- Node color to determined by the `community` property. This will allow us to visualize clusters.
+- Relationship thickeness should be proportional to the `weight` property on the `INTERACTS` relationship.
 
 Neovis.js, by combining the JavaScript driver for Neo4j and the vis.js visualization library will allow us to build this
 visualization.
@@ -161,7 +161,12 @@ And define our draw() function:
             visConfig: {
                 nodes: {
                     shape: 'dot'
-                }
+                },
+                edges: {
+                    arrows: {
+                        to: {enabled: true}
+                    }
+                },
             },
             labels: {
                 Character: {
@@ -232,7 +237,4 @@ npm run build
 npm run typedoc
 ```
 
-will build `dist/neovis.js` and `dist/neovis-without-dependencies.js` 
-
-
-
+will build `dist/neovis.js` and `dist/neovis-without-dependencies.js`
