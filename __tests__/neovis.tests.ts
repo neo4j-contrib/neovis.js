@@ -603,19 +603,19 @@ describe('Neovis', () => {
 				yield record;
 			}
 		},
-	} as Partial<NonFlatNeovisConfig>], ['Async Iterable', {
+	} as Partial<NeovisConfig>], ['Async Iterable', {
 		...dataFunctionSharedConfig,
 		async dataFunction() {
 			return retData;
 		},
-	} as Partial<NonFlatNeovisConfig>], ['ASync Generator', {
+	} as Partial<NeovisConfig>], ['ASync Generator', {
 		...dataFunctionSharedConfig,
 		async *dataFunction() {
 			for (const record of retData) {
 				yield record;
 			}
 		},
-	} as Partial<NonFlatNeovisConfig>]])('neovis dataFunction %s test', (configName: string, config) => {
+	} as Partial<NeovisConfig>]])('neovis dataFunction %s test', (configName: string, config) => {
 		beforeEach(() => {
 			neovis = new Neovis(config as NonFlatNeovisConfig | NeovisConfig);
 		});
