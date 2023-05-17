@@ -1,6 +1,6 @@
 {
   "name": "neovis.js",
-  "version": "2.1.0-alpha7",
+  "version": "2.1.0-alpha8",
   "description": "Graph visualizations powered by vis.js with data from Neo4j.",
   "main": "./dist/neovis.js",
   "module": "./dist/neovis-without-dependencies.js",
@@ -11,7 +11,9 @@
     "test": "`__tests__"
   },
   "scripts": {
-    "test": "jest __tests__/neovis.tests.ts",
+    "test": "run-p test:*",
+    "test:jest": "jest __tests__/neovis.tests.ts",
+    "test:types": "tsc --esModuleInterop --allowSyntheticDefaultImports --moduleResolution Node --target esnext --noemit ./__tests__/neovis.tests.ts",
     "eslint": "eslint .",
     "prepublishOnly": "run-s typedoc build",
     "clean": "rimraf ./dist",
