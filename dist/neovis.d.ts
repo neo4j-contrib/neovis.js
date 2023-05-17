@@ -1,7 +1,7 @@
 import * as Neo4jTypes from 'neo4j-driver';
 import { EventFunctionTypes, NeoVisEvents } from './events';
 import type * as VisNetwork from 'vis-network';
-import { Cypher, Edge, NEOVIS_DEFAULT_CONFIG, NeovisConfig, Node, NonFlatNeovisConfig, NumberOrInteger } from './types';
+import { Cypher, DataFunctionType, Edge, NEOVIS_DEFAULT_CONFIG, NeovisConfig, Node, NonFlatNeovisConfig, NumberOrInteger } from './types';
 export * from './events';
 export * from './types';
 /**
@@ -50,7 +50,7 @@ export declare class NeoVis {
     /**
      * Renders the network
      */
-    render(query?: Cypher, parameters?: unknown): void;
+    render(query_or_function?: Cypher | DataFunctionType, parameters?: unknown): void;
     /**
      * Clear the data for the visualization
      */
@@ -65,11 +65,11 @@ export declare class NeoVis {
      * Reset the config object and reload data
      * @param config
      */
-    reinit(config: NeovisConfig | NonFlatNeovisConfig): void;
+    reinit(config: NeovisConfig | NonFlatNeovisConfig, parameter?: unknown): void;
     /**
      * Clear the network and fetch live data form the server and reload the visualization
      */
-    reload(): void;
+    reload(parameter?: unknown): void;
     /**
      * Stabilize the visualization
      */
@@ -77,14 +77,28 @@ export declare class NeoVis {
     /**
      * Execute an arbitrary Cypher query and re-render the visualization
      * @param query
+     * @param parameters - parameters to send to the cypher
      */
-    renderWithCypher(query: Cypher): void;
+    renderWithCypher(query: Cypher, parameters?: unknown): void;
+    /**
+     * Execute an arbitrary function and re-render the visualization
+     * @param func
+     * @param parameters - parameters to send to the function
+     */
+    renderWithFunction(func: DataFunctionType, parameters?: unknown): void;
     /**
      * Execute an arbitrary Cypher query and update the current visualization, retaning current nodes
      * This function will not change the original query given by renderWithCypher or the inital cypher.
-     * @param query
+     * @param parameters - parameters to send to the cypher
+     *
      */
-    updateWithCypher(query: Cypher): void;
+    updateWithCypher(query: Cypher, parameters?: unknown): void;
+    /**
+     * Execute an arbitrary function and update the visualization
+     * @param func
+     * @param parameters - parameters to send to the function
+     */
+    updateWithFunction(func: DataFunctionType, parameters?: unknown): void;
 }
 /**
  * @deprecated for migration only

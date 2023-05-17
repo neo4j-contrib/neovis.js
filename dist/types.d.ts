@@ -4,6 +4,7 @@ export declare const NEOVIS_DEFAULT_CONFIG: unique symbol;
 export declare const NEOVIS_ADVANCED_CONFIG: unique symbol;
 export type NumberOrInteger = number | Neo4jTypes.Integer;
 export type RecursiveMapToDist<T, New> = T extends object ? RecursiveMapTo<T, New> : New;
+export type DataFunctionType = (any?: unknown) => AsyncIterable<Neo4jTypes.Record> | Promise<Iterable<Neo4jTypes.Record>> | Iterable<Neo4jTypes.Record>;
 /**
  * Maps a type recursively and replace each non object type with the new type
  * @param <T> type to map
@@ -102,10 +103,13 @@ export interface BaseNeovisConfig {
      */
     visConfig?: VisNetwork.Options;
     /**
-     * function to get the data instead of neo4j driver
-     * @returns list of neo4j data
+     * function to get fetch data instead of neo4j driver
+     *
+     * it needs to return a list of records
+     *
+     * example in examples/simple-dataFunction-example.html
      */
-    dataFunction?: (any?: unknown) => AsyncIterable<Neo4jTypes.Record> | Promise<Iterable<Neo4jTypes.Record>> | Iterable<Neo4jTypes.Record>;
+    dataFunction?: DataFunctionType;
     /**
      * The Cypher query that will get the data
      */
