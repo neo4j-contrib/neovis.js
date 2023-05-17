@@ -158,6 +158,11 @@ And define our draw() function:
                 serverUser: "neo4j",
                 serverPassword: "sorts-swims-burglaries",
             },
+            visConfig: {
+                nodes: {
+                    shape: 'dot'
+                }
+            },
             labels: {
                 Character: {
                     label: "name",
@@ -165,10 +170,7 @@ And define our draw() function:
                     group: "community",
                     [NeoVis.NEOVIS_ADVANCED_CONFIG]: {
                         function: {
-                            title: (node) => viz.nodeToHtml(node, [
-                                "name",
-                                "pagerank"
-                            ])
+                            title: (node) => node.properties.name
                         }
                     }
                 }
@@ -176,9 +178,15 @@ And define our draw() function:
             relationships: {
                 INTERACTS: {
                     value: "weight"
+                    [NeoVis.NEOVIS_ADVANCED_CONFIG]: {
+                        function: {
+                            title: (relationship) => relationship.properties.weight,
+                            label: (relationship) => 'INTERACTS',
+                        }
+                    }
                 }
             },
-            initialCypher: "MATCH (n)-[r:INTERACTS]->(m) RETURN *"
+            initialCypher: "MATCH (n:Character)-[r:INTERACTS]->(m) RETURN * LIMIT 200"
         };
 
         neoViz = new NeoVis.default(config);
