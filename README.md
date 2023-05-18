@@ -186,7 +186,7 @@ And define our draw() function:
                     [NeoVis.NEOVIS_ADVANCED_CONFIG]: {
                         function: {
                             title: (relationship) => relationship.properties.weight,
-                            label: (relationship) => 'INTERACTS',
+                            label: (relationship) => relationship.type,
                         }
                     }
                 }
