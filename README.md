@@ -175,7 +175,10 @@ And define our draw() function:
                     group: "community",
                     [NeoVis.NEOVIS_ADVANCED_CONFIG]: {
                         function: {
-                            title: (node) => node.properties.name
+                             title: (node) => NeoVis.objectToTitleHtml(node, [
+                                "name",
+                                "pagerank"
+                            ])
                         }
                     }
                 }
