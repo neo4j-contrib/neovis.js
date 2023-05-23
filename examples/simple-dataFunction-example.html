@@ -92,6 +92,7 @@
 			viz = new NeoVis.default(config);
 			viz.render();
 			console.log(viz);
+			viz.registerOnEvent('error', ({error}) => console.error(error))
 
 		}
     </script>
