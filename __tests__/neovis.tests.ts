@@ -568,7 +568,8 @@ describe('Neovis', () => {
 				test6: new Neo4j.types.LocalTime(1, 2, 3, 4),
 				test7: new Neo4j.types.Point(1, 2, 3, 4),
 				test8: new Neo4j.types.Point(1, 2, 3),
-				test9: new Neo4j.types.Time(1, 2, 3, 4, 5)
+				test9: new Neo4j.types.Time(1, 2, 3, 4, 5),
+				test10: NaN
 			}),
 			new Neo4j.types.Relationship(new Neo4j.types.Integer(0, 0), new Neo4j.types.Integer(0, 0), new Neo4j.types.Integer(1, 0), 'TEST', {}),
 			new Neo4j.types.Path(
@@ -647,6 +648,7 @@ describe('Neovis', () => {
 			expect(neovis.nodes.get(1)?.raw.properties.test7).toBeInstanceOf(Neo4j.types.Point);
 			expect(neovis.nodes.get(1)?.raw.properties.test8).toBeInstanceOf(Neo4j.types.Point);
 			expect(neovis.nodes.get(1)?.raw.properties.test9).toBeInstanceOf(Neo4j.types.Time);
+			expect(neovis.nodes.get(1)?.raw.properties.test10).toBeNaN();
 		});
 	});
 });
