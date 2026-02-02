@@ -1,8 +1,12 @@
 # neovis.js
 
+
 [![Actions Build Status](https://github.com/neo4j-contrib/neovis.js/workflows/CI/badge.svg?branch=master)]()[![npm version](https://badge.fury.io/js/neovis.js.svg)](https://badge.fury.io/js/neovis.js)
 
 Graph visualizations powered by vis.js with data from Neo4j.
+
+> ⚠️ NeoVis is no longer actively updated. Looking for a free & modern Neo4j visualization library? Check out [NVL](https://neo4j.com/docs/api/nvl/current/examples.html)!
+
 
 ![](img/example-viz.png)
 
