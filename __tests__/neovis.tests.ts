@@ -619,6 +619,13 @@ describe('Neovis', () => {
 		beforeEach(() => {
 			neovis = new Neovis(config as NonFlatNeovisConfig | NeovisConfig);
 		});
+		it('renders nodes when an optional relationship is null', async () => {
+			const record = JSON.parse(JSON.stringify(testUtils.makeRecord([testUtils.makeNode(['Test'], {}, 42), null])));
+			neovis.renderWithFunction(() => [record]);
+			await testUtils.neovisRenderDonePromise(neovis);
+			expect(neovis.nodes.get(42)).toBeTruthy();
+			expect(neovis.edges.length).toBe(0);
+		});
 		// TODO TESTS
 		it('should create all nodes and relationship same if it was normal', async () => {
 			neovis.render();

@@ -618,7 +618,7 @@ export class NeoVis {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const fields: (FakeNode | FakePath | FakeRelationship)[] = (record as any)._fields;
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			record = new Neo4j.types.Record(record.keys, fields.map(dumbToNeo4j), (record as any)._fieldLookup);
+			record = new Neo4j.types.Record(record.keys, fields.map(field => field == null ? field : dumbToNeo4j(field)), (record as any)._fieldLookup);
 		}
 		this.#consoleLog('CLASS NAME');
 		this.#consoleLog(record?.constructor.name);
