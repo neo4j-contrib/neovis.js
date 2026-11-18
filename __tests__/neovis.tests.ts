@@ -620,7 +620,7 @@ describe('Neovis', () => {
 			neovis = new Neovis(config as NonFlatNeovisConfig | NeovisConfig);
 		});
 		it('renders nodes when an optional relationship is null', async () => {
-			const record = JSON.parse(JSON.stringify(testUtils.makeRecord([testUtils.makeNode(['Test'], {}, 42), null])));
+			const record = JSON.parse(JSON.stringify(testUtils.makeRecord([testUtils.makeNode(['Test'], {}, new Neo4j.types.Integer(42, 0)), null])));
 			neovis.renderWithFunction(() => [record]);
 			await testUtils.neovisRenderDonePromise(neovis);
 			expect(neovis.nodes.get(42)).toBeTruthy();
